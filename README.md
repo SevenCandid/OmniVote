@@ -70,7 +70,39 @@ The following documents define the specifications of the OmniVote platform:
 ---
 
 ## Local Development Setup
-Detailed instructions on setting up local virtual environments, launching Docker service stacks, and starting frontend/backend dev loops will be added in upcoming sprints.
+
+### Backend API (`apps/api`)
+1. **Python Version**: Python 3.13+ is required (verified against Python 3.14).
+2. **Virtual Environment Setup**:
+   Create a virtual environment inside the `apps/api` directory:
+   ```bash
+   cd apps/api
+   python -m venv .venv
+   .venv\Scripts\activate     # On Windows
+   source .venv/bin/activate  # On macOS/Linux
+   ```
+3. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. **Environment Variables**:
+   Copy the `.env.example` file to `.env` and fill in local credentials:
+   ```bash
+   cp .env.example .env
+   ```
+5. **Run the API Server**:
+   Start the FastAPI development server:
+   ```bash
+   python -m app.main
+   ```
+   The API will be available at `http://localhost:8000`. Swagger documentation is available at `http://localhost:8000/api/v1/docs`.
+
+6. **Verify with Tests**:
+   Run the test suite using pytest:
+   ```bash
+   python -m pytest
+   ```
+
 
 ---
 

@@ -1,27 +1,7 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+from app.factory import create_app
 
-app = FastAPI(
-    title="OmniVote API",
-    description="One System. Every Vote. Powered by VeroSeven",
-    version="1.0.0",
-)
+app = create_app()
 
-# CORS configurations matching Design System constraints
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Restrict to *.omnivote.com in staging/production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@app.get("/health", status_code=200)
-async def health_check():
-    return {
-        "success": True,
-        "data": {
-            "status": "healthy",
-            "message": "OmniVote API is running."
-        }
-    }
+if __name__ == "__main__":
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)

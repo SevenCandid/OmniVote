@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #4F46E5;
+  --color-secondary: #0D9488;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  --color-info: #3B82F6;
+  
+  --color-canvas-light: #FAFAFA;
+  --color-canvas-dark: #09090B;
+  
+  --color-surface-light: #FFFFFF;
+  --color-surface-dark: #18181B;
+  
+  --color-surface-muted-light: #F4F4F5;
+  --color-surface-muted-dark: #27272A;
+  
+  --color-neutral-primary-light: #09090B;
+  --color-neutral-primary-dark: #FAFAFA;
+  
+  --color-neutral-secondary-light: #52525B;
+  --color-neutral-secondary-dark: #A1A1AA;
+  
+  --color-neutral-muted-light: #71717A;
+  --color-neutral-muted-dark: #71717A;
+  
+  --color-border-default-light: #E4E4E7;
+  --color-border-default-dark: #27272A;
+  
+  --color-border-muted-light: #F4F4F5;
+  --color-border-muted-dark: #18181B;
+
+  --font-sans: "Geist Sans", "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono", "Fira Code", monospace;
+
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Global Styles */
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: var(--font-sans);
+    transition: background-color var(--transitions-duration_fast) var(--transitions-easing_default), 
+                color var(--transitions-duration_fast) var(--transitions-easing_default);
+  }
+
+  body {
+    background-color: var(--color-canvas-light);
+    color: var(--color-neutral-primary-light);
+  }
+
+  .dark body {
+    background-color: var(--color-canvas-dark);
+    color: var(--color-neutral-primary-dark);
+  }
+  
+  /* Touch target rule */
+  button, input, select, textarea {
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+}
