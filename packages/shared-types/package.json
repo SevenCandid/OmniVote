@@ -1,0 +1,7 @@
+{
+  "name": "@omnivote/shared-types",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared TypeScript types for OmniVote",
+  "types": "./index.d.ts"
+}

@@ -1,0 +1,9 @@
+[core]
+    autocrlf = input
+    safecrlf = warn
+[pull]
+    rebase = true
+[push]
+    default = simple
+[commit]
+    gpgsign = false

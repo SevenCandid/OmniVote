@@ -1,0 +1,20 @@
+name: OmniVote CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify structure
+        run: |
+          echo "Verifying monorepo layout..."
+          test -d apps/web
+          test -d apps/api
+          test -d packages/shared-types

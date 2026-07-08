@@ -1,0 +1,44 @@
+# Global
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.local
+.env.*.local
+.venv
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Frontend (apps/web)
+apps/web/node_modules/
+apps/web/dist/
+apps/web/.svelte-kit/
+apps/web/.next/
+apps/web/.vercel/
+apps/web/stats.html
+
+# Backend (apps/api)
+apps/api/.pytest_cache/
+apps/api/__pycache__/
+apps/api/alembic/versions/*.pyc
+
+# IDE / Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# OS-specific
+Icon?
+ehthumbs.db
