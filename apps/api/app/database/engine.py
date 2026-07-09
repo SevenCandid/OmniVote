@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.pool import StaticPool, QueuePool
+from sqlalchemy.pool import StaticPool
 from app.core.config import settings
 import structlog
 
@@ -21,7 +21,6 @@ else:
     # Settings validation ensures DATABASE_URL starts with postgresql
     engine_url = settings.DATABASE_URL
     engine_kwargs = {
-        "poolclass": QueuePool,
         "pool_size": settings.DATABASE_POOL_SIZE,
         "max_overflow": settings.DATABASE_MAX_OVERFLOW,
         "pool_timeout": settings.DATABASE_POOL_TIMEOUT,
