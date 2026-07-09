@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from sqlalchemy.exc import SQLAlchemyError
 from app.core.config import settings
 from app.core.logging import setup_logging
 from app.api.v1.router import api_router
@@ -13,6 +14,7 @@ from app.exceptions.handlers import (
     validation_exception_handler,
     starlette_http_exception_handler,
     general_exception_handler,
+    sqlalchemy_exception_handler,
 )
 
 def create_app() -> FastAPI:
@@ -44,6 +46,7 @@ def create_app() -> FastAPI:
     app.add_exception_handler(AppException, app_exception_handler)
     app.add_exception_handler(RequestValidationError, validation_exception_handler)
     app.add_exception_handler(StarletteHTTPException, starlette_http_exception_handler)
+    app.add_exception_handler(SQLAlchemyError, sqlalchemy_exception_handler)
     app.add_exception_handler(Exception, general_exception_handler)
 
     # Register Router with Version prefix

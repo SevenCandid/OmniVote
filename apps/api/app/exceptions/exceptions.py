@@ -54,3 +54,14 @@ class ValidationException(AppException):
         details: Optional[List[Dict[str, Any]]] = None,
     ):
         super().__init__(message=message, code=code, status_code=422, details=details)
+
+class DatabaseException(AppException):
+    """Raised when database query or transaction fails."""
+    def __init__(
+        self,
+        message: str = "Database operation failed.",
+        code: str = "DATABASE_ERROR",
+        details: Optional[List[Dict[str, Any]]] = None,
+    ):
+        super().__init__(message=message, code=code, status_code=500, details=details)
+
