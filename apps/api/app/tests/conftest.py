@@ -32,3 +32,14 @@ def client() -> Generator[TestClient, None, None]:
     app = create_app()
     with TestClient(app) as c:
         yield c
+
+@pytest.fixture(scope="function", autouse=True)
+def mock_redis_connection():
+    from unittest.mock import AsyncMock, patch
+    # Mock get_redis globally during pytest execution to simulate a running Redis server
+    with patch("app.cache.redis.get_redis") as mock_get_redis:
+        mock_client = AsyncMock()
+        mock_client.ping.return_value = True
+        mock_get_redis.return_value = mock_client
+        yield
+

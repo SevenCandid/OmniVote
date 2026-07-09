@@ -49,6 +49,17 @@ def create_app() -> FastAPI:
     app.add_exception_handler(SQLAlchemyError, sqlalchemy_exception_handler)
     app.add_exception_handler(Exception, general_exception_handler)
 
+    # Register Redis Connection Pool Hooks
+    @app.on_event("startup")
+    def startup_redis():
+        from app.cache.redis import redis_manager
+        redis_manager.init_pool()
+
+    @app.on_event("shutdown")
+    async def shutdown_redis():
+        from app.cache.redis import redis_manager
+        await redis_manager.close_pool()
+
     # Register Router with Version prefix
     app.include_router(api_router, prefix=settings.API_V1_STR)
 

@@ -9,7 +9,8 @@ def test_health_check(client: TestClient):
     assert data == {
         "status": "healthy",
         "service": "omnivote-api",
-        "database": "connected"
+        "database": "connected",
+        "redis": "connected"
     }
 
 def test_error_handler_wrapper(client: TestClient):

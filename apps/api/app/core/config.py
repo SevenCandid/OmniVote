@@ -16,16 +16,28 @@ class Settings(BaseSettings):
     DATABASE_POOL_TIMEOUT: float = 30.0
     DATABASE_POOL_RECYCLE: int = 1800
 
+    # Redis Configurations
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_PASSWORD: str | None = None
+    REDIS_DB: int = 0
+    REDIS_URL: str = ""
+
     @model_validator(mode="after")
-    def validate_database_url(self) -> "Settings":
+    def validate_and_build_urls(self) -> "Settings":
         if self.ENV != "testing":
             if not self.DATABASE_URL or not self.DATABASE_URL.startswith("postgresql"):
                 raise ValueError(
                     f"DATABASE_URL must be a PostgreSQL connection string for active environment '{self.ENV}'. "
                     "In-memory SQLite fallbacks are disabled in non-test modes to prevent silent data loss."
                 )
+        
+        if not self.REDIS_URL:
+            if self.REDIS_PASSWORD:
+                self.REDIS_URL = f"redis://:{self.REDIS_PASSWORD}@{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
+            else:
+                self.REDIS_URL = f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{self.REDIS_DB}"
         return self
-    REDIS_URL: str = "redis://localhost:6379/0"
     SECRET_KEY: str = "placeholder_secret_key_change_me_in_production"
     
     # CORS Origins
