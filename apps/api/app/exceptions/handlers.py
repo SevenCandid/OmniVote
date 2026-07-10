@@ -1,13 +1,16 @@
-from datetime import datetime, timezone
-from fastapi import Request
-from fastapi.responses import JSONResponse
-from fastapi.exceptions import RequestValidationError
-from starlette.exceptions import HTTPException as StarletteHTTPException
-from sqlalchemy.exc import SQLAlchemyError
+from datetime import UTC, datetime
+
 import structlog
+from fastapi import Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+from sqlalchemy.exc import SQLAlchemyError
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
 from app.exceptions.exceptions import AppException
 
 logger = structlog.get_logger()
+
 
 async def app_exception_handler(request: Request, exc: AppException) -> JSONResponse:
     request_id = getattr(request.state, "request_id", None)
@@ -23,14 +26,17 @@ async def app_exception_handler(request: Request, exc: AppException) -> JSONResp
                 "details": exc.details,
             },
             "metadata": {
-                "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                "timestamp": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
                 "request_id": request_id,
                 "correlation_id": correlation_id,
-            }
-        }
+            },
+        },
     )
 
-async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+
+async def validation_exception_handler(
+    request: Request, exc: RequestValidationError
+) -> JSONResponse:
     request_id = getattr(request.state, "request_id", None)
     correlation_id = getattr(request.state, "correlation_id", None)
 
@@ -38,11 +44,17 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     for err in exc.errors():
         # loc maps to field names (e.g., ['body', 'username'])
         loc = err.get("loc", [])
-        field = ".".join(str(item) for item in loc[1:]) if len(loc) > 1 else ".".join(str(item) for item in loc)
-        details.append({
-            "field": field or "payload",
-            "issue": err.get("msg", "Invalid value"),
-        })
+        field = (
+            ".".join(str(item) for item in loc[1:])
+            if len(loc) > 1
+            else ".".join(str(item) for item in loc)
+        )
+        details.append(
+            {
+                "field": field or "payload",
+                "issue": err.get("msg", "Invalid value"),
+            }
+        )
 
     return JSONResponse(
         status_code=422,
@@ -54,14 +66,17 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
                 "details": details,
             },
             "metadata": {
-                "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                "timestamp": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
                 "request_id": request_id,
                 "correlation_id": correlation_id,
-            }
-        }
+            },
+        },
     )
 
-async def starlette_http_exception_handler(request: Request, exc: StarletteHTTPException) -> JSONResponse:
+
+async def starlette_http_exception_handler(
+    request: Request, exc: StarletteHTTPException
+) -> JSONResponse:
     request_id = getattr(request.state, "request_id", None)
     correlation_id = getattr(request.state, "correlation_id", None)
 
@@ -76,12 +91,13 @@ async def starlette_http_exception_handler(request: Request, exc: StarletteHTTPE
                 "details": [],
             },
             "metadata": {
-                "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                "timestamp": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
                 "request_id": request_id,
                 "correlation_id": correlation_id,
-            }
-        }
+            },
+        },
     )
+
 
 async def general_exception_handler(request: Request, exc: Exception) -> JSONResponse:
     request_id = getattr(request.state, "request_id", None)
@@ -99,17 +115,20 @@ async def general_exception_handler(request: Request, exc: Exception) -> JSONRes
                 "details": [],
             },
             "metadata": {
-                "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                "timestamp": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
                 "request_id": request_id,
                 "correlation_id": correlation_id,
-            }
-        }
+            },
+        },
     )
 
-async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError) -> JSONResponse:
+
+async def sqlalchemy_exception_handler(
+    request: Request, exc: SQLAlchemyError
+) -> JSONResponse:
     request_id = getattr(request.state, "request_id", None)
     correlation_id = getattr(request.state, "correlation_id", None)
-    timestamp_str = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    timestamp_str = datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
     # Safe structured logger (never log sensitive query bind variables or credentials)
     # We only log the base error type/class and generic message safely
@@ -117,7 +136,7 @@ async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError) -
         "database_transaction_failed",
         error_class=exc.__class__.__name__,
         request_id=request_id,
-        correlation_id=correlation_id
+        correlation_id=correlation_id,
     )
 
     return JSONResponse(
@@ -137,6 +156,5 @@ async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError) -
             # Flat attributes for root-level direct compatibility
             "request_id": request_id,
             "timestamp": timestamp_str,
-        }
+        },
     )
-

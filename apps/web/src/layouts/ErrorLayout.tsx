@@ -8,7 +8,8 @@ export default function ErrorLayout() {
       </div>
       <footer className="w-full py-6 text-center border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-white dark:bg-[#18181B]">
         <p className="text-[11px] text-[var(--color-neutral-muted-light)] uppercase tracking-[1.5px]">
-          Powered by <span className="font-semibold text-primary">VeroSeven</span>
+          Powered by{' '}
+          <span className="font-semibold text-primary">VeroSeven</span>
         </p>
       </footer>
     </div>

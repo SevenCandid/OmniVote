@@ -42,3 +42,8 @@ apps/api/alembic/versions/*.pyc
 # OS-specific
 Icon?
 ehthumbs.db
+
+# Test coverage
+coverage/
+coverage.xml
+

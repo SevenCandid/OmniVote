@@ -1,7 +1,10 @@
 import logging
 import sys
+
 import structlog
+
 from app.core.config import settings
+
 
 def setup_logging() -> None:
     # Clear existing handlers
@@ -16,14 +19,12 @@ def setup_logging() -> None:
 
     if settings.ENV == "development":
         # Development: Output readable logs to console
-        processors = shared_processors + [
-            structlog.dev.ConsoleRenderer()
-        ]
+        processors = shared_processors + [structlog.dev.ConsoleRenderer()]
     else:
         # Production: Output structured JSON logs to console
         processors = shared_processors + [
             structlog.processors.dict_tracebacks,
-            structlog.processors.JSONRenderer()
+            structlog.processors.JSONRenderer(),
         ]
 
     structlog.configure(

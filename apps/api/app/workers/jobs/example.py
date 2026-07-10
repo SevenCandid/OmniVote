@@ -2,6 +2,7 @@ import structlog
 
 logger = structlog.get_logger()
 
+
 async def example_job(ctx) -> str:
     """
     Verification placeholder job to check arq integration.

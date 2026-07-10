@@ -24,10 +24,21 @@ export default function PublicLayout() {
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-8 font-medium text-sm text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)]">
-            <Link to="/" className="hover:text-primary transition-colors">Home</Link>
-            <Link to="/about" className="hover:text-primary transition-colors">About</Link>
-            <Link to="/contact" className="hover:text-primary transition-colors">Contact</Link>
-            <Link to="/vote" className="hover:text-primary transition-colors">Voter Portal</Link>
+            <Link to="/" className="hover:text-primary transition-colors">
+              Home
+            </Link>
+            <Link to="/about" className="hover:text-primary transition-colors">
+              About
+            </Link>
+            <Link
+              to="/contact"
+              className="hover:text-primary transition-colors"
+            >
+              Contact
+            </Link>
+            <Link to="/vote" className="hover:text-primary transition-colors">
+              Voter Portal
+            </Link>
           </nav>
 
           {/* Actions & Theme Controls */}
@@ -82,10 +93,34 @@ export default function PublicLayout() {
         {isMobileMenuOpen && (
           <div className="md:hidden border-b border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-white dark:bg-[#18181B] px-4 pt-2 pb-6 space-y-4 animate-fade-in">
             <nav className="flex flex-col gap-3 text-sm font-medium">
-              <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">Home</Link>
-              <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">About</Link>
-              <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">Contact</Link>
-              <Link to="/vote" onClick={() => setIsMobileMenuOpen(false)} className="px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">Voter Portal</Link>
+              <Link
+                to="/"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+              >
+                Home
+              </Link>
+              <Link
+                to="/about"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+              >
+                About
+              </Link>
+              <Link
+                to="/contact"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+              >
+                Contact
+              </Link>
+              <Link
+                to="/vote"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+              >
+                Voter Portal
+              </Link>
             </nav>
 
             <div className="flex flex-col gap-4 border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] pt-4 px-3">
@@ -142,14 +177,29 @@ export default function PublicLayout() {
       <footer className="w-full border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-white dark:bg-[#18181B] py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-[11px] text-[var(--color-neutral-muted-light)] uppercase tracking-[1.5px]">
-            Powered by <span className="font-semibold text-primary">VeroSeven</span>
+            Powered by{' '}
+            <span className="font-semibold text-primary">VeroSeven</span>
           </p>
 
           <div className="flex flex-wrap justify-center gap-6 text-xs text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)]">
-            <Link to="/privacy" className="hover:text-primary transition-colors">Privacy</Link>
-            <Link to="/terms" className="hover:text-primary transition-colors">Terms</Link>
-            <Link to="/docs" className="hover:text-primary transition-colors">Documentation</Link>
-            <Link to="/manifesto" className="hover:text-primary transition-colors">Manifesto</Link>
+            <Link
+              to="/privacy"
+              className="hover:text-primary transition-colors"
+            >
+              Privacy
+            </Link>
+            <Link to="/terms" className="hover:text-primary transition-colors">
+              Terms
+            </Link>
+            <Link to="/docs" className="hover:text-primary transition-colors">
+              Documentation
+            </Link>
+            <Link
+              to="/manifesto"
+              className="hover:text-primary transition-colors"
+            >
+              Manifesto
+            </Link>
           </div>
         </div>
       </footer>

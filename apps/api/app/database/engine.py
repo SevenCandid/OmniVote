@@ -1,7 +1,8 @@
+import structlog
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.pool import StaticPool
+
 from app.core.config import settings
-import structlog
 
 logger = structlog.get_logger()
 
@@ -29,7 +30,12 @@ else:
     }
     # Log startup safely (strip credentials from connection string before logging)
     safe_url = engine_url.split("@")[-1] if "@" in engine_url else "configured_url"
-    logger.info("database_engine_init", database="postgresql", host_info=safe_url, env=settings.ENV)
+    logger.info(
+        "database_engine_init",
+        database="postgresql",
+        host_info=safe_url,
+        env=settings.ENV,
+    )
 
 # Create the async engine
 engine = create_async_engine(engine_url, **engine_kwargs)

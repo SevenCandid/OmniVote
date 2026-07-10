@@ -7,7 +7,6 @@ import { BaseCard } from '../components/ui/BaseCard';
 export default function LandingPage() {
   return (
     <div className="flex flex-col gap-16 py-8 sm:py-12 lg:py-16 overflow-hidden">
-      
       {/* 1. Hero Section */}
       <section className="relative text-center max-w-4xl mx-auto flex flex-col items-center gap-6">
         <motion.div
@@ -35,7 +34,9 @@ export default function LandingPage() {
           transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
           className="text-base sm:text-xl text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)] max-w-2xl"
         >
-          Secure, multi-tenant voting SaaS built for democratic organizational elections and high-throughput public contests. Trust starts with cryptography.
+          Secure, multi-tenant voting SaaS built for democratic organizational
+          elections and high-throughput public contests. Trust starts with
+          cryptography.
         </motion.p>
 
         <motion.div
@@ -59,7 +60,6 @@ export default function LandingPage() {
 
       {/* 2. Features Grid */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto w-full">
-        
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -72,7 +72,8 @@ export default function LandingPage() {
             </div>
             <h3 className="text-lg font-bold">End-to-End Verifiable</h3>
             <p className="text-sm text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)]">
-              Cryptographic receipts allow voters to audit their ballots individually and ensure their vote is tallied correctly.
+              Cryptographic receipts allow voters to audit their ballots
+              individually and ensure their vote is tallied correctly.
             </p>
           </BaseCard>
         </motion.div>
@@ -89,7 +90,8 @@ export default function LandingPage() {
             </div>
             <h3 className="text-lg font-bold">High-Throughput Scale</h3>
             <p className="text-sm text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)]">
-              Designed to handle thousands of concurrent transactions for paid public contests and massive SMS/USSD voting events.
+              Designed to handle thousands of concurrent transactions for paid
+              public contests and massive SMS/USSD voting events.
             </p>
           </BaseCard>
         </motion.div>
@@ -106,13 +108,12 @@ export default function LandingPage() {
             </div>
             <h3 className="text-lg font-bold">Multi-Channel Access</h3>
             <p className="text-sm text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)]">
-              Cast your ballot securely through Web client app, mobile applications, USSD session dial-ins, or SMS message relays.
+              Cast your ballot securely through Web client app, mobile
+              applications, USSD session dial-ins, or SMS message relays.
             </p>
           </BaseCard>
         </motion.div>
-
       </section>
-
     </div>
   );
 }

@@ -1,16 +1,20 @@
-import uuid
 import time
+import uuid
+
+import structlog
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
-import structlog
 
 logger = structlog.get_logger()
+
 
 class RequestContextMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next) -> Response:
         # Traceability: Propagate request_id and correlation_id parameters
         request_id = request.headers.get("X-Request-ID") or f"req-{uuid.uuid4()}"
-        correlation_id = request.headers.get("X-Correlation-ID") or f"corr-{uuid.uuid4()}"
+        correlation_id = (
+            request.headers.get("X-Correlation-ID") or f"corr-{uuid.uuid4()}"
+        )
 
         # Attach to request state for use in exception handlers or endpoints
         request.state.request_id = request_id
@@ -31,7 +35,11 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
         try:
             response = await call_next(request)
             duration_ms = (time.perf_counter() - start_time) * 1000.0
-            logger.info("request_completed", status_code=response.status_code, duration_ms=duration_ms)
+            logger.info(
+                "request_completed",
+                status_code=response.status_code,
+                duration_ms=duration_ms,
+            )
 
             # Set tracing headers in response
             response.headers["X-Request-ID"] = request_id

@@ -14,16 +14,17 @@ export default function AuthLayout() {
             Omni<span className="text-primary">Vote</span>
           </span>
         </Link>
-        
+
         <div className="w-full max-w-md bg-white dark:bg-[#18181B] border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] rounded-2xl shadow-sm p-6 sm:p-8">
           <Outlet />
         </div>
       </div>
-      
+
       {/* Powered by VeroSeven footer */}
       <footer className="w-full py-6 text-center border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)]">
         <p className="text-[11px] text-[var(--color-neutral-muted-light)] uppercase tracking-[1.5px]">
-          Powered by <span className="font-semibold text-primary">VeroSeven</span>
+          Powered by{' '}
+          <span className="font-semibold text-primary">VeroSeven</span>
         </p>
       </footer>
     </div>

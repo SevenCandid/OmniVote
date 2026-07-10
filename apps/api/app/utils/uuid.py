@@ -1,6 +1,7 @@
-import time
 import os
+import time
 import uuid
+
 
 def generate_uuid7() -> uuid.UUID:
     """
@@ -9,7 +10,7 @@ def generate_uuid7() -> uuid.UUID:
     otherwise falls back to a clean Python-based generation.
     """
     if hasattr(uuid, "uuid7"):
-        return getattr(uuid, "uuid7")()
+        return uuid.uuid7()
 
     # Fallback implementation:
     # 48-bit timestamp in milliseconds
@@ -36,6 +37,6 @@ def generate_uuid7() -> uuid.UUID:
     for i in range(2, 10):
         rand_b = (rand_b << 8) | rand_bytes[i]
     rand_b &= 0x3FFFFFFFFFFFFFFF
-    val |= (0x8000000000000000 | rand_b)
+    val |= 0x8000000000000000 | rand_b
 
     return uuid.UUID(int=val)

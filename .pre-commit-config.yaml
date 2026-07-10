@@ -1,0 +1,51 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+
+  # Backend: Ruff lint & format checks
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.4
+    hooks:
+      - id: ruff
+        args: [ --fix, --exit-non-zero-on-fix ]
+        files: ^apps/api/
+      - id: ruff-format
+        files: ^apps/api/
+
+  # Frontend: Linting & Prettier & TypeScript compiler check
+  - repo: local
+    hooks:
+      - id: frontend-eslint
+        name: Frontend ESLint
+        entry: npm --prefix apps/web run lint
+        language: system
+        files: ^apps/web/src/
+        types_or: [ts, tsx]
+
+      - id: frontend-prettier
+        name: Frontend Prettier Check
+        entry: npm --prefix apps/web run format -- --check
+        language: system
+        files: ^apps/web/src/
+        types_or: [ts, tsx, css, json]
+
+      - id: frontend-typecheck
+        name: Frontend TypeScript Check
+        entry: npm --prefix apps/web run type-check
+        language: system
+        pass_filenames: false
+        files: ^apps/web/src/
+
+  # Conventional Commits Validator
+  - repo: local
+    hooks:
+      - id: conventional-commits
+        name: Conventional Commits Check
+        entry: python scripts/validate_commit_msg.py
+        language: system
+        stages: [commit-msg]

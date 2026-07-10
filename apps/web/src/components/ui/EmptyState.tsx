@@ -9,7 +9,13 @@ interface EmptyStateProps {
   onAction?: () => void;
 }
 
-export function EmptyState({ icon: Icon, title, description, actionText, onAction }: EmptyStateProps) {
+export function EmptyState({
+  icon: Icon,
+  title,
+  description,
+  actionText,
+  onAction,
+}: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center text-center p-8 border border-dashed border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] rounded-2xl bg-[var(--color-surface-muted-light)]/50 dark:bg-[var(--color-surface-muted-dark)]/50 max-w-md mx-auto">
       <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4 shrink-0 animate-pulse-slow">

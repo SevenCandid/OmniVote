@@ -1,14 +1,17 @@
 import structlog
 from redis.asyncio import ConnectionPool, Redis
+
 from app.core.config import settings
 
 logger = structlog.get_logger()
+
 
 class RedisClientManager:
     """
     Manages lifecycle and connection pooling of the shared async Redis client.
     Ensures safe initialization and cleanup callbacks within application context bounds.
     """
+
     def __init__(self):
         self.pool: ConnectionPool | None = None
         self.client: Redis | None = None
@@ -47,11 +50,15 @@ class RedisClientManager:
             return "redis://:****@" + url.split("@")[-1]
         return url
 
+
 # Singleton manager instance
 redis_manager = RedisClientManager()
 
+
 def get_redis() -> Redis:
-    """ Expose the initialized async Redis client instance. """
+    """Expose the initialized async Redis client instance."""
     if redis_manager.client is None:
-        raise RuntimeError("Redis Client Manager has not been initialized. Call init_pool first.")
+        raise RuntimeError(
+            "Redis Client Manager has not been initialized. Call init_pool first."
+        )
     return redis_manager.client

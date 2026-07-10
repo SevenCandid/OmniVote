@@ -33,3 +33,52 @@ ruff = "^0.4.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+[tool.ruff.lint]
+select = [
+    "E4",   # pycodestyle errors
+    "E7",   
+    "E9",   
+    "F",    # Pyflakes
+    "I",    # isort (import sorting)
+    "UP",   # pyupgrade (modern Python syntax suggestions)
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "T20",  # flake8-print
+]
+ignore = ["B008"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+known-first-party = ["app"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q --cov=app --cov-report=term-missing --cov-report=html --cov-report=xml"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+asyncio_mode = "strict"

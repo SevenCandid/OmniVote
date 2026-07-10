@@ -11,7 +11,13 @@ interface DialogProps {
   className?: string;
 }
 
-export function BaseDialog({ isOpen, onClose, title, children, className }: DialogProps) {
+export function BaseDialog({
+  isOpen,
+  onClose,
+  title,
+  children,
+  className,
+}: DialogProps) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -24,7 +30,7 @@ export function BaseDialog({ isOpen, onClose, title, children, className }: Dial
             onClick={onClose}
             className="absolute inset-0 bg-black/55 backdrop-blur-[2px]"
           />
-          
+
           {/* Main Dialog body */}
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
@@ -38,7 +44,9 @@ export function BaseDialog({ isOpen, onClose, title, children, className }: Dial
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
-              {title && <h3 className="text-lg font-bold font-sans">{title}</h3>}
+              {title && (
+                <h3 className="text-lg font-bold font-sans">{title}</h3>
+              )}
               <button
                 onClick={onClose}
                 className="p-1 rounded-full text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
@@ -47,7 +55,7 @@ export function BaseDialog({ isOpen, onClose, title, children, className }: Dial
                 <X size={18} />
               </button>
             </div>
-            
+
             {/* Content */}
             <div className="text-sm">{children}</div>
           </motion.div>

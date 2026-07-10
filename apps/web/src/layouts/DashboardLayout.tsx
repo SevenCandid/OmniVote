@@ -1,7 +1,21 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { 
-  Vote, Menu, X, Home, Calendar, CreditCard, Settings, FileText, Bell, Search, ChevronDown, User, LogOut, Sun, Moon 
+import {
+  Vote,
+  Menu,
+  X,
+  Home,
+  Calendar,
+  CreditCard,
+  Settings,
+  FileText,
+  Bell,
+  Search,
+  ChevronDown,
+  User,
+  LogOut,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { useSidebarStore } from '../stores/sidebarStore';
 import { useTheme } from '../providers/theme-provider';
@@ -27,14 +41,16 @@ export default function DashboardLayout() {
 
   return (
     <div className="min-h-screen flex bg-[var(--color-canvas-light)] dark:bg-[var(--color-canvas-dark)] text-[var(--color-neutral-primary-light)] dark:text-[var(--color-neutral-primary-dark)]">
-      
       {/* 1. Desktop Sidebar Container */}
-      <aside 
+      <aside
         className={`hidden lg:flex flex-col border-r border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-white dark:bg-[#18181B] transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'}`}
       >
         {/* Header Branding */}
         <div className="sticky top-0 z-10 bg-white/85 dark:bg-[#18181B]/85 backdrop-blur-md h-16 flex items-center justify-between px-4 border-b border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)]">
-          <Link to="/dashboard" className="flex items-center gap-2 group overflow-hidden">
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-2 group overflow-hidden"
+          >
             <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white shrink-0">
               <Vote size={16} />
             </div>
@@ -44,8 +60,8 @@ export default function DashboardLayout() {
               </span>
             )}
           </Link>
-          <button 
-            onClick={toggle} 
+          <button
+            onClick={toggle}
             className="p-1 rounded-md text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800"
             aria-label="Toggle sidebar"
           >
@@ -68,7 +84,9 @@ export default function DashboardLayout() {
                 }`}
               >
                 <Icon size={18} className="shrink-0" />
-                {isOpen && <span className="whitespace-nowrap">{item.title}</span>}
+                {isOpen && (
+                  <span className="whitespace-nowrap">{item.title}</span>
+                )}
               </Link>
             );
           })}
@@ -78,10 +96,13 @@ export default function DashboardLayout() {
         <div className="p-4 border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)]">
           {isOpen ? (
             <p className="text-[9px] text-[var(--color-neutral-muted-light)] uppercase tracking-[1.5px]">
-              Powered by <span className="font-semibold text-primary">VeroSeven</span>
+              Powered by{' '}
+              <span className="font-semibold text-primary">VeroSeven</span>
             </p>
           ) : (
-            <span className="text-[10px] text-primary font-bold text-center block">V7</span>
+            <span className="text-[10px] text-primary font-bold text-center block">
+              V7
+            </span>
           )}
         </div>
       </aside>
@@ -90,7 +111,7 @@ export default function DashboardLayout() {
       {showMobileSidebar && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
           {/* Overlay */}
-          <div 
+          <div
             onClick={() => setShowMobileSidebar(false)}
             className="fixed inset-0 bg-black/40 backdrop-blur-sm"
           />
@@ -105,8 +126,8 @@ export default function DashboardLayout() {
                   Omni<span className="text-primary">Vote</span>
                 </span>
               </Link>
-              <button 
-                onClick={() => setShowMobileSidebar(false)} 
+              <button
+                onClick={() => setShowMobileSidebar(false)}
                 className="p-1 rounded-md text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 aria-label="Close menu"
               >
@@ -135,7 +156,8 @@ export default function DashboardLayout() {
             </nav>
             <div className="p-4 border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] text-center">
               <p className="text-[9px] text-[var(--color-neutral-muted-light)] uppercase tracking-[1px]">
-                Powered by <span className="font-semibold text-primary">VeroSeven</span>
+                Powered by{' '}
+                <span className="font-semibold text-primary">VeroSeven</span>
               </p>
             </div>
           </aside>
@@ -144,7 +166,6 @@ export default function DashboardLayout() {
 
       {/* 3. Main Dashboard Wrapper */}
       <div className="flex-1 flex flex-col min-w-0">
-        
         {/* Top Navbar */}
         <header className="sticky top-0 z-40 w-full h-16 border-b border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-white/80 dark:bg-[#18181B]/80 backdrop-blur-md flex items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-4">
@@ -166,19 +187,21 @@ export default function DashboardLayout() {
 
           {/* Search, Notifications & Profile actions */}
           <div className="flex items-center gap-4">
-            
             {/* Search Placeholder */}
             <div className="relative hidden md:block">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={14} />
-              <input 
-                type="text" 
-                placeholder="Search..." 
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"
+                size={14}
+              />
+              <input
+                type="text"
+                placeholder="Search..."
                 className="w-48 pl-9 pr-4 py-1.5 text-xs rounded-full border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-[var(--color-surface-muted-light)] dark:bg-[var(--color-surface-muted-dark)] focus:outline-none focus:border-primary transition-all"
               />
             </div>
 
             {/* Notification Bell */}
-            <button 
+            <button
               title="Notifications"
               aria-label="View notifications"
               className="relative p-2 rounded-full text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
@@ -216,17 +239,24 @@ export default function DashboardLayout() {
                 <div className="w-6 h-6 rounded-full bg-indigo-100 text-primary font-bold text-xs flex items-center justify-center">
                   JD
                 </div>
-                <span className="hidden sm:inline text-xs font-semibold">Jane Doe</span>
+                <span className="hidden sm:inline text-xs font-semibold">
+                  Jane Doe
+                </span>
                 <ChevronDown size={12} className="text-zinc-400" />
               </button>
 
               {showUserMenu && (
                 <>
-                  <div className="fixed inset-0 z-10" onClick={() => setShowUserMenu(false)} />
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setShowUserMenu(false)}
+                  />
                   <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#18181B] border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] rounded-xl shadow-lg p-2 z-20 animate-fade-in">
                     <div className="px-3 py-2 text-xs border-b border-zinc-100 dark:border-zinc-800 mb-1">
                       <p className="font-semibold">Jane Doe</p>
-                      <p className="text-[var(--color-neutral-muted-light)]">jane.doe@veroseven.com</p>
+                      <p className="text-[var(--color-neutral-muted-light)]">
+                        jane.doe@veroseven.com
+                      </p>
                     </div>
                     <Link
                       to="/dashboard/settings"
@@ -248,24 +278,28 @@ export default function DashboardLayout() {
                 </>
               )}
             </div>
-
           </div>
         </header>
 
         {/* Content Area */}
         <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
-          
           {/* Breadcrumb / PageHeader Placeholder */}
           <div className="flex items-center gap-2 text-xs text-[var(--color-neutral-muted-light)] mb-4">
-            <Link to="/dashboard" className="hover:text-primary transition-colors">Dashboard</Link>
+            <Link
+              to="/dashboard"
+              className="hover:text-primary transition-colors"
+            >
+              Dashboard
+            </Link>
             <span>/</span>
-            <span className="capitalize">{location.pathname.split('/').pop() || 'Home'}</span>
+            <span className="capitalize">
+              {location.pathname.split('/').pop() || 'Home'}
+            </span>
           </div>
 
           <Outlet />
         </main>
       </div>
-
     </div>
   );
 }

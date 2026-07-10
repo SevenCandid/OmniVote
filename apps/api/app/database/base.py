@@ -1,6 +1,8 @@
 import uuid
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
 from sqlalchemy import MetaData, Uuid
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
 from app.utils.uuid import generate_uuid7
 
 # Strict naming convention to ensure deterministic constraint generation for migrations
@@ -14,8 +16,10 @@ NAMING_CONVENTION = {
 
 metadata = MetaData(naming_convention=NAMING_CONVENTION)
 
+
 class Base(DeclarativeBase):
     metadata = metadata
+
 
 class BaseModel(Base):
     """
@@ -23,11 +27,12 @@ class BaseModel(Base):
     Uses SQLAlchemy's native Uuid type which maps to PG native UUID columns in production,
     and falls back to standard strings in SQLite test runs.
     """
+
     __abstract__ = True
 
     id: Mapped[uuid.UUID] = mapped_column(
         Uuid(as_uuid=True),
         primary_key=True,
         default=generate_uuid7,
-        sort_order=-100  # Ensures primary key is generated first in schema mappings
+        sort_order=-100,  # Ensures primary key is generated first in schema mappings
     )

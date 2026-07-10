@@ -1,21 +1,22 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.exc import SQLAlchemyError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from sqlalchemy.exc import SQLAlchemyError
+from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.logging import setup_logging
-from app.api.v1.router import api_router
-from app.middleware.request_context import RequestContextMiddleware
 from app.exceptions.exceptions import AppException
 from app.exceptions.handlers import (
     app_exception_handler,
-    validation_exception_handler,
-    starlette_http_exception_handler,
     general_exception_handler,
     sqlalchemy_exception_handler,
+    starlette_http_exception_handler,
+    validation_exception_handler,
 )
+from app.middleware.request_context import RequestContextMiddleware
+
 
 def create_app() -> FastAPI:
     # Configure structlog logger
@@ -53,11 +54,13 @@ def create_app() -> FastAPI:
     @app.on_event("startup")
     def startup_redis():
         from app.cache.redis import redis_manager
+
         redis_manager.init_pool()
 
     @app.on_event("shutdown")
     async def shutdown_redis():
         from app.cache.redis import redis_manager
+
         await redis_manager.close_pool()
 
     # Register Router with Version prefix

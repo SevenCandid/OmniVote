@@ -1,8 +1,9 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import text
 import structlog
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = structlog.get_logger()
+
 
 async def check_db_health(session: AsyncSession) -> bool:
     """
