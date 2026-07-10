@@ -1,75 +1,120 @@
-version: '3.8'
-
 services:
-  api:
+  omnivote-postgres:
+    image: postgres:16-alpine
+    container_name: omnivote-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-securepassword}
+      POSTGRES_DB: ${POSTGRES_DB:-omnivote}
+    ports:
+      - "5432:5432"
+    volumes:
+      - omnivote_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-omnivote}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - omnivote-network
+
+  omnivote-redis:
+    image: redis:7-alpine
+    container_name: omnivote-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - omnivote_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - omnivote-network
+
+  omnivote-api:
     build:
-      context: .
-      dockerfile: apps/api/Dockerfile.backend
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: omnivote-api
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
       - ./apps/api:/workspace/api
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql+asyncpg://postgres:securepassword@db:5432/omnivote
-      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-securepassword}@omnivote-postgres:5432/${POSTGRES_DB:-omnivote}
+      - REDIS_HOST=${REDIS_HOST:-omnivote-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_URL=redis://omnivote-redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-change_me_to_a_secure_random_hash_in_production_environments}
     depends_on:
-      - db
-      - redis
+      omnivote-postgres:
+        condition: service_healthy
+      omnivote-redis:
+        condition: service_healthy
+    networks:
+      - omnivote-network
 
-  web:
+  omnivote-web:
     build:
-      context: .
-      dockerfile: apps/web/Dockerfile.frontend
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: omnivote-web
     volumes:
       - ./apps/web:/workspace/web
+      - /workspace/web/node_modules
     ports:
-      - "3000:3000"
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000/api/v1
     depends_on:
-      - api
+      - omnivote-api
+    networks:
+      - omnivote-network
 
-  celery_worker:
+  omnivote-worker:
     build:
-      context: .
-      dockerfile: apps/api/Dockerfile.backend
-    command: celery -A app.core.celery worker --loglevel=info
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: omnivote-worker
+    command: arq app.workers.worker.WorkerSettings
     volumes:
       - ./apps/api:/workspace/api
     environment:
-      - DATABASE_URL=postgresql+asyncpg://postgres:securepassword@db:5432/omnivote
-      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-securepassword}@omnivote-postgres:5432/${POSTGRES_DB:-omnivote}
+      - REDIS_HOST=${REDIS_HOST:-omnivote-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_URL=redis://omnivote-redis:6379/0
     depends_on:
-      - redis
-      - db
+      omnivote-postgres:
+        condition: service_healthy
+      omnivote-redis:
+        condition: service_healthy
+    networks:
+      - omnivote-network
 
-  db:
-    image: postgres:15-alpine
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=securepassword
-      - POSTGRES_DB=omnivote
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-
-  storage:
+  omnivote-storage:
     image: minio/minio:RELEASE.2023-01-25T00-19-54Z
+    container_name: omnivote-storage
     ports:
       - "9000:9000"
       - "9001:9001"
     environment:
-      - MINIO_ROOT_USER=minioadmin
-      - MINIO_ROOT_PASSWORD=minioadminpassword
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER:-minioadmin}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD:-minioadminpassword}
     command: server /data --console-address ":9001"
     volumes:
-      - miniadata:/data
+      - omnivote_storage_data:/data
+    networks:
+      - omnivote-network
 
 volumes:
-  pgdata:
-  miniadata:
+  omnivote_postgres_data:
+  omnivote_redis_data:
+  omnivote_storage_data:
+
+networks:
+  omnivote-network:
+    name: omnivote-network
