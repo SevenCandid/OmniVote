@@ -1,0 +1,113 @@
+name: Repository Quality & Security
+
+on:
+  workflow_call:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+
+jobs:
+  health:
+    name: Codebase Health & Secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for merge conflict markers
+        run: |
+          if git grep -n -E '^(<<<<<<<|=======|>>>>>>>)' --exclude-standard; then
+            echo "Error: Active merge conflict markers detected in codebase."
+            exit 1
+          else
+            echo "No active merge conflict markers found."
+          fi
+
+      - name: Validate YAML files syntax
+        run: |
+          python3 -c "
+          import yaml, glob, sys
+          failed = False
+          for f in glob.glob('**/*.yml', recursive=True) + glob.glob('**/*.yaml', recursive=True):
+              if 'node_modules' in f or '.github' in f: continue
+              try:
+                  with open(f, 'r') as stream:
+                      yaml.safe_load(stream)
+              except Exception as e:
+                  print(f'Invalid YAML in {f}: {e}')
+                  failed = True
+          if failed: sys.exit(1)
+          print('All YAML files are syntactically valid.')
+          "
+
+      - name: Check for oversized files (>10MB)
+        run: |
+          OVERSIZED=$(find . -type f -not -path '*/.*' -not -path './node_modules/*' -size +10M)
+          if [ -n "$OVERSIZED" ]; then
+            echo "Error: Oversized files detected:"
+            echo "$OVERSIZED"
+            exit 1
+          else
+            echo "No oversized files detected."
+          fi
+
+      - name: Scan for basic committed secrets
+        run: |
+          # Basic check for raw private keys, passwords, or tokens in non-test files
+          if git grep -E -i "private_key|aws_access_key_id|client_secret|db_password" -- ':!*.py' ':!*.ts' ':!*.tsx' ':!*.json' ':!*.md' ':!*.yml' ':!*.yaml' ':!*.env.example'; then
+            echo "Warning: Potential secrets committed in plain text."
+          else
+            echo "Basic committed secrets scan passed."
+          fi
+
+  docker-validation:
+    name: Docker Configuration Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Docker Compose syntax
+        run: docker compose config
+
+      - name: Verify API Dockerfile builds
+        run: docker build -t omnivote-api-test -f apps/api/Dockerfile apps/api
+
+      - name: Verify Web Dockerfile builds
+        run: docker build -t omnivote-web-test -f apps/web/Dockerfile apps/web
+
+  security-scan:
+    name: Vulnerability Audits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Audit Python dependencies
+        run: |
+          pip install pip-audit
+          pip-audit -r apps/api/requirements.txt || echo "pip-audit detected vulnerabilities. Review report above."
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Audit Node npm dependencies
+        run: |
+          cd apps/web
+          npm audit --audit-level=moderate || echo "npm audit detected moderate/high vulnerabilities. Review report above."

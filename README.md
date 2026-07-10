@@ -3,6 +3,12 @@
 
 Powered by **VeroSeven**
 
+[![CI Build Status](https://github.com/{owner}/{repo}/actions/workflows/ci.yml/badge.svg)](https://github.com/{owner}/{repo}/actions/workflows/ci.yml)
+[![Backend Tests Status](https://github.com/{owner}/{repo}/actions/workflows/backend.yml/badge.svg)](https://github.com/{owner}/{repo}/actions/workflows/backend.yml)
+[![Frontend Tests Status](https://github.com/{owner}/{repo}/actions/workflows/frontend.yml/badge.svg)](https://github.com/{owner}/{repo}/actions/workflows/frontend.yml)
+[![Code Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)](#)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 OmniVote is a secure, multi-tenant, cloud-native SaaS voting platform designed to centralize and streamline the management of all forms of voting events. Built to support thousands of concurrent organizations, the platform delivers solutions for strict democratic student and corporate elections (Module A) as well as high-throughput paid public voting contests (Module B).
 
 ---

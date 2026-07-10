@@ -1,20 +1,20 @@
-name: OmniVote CI
+name: Continuous Integration
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main ]
 
 jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+  quality-validation:
+    name: Quality
+    uses: ./.github/workflows/quality.yml
 
-      - name: Verify structure
-        run: |
-          echo "Verifying monorepo layout..."
-          test -d apps/web
-          test -d apps/api
-          test -d packages/shared-types
+  backend-validation:
+    name: Backend
+    uses: ./.github/workflows/backend.yml
+
+  frontend-validation:
+    name: Frontend
+    uses: ./.github/workflows/frontend.yml

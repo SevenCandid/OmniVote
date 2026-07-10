@@ -1,0 +1,61 @@
+name: Frontend CI
+
+on:
+  workflow_call:
+  push:
+    branches: [ main ]
+    paths:
+      - 'apps/web/**'
+      - '.github/workflows/frontend.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'apps/web/**'
+      - '.github/workflows/frontend.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22 (LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: 'apps/web/package-lock.json'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: TypeScript compiler check
+        run: npm run type-check
+
+      - name: ESLint syntax verification
+        run: npm run lint
+
+      - name: Prettier formatting check
+        run: npm run format:check
+
+      - name: Run Vitest with Coverage
+        run: npm run coverage
+
+      - name: Upload Frontend Coverage (HTML)
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage-html
+          path: apps/web/coverage/
+          retention-days: 7
+
+      - name: Upload Frontend Coverage (Clover XML)
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage-xml
+          path: apps/web/coverage/clover.xml
+          retention-days: 7
