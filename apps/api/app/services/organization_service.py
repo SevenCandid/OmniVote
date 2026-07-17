@@ -26,7 +26,7 @@ class OrganizationService:
         # 1. Check for slug uniqueness
         existing_org = await self.repository.get_by_slug(org_data.slug)
         if existing_org:
-            raise ConflictException(detail="Organization slug is already in use.")
+            raise ConflictException(message="Organization slug is already in use.")
 
         # 2. Create the core organization
         organization = Organization(
@@ -44,7 +44,6 @@ class OrganizationService:
         
         # Wait for commit outside this layer typically, but we flush here
         await self.session.commit()
-        await self.session.refresh(created_org)
         
         return created_org
 
@@ -52,7 +51,7 @@ class OrganizationService:
         """Fetch organization or raise 404."""
         org = await self.repository.get_by_id(org_id)
         if not org:
-            raise NotFoundException(detail="Organization not found")
+            raise NotFoundException(message="Organization not found")
         return org
 
     async def list_organizations(self, skip: int = 0, limit: int = 100) -> Sequence[Organization]:
@@ -68,14 +67,13 @@ class OrganizationService:
         if "slug" in update_data and update_data["slug"] != org.slug:
             existing_org = await self.repository.get_by_slug(update_data["slug"])
             if existing_org:
-                raise ConflictException(detail="Organization slug is already in use.")
+                raise ConflictException(message="Organization slug is already in use.")
                 
         for field, value in update_data.items():
             setattr(org, field, value)
             
         updated_org = await self.repository.update(org)
         await self.session.commit()
-        await self.session.refresh(updated_org)
         
         return updated_org
 

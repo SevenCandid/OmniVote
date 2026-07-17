@@ -7,14 +7,26 @@ import { OrganizationCreateInput } from '../schemas/organizationSchema';
 export default function OrganizationDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const isNew = id === 'new';
+  // If id is undefined, we matched the 'new' route exactly. 
+  // If id is 'new', we somehow matched the ':id' route with value 'new'.
+  const isNew = id === undefined || id === 'new';
 
   const { data: organization, isLoading } = useOrganization(isNew ? '' : id!);
   const createMutation = useCreateOrganization();
 
   const handleSubmit = async (data: OrganizationCreateInput) => {
+    // Sanitize empty strings to null or undefined since the backend requires strict types
+    // (e.g. EmailStr fails on "", HttpUrl fails on "")
+    const sanitizedData: any = { ...data };
+    const optionalFields = ['legal_name', 'description', 'website', 'contact_email', 'contact_phone', 'country'];
+    optionalFields.forEach(field => {
+      if (sanitizedData[field] === '') {
+        sanitizedData[field] = null;
+      }
+    });
+
     if (isNew) {
-      createMutation.mutate(data, {
+      createMutation.mutate(sanitizedData, {
         onSuccess: () => navigate('/dashboard/organizations'),
       });
     } else {
@@ -45,6 +57,13 @@ export default function OrganizationDetailsPage() {
           <button className="pb-2 border-b-2 border-blue-600 font-medium text-blue-600">Profile</button>
           <button className="pb-2 font-medium text-gray-500 hover:text-gray-900">Settings</button>
           <button className="pb-2 font-medium text-gray-500 hover:text-gray-900">Branding</button>
+        </div>
+      )}
+
+      {createMutation.isError && (
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm mb-6">
+          <p className="font-semibold">Failed to save organization</p>
+          <p>{createMutation.error instanceof Error ? createMutation.error.message : 'Unknown error occurred'}</p>
         </div>
       )}
 

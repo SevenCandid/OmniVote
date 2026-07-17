@@ -37,6 +37,11 @@ class OrganizationRepository:
         """List active organizations with optional filters."""
         stmt = (
             select(Organization)
+            .options(
+                selectinload(Organization.settings),
+                selectinload(Organization.branding),
+                selectinload(Organization.subscription),
+            )
             .where(Organization.is_deleted == False)
             .offset(skip)
             .limit(limit)

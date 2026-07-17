@@ -4,7 +4,7 @@ from typing import Sequence
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database.session import get_db
+from app.database.session import get_db_session
 from app.schemas.organization import (
     OrganizationCreate,
     OrganizationResponse,
@@ -18,7 +18,7 @@ router = APIRouter()
 @router.post("/", response_model=OrganizationResponse, status_code=status.HTTP_201_CREATED)
 async def create_organization(
     org_in: OrganizationCreate,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db_session),
 ) -> OrganizationResponse:
     """
     Create a new organization.
@@ -32,7 +32,7 @@ async def create_organization(
 async def list_organizations(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=100),
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db_session),
 ) -> Sequence[OrganizationResponse]:
     """
     Retrieve all active organizations.
@@ -44,7 +44,7 @@ async def list_organizations(
 @router.get("/{org_id}", response_model=OrganizationResponse)
 async def get_organization(
     org_id: uuid.UUID,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db_session),
 ) -> OrganizationResponse:
     """
     Retrieve a specific organization by ID.
@@ -57,7 +57,7 @@ async def get_organization(
 async def update_organization(
     org_id: uuid.UUID,
     org_in: OrganizationUpdate,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db_session),
 ) -> OrganizationResponse:
     """
     Update an organization's core profile fields.
@@ -69,7 +69,7 @@ async def update_organization(
 @router.delete("/{org_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_organization(
     org_id: uuid.UUID,
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db_session),
 ):
     """
     Soft delete an organization.

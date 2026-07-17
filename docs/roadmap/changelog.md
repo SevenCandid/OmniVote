@@ -7,9 +7,16 @@ All notable changes to the OmniVote platform will be documented in this file. Th
 ## [Unreleased]
 
 ### Added
+- **Documentation**: Integrated OmniVote product history into engineering onboarding documentation.
+- **Product History**: Created the official `docs/roadmap/product-history.md` outlining the evolution of OmniVote from concept to an enterprise-grade platform.
 - **Domain Architecture**: Completed extensive Domain-Driven Design (DDD) documents defining bounded contexts, events, aggregates, and business rules (`docs/architecture/`).
 - **Organization Management**: Implemented backend models, schemas, and endpoints for tenant `Organization` entities along with their 1:1 settings, branding, and subscriptions (`apps/api/`).
 - **Organization UI**: Added TanStack Query client, Zod validation schemas, and React views for creating, listing, and managing organization profiles (`apps/web/`).
+
+### Fixed
+- **Organization UI Routing**: Fixed a routing bug where `/dashboard/organizations/new` incorrectly evaluated `isNew` to false due to parameter matching, causing the save button to fail silently.
+- **API Error Parsing**: Enhanced the frontend API service to properly parse and display detailed `422 Unprocessable Content` validation errors from FastAPI.
+- **Payload Sanitization**: Implemented form data sanitization to strip empty strings for optional fields, ensuring strict compatibility with backend Pydantic schemas (e.g. `EmailStr`, `HttpUrl`).
 
 ---
 

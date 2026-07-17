@@ -4,6 +4,13 @@ Welcome to the internal engineering handbook for OmniVote, powered by **VeroSeve
 
 ---
 
+## Product History
+
+Understanding the history and evolution of OmniVote helps engineers understand the product vision, architectural decisions, and long-term goals of the platform.
+Please read the **[Product History](file:///c:/Users/DELL/omnivote/docs/roadmap/product-history.md)** document before contributing code.
+
+---
+
 ## 1. Engineering Philosophy & Core Principles
 
 Our primary engineering principle is:

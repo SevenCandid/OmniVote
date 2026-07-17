@@ -65,13 +65,14 @@ omnivote/
 ---
 
 ## Platform Core Documentation
-The following documents define the specifications of the OmniVote platform:
+The following documents define the specifications of the OmniVote platform and serve as the entry points for anyone visiting the repository:
+
+* **Product History:** [History & Evolution](file:///c:/Users/DELL/omnivote/docs/roadmap/product-history.md) - Learn why OmniVote exists and its evolutionary timeline.
+* **Engineering Standards:** [Engineering Handbook](file:///c:/Users/DELL/omnivote/docs/handbook/README.md) - The central hub for all development guidelines, code standards, and workflows.
+* **Architectural Blueprint:** [System Architecture](file:///c:/Users/DELL/omnivote/docs/architecture/domain-model.md) - The core Domain-Driven Design architecture, aggregates, and context mapping.
+* **Interface Specification:** [API Documentation](file:///c:/Users/DELL/omnivote/docs/api/api_specification.md) - OpenAPI contracts and webhook documentation.
 * **Product Specifications:** [PRD](file:///c:/Users/DELL/omnivote/docs/prd/PRD.md)
-* **Architectural Blueprint:** [System Architecture](file:///c:/Users/DELL/omnivote/docs/architecture/architecture.md)
-* **Data Layer Design:** [Domain Model & Database Design](file:///c:/Users/DELL/omnivote/docs/database/domain_model_and_db_design.md)
-* **UI/UX System Rules:** [Design Language (ODL)](file:///c:/Users/DELL/omnivote/docs/design/design_language.md)
-* **Interface Specification:** [API Contracts](file:///c:/Users/DELL/omnivote/docs/api/api_specification.md)
-* **Engineering Standards:** [Engineering Handbook](file:///c:/Users/DELL/omnivote/docs/engineering/engineering_handbook.md)
+* **Development Guide:** Refer to the Local Development Setup below.
 
 ---
 

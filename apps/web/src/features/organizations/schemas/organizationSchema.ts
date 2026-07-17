@@ -25,10 +25,10 @@ export const OrganizationCreateSchema = z.object({
     .max(100)
     .regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
   description: z.string().optional().nullable(),
-  website: z.string().url('Must be a valid URL').optional().nullable(),
-  contact_email: z.string().email('Must be a valid email').optional().nullable(),
+  website: z.union([z.string().url('Must be a valid URL'), z.literal('')]).optional().nullable(),
+  contact_email: z.union([z.string().email('Must be a valid email'), z.literal('')]).optional().nullable(),
   contact_phone: z.string().max(50).optional().nullable(),
-  country: z.string().length(2, 'Must be a 2-letter country code').optional().nullable(),
+  country: z.union([z.string().length(2, 'Must be a 2-letter country code'), z.literal('')]).optional().nullable(),
   timezone: z.string().max(100).default('UTC'),
   preferred_language: z.string().max(10).default('en'),
   currency: z.string().length(3).default('USD'),

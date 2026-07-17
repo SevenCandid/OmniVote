@@ -13,7 +13,21 @@ async function fetchWithConfig(endpoint: string, options: RequestInit = {}) {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => null);
-    throw new Error(errorData?.detail || 'An error occurred during the API request');
+    let errorMessage = 'An error occurred during the API request';
+    
+    if (errorData?.message) {
+      errorMessage = errorData.message;
+      if (errorData?.error?.details && Array.isArray(errorData.error.details)) {
+        const issues = errorData.error.details.map((d: any) => `${d.field}: ${d.issue}`).join(', ');
+        if (issues) {
+          errorMessage += ` (${issues})`;
+        }
+      }
+    } else if (errorData?.detail) {
+      errorMessage = typeof errorData.detail === 'string' ? errorData.detail : JSON.stringify(errorData.detail);
+    }
+    
+    throw new Error(errorMessage);
   }
 
   if (response.status === 204) {

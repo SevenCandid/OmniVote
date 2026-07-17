@@ -76,3 +76,15 @@ class DatabaseException(AppException):
         details: list[dict[str, Any]] | None = None,
     ):
         super().__init__(message=message, code=code, status_code=500, details=details)
+
+
+class ConflictException(AppException):
+    """Raised when a resource conflict occurs (e.g., duplicate slug)."""
+
+    def __init__(
+        self,
+        message: str = "Resource conflict detected.",
+        code: str = "CONFLICT",
+        details: list[dict[str, Any]] | None = None,
+    ):
+        super().__init__(message=message, code=code, status_code=409, details=details)

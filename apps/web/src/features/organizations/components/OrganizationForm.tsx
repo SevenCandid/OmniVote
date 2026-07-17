@@ -30,8 +30,27 @@ export function OrganizationForm({ initialData, onSubmit, isLoading }: Props) {
     },
   });
 
+  const onInvalid = (validationErrors: any) => {
+    console.error("Form validation failed. Fields with errors:", Object.keys(validationErrors));
+    console.error("Validation error details:", validationErrors);
+    alert("Validation failed on fields: " + Object.keys(validationErrors).join(', '));
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-6">
+      {Object.keys(errors).length > 0 && (
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm mb-6 border border-red-200 dark:border-red-800">
+          <p className="font-semibold mb-2">Please fix the following validation errors:</p>
+          <ul className="list-disc pl-5 space-y-1">
+            {Object.entries(errors).map(([key, error]) => (
+              <li key={key}>
+                <strong className="capitalize">{key.replace('_', ' ')}</strong>: {error?.message as string}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <div className="bg-white dark:bg-[#18181B] p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
         <h3 className="text-lg font-semibold mb-4">Core Profile</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
