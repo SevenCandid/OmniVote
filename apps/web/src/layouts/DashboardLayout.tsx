@@ -5,6 +5,7 @@ import {
   Menu,
   X,
   Home,
+  Building2,
   Calendar,
   CreditCard,
   Settings,
@@ -28,11 +29,12 @@ export default function DashboardLayout() {
   const location = useLocation();
 
   // Helper to detect active paths
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => location.pathname.startsWith(path) && (path !== '/dashboard' || location.pathname === '/dashboard');
 
   // Sidebar Menu Items
   const menuItems = [
     { title: 'Home', path: '/dashboard', icon: Home },
+    { title: 'Organizations', path: '/dashboard/organizations', icon: Building2 },
     { title: 'Elections', path: '/dashboard/elections', icon: Calendar },
     { title: 'Billing', path: '/dashboard/billing', icon: CreditCard },
     { title: 'Audit Logs', path: '/dashboard/audit', icon: FileText },
