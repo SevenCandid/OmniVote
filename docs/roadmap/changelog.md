@@ -4,6 +4,15 @@ All notable changes to the OmniVote platform will be documented in this file. Th
 
 ---
 
+## [Unreleased]
+
+### Added
+- **Domain Architecture**: Completed extensive Domain-Driven Design (DDD) documents defining bounded contexts, events, aggregates, and business rules (`docs/architecture/`).
+- **Organization Management**: Implemented backend models, schemas, and endpoints for tenant `Organization` entities along with their 1:1 settings, branding, and subscriptions (`apps/api/`).
+- **Organization UI**: Added TanStack Query client, Zod validation schemas, and React views for creating, listing, and managing organization profiles (`apps/web/`).
+
+---
+
 ## [1.0.0] - 2026-07-10
 
 ### Added

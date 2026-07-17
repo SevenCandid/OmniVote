@@ -11,6 +11,8 @@ import ErrorLayout from '../layouts/ErrorLayout';
 import LandingPage from '../pages/LandingPage';
 import DashboardPage from '../pages/DashboardPage';
 import VotingPage from '../pages/VotingPage';
+import OrganizationListPage from '../features/organizations/pages/OrganizationListPage';
+import OrganizationDetailsPage from '../features/organizations/pages/OrganizationDetailsPage';
 import {
   NotFoundPage,
   ForbiddenPage,
@@ -71,6 +73,14 @@ const router = createBrowserRouter([
     element: <DashboardLayout />,
     children: [
       { index: true, element: <DashboardPage /> },
+      {
+        path: 'organizations',
+        children: [
+          { index: true, element: <OrganizationListPage /> },
+          { path: 'new', element: <OrganizationDetailsPage /> },
+          { path: ':id', element: <OrganizationDetailsPage /> },
+        ],
+      },
       {
         path: 'elections',
         element: <PlaceholderPage title="Manage Elections" />,
