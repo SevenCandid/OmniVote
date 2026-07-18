@@ -6,6 +6,21 @@ All notable changes to the OmniVote platform will be documented in this file. Th
 
 ## [Unreleased]
 
+---
+
+## [0.2.2-alpha] - 2026-07-18
+
+### Added
+- **Identity Platform**: Reusable bounded context providing User Management, Authentication, Sessions, and Security Audit logs.
+- **Authentication Flows**: E2E workflows for User Registration, Email Verification, Login, Logout, and Password Resets.
+- **Security Hardening**: Argon2 password hashing, SHA-256 for short-lived link tokens, secure JWT tokens.
+- **Session Management**: Persistent refresh tokens, device tracking, and session revocation support.
+- **Audit Ledger**: Automatic logging of critical security events (login success, failures, verification, password resets).
+
+---
+
+## [0.2.1-alpha] - 2026-07-15
+
 ### Added
 - **Documentation**: Integrated OmniVote product history into engineering onboarding documentation.
 - **Product History**: Created the official `docs/roadmap/product-history.md` outlining the evolution of OmniVote from concept to an enterprise-grade platform.

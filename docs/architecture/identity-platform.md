@@ -158,6 +158,14 @@ apps/web/src/features/identity/ # Isolated Identity UI
 ---
 
 ## Technology Stack Extensions
-* **Hashing**: `argon2-cffi`
+* **Hashing**: `argon2-cffi` for Passwords, `hashlib.sha256` for short-lived link tokens.
 * **Tokens**: `PyJWT` for stateless Access Tokens + Stateful Refresh Tokens stored in PostgreSQL.
 * **API Protection**: FastAPI Dependency Injection (`get_current_user`).
+
+---
+
+## Security Hardening Details
+* **Passwords**: Never logged. Argon2 hashing.
+* **Refresh Tokens**: Hashed with Argon2 before storage in the database.
+* **Link Tokens (Verification / Reset)**: Generated using `secrets.token_urlsafe(32)` (256-bit entropy) and hashed with SHA-256 before database storage to prevent database leak compromise.
+* **Sanitization**: API responses are scrubbed of password hashes, SQL errors, and stack traces.

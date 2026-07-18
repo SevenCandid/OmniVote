@@ -7,70 +7,58 @@ import DashboardLayout from '../layouts/DashboardLayout';
 import VotingLayout from '../layouts/VotingLayout';
 import ErrorLayout from '../layouts/ErrorLayout';
 
-// Pages
+// Auth Pages
+import { ProtectedRoute } from '../components/ProtectedRoute';
+import { PublicRoute } from '../components/PublicRoute';
+import { LoginPage } from '../features/identity/pages/LoginPage';
+import { RegisterPage } from '../features/identity/pages/RegisterPage';
+import { ForgotPasswordPage } from '../features/identity/pages/ForgotPasswordPage';
+import { ResetPasswordPage } from '../features/identity/pages/ResetPasswordPage';
+import { VerifyEmailPage } from '../features/identity/pages/VerifyEmailPage';
+import { ProfilePage } from '../features/identity/pages/ProfilePage';
+import { SecurityPage } from '../features/identity/pages/SecurityPage';
+import { SessionsPage } from '../features/identity/pages/SessionsPage';
+
+// Other Pages
 import LandingPage from '../pages/LandingPage';
 import DashboardPage from '../pages/DashboardPage';
-import VotingPage from '../pages/VotingPage';
 import OrganizationListPage from '../features/organizations/pages/OrganizationListPage';
 import OrganizationDetailsPage from '../features/organizations/pages/OrganizationDetailsPage';
-import {
-  NotFoundPage,
-  ForbiddenPage,
-  ServerErrorPage,
-  MaintenancePage,
-} from '../pages/ErrorPages';
+import { PlaceholderPage } from '../pages/PlaceholderPage';
 
-// Reusable Placeholder Page Component
-const PlaceholderPage = ({ title }: { title: string }) => (
-  <div className="p-6 bg-white dark:bg-[#18181B] rounded-2xl border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)]">
-    <h2 className="text-xl font-bold mb-2">{title}</h2>
-    <p className="text-sm text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)]">
-      This is a placeholder page for {title.toLowerCase()}. Business
-      functionality will be introduced in future sprints.
-    </p>
-  </div>
-);
-
-const router = createBrowserRouter([
-  // Public Routes
+export const router = createBrowserRouter([
+  // Public Marketing Routes
   {
     path: '/',
     element: <PublicLayout />,
+    errorElement: <ErrorLayout />,
     children: [
       { index: true, element: <LandingPage /> },
       { path: 'about', element: <PlaceholderPage title="About OmniVote" /> },
+      { path: 'pricing', element: <PlaceholderPage title="Pricing Plans" /> },
+      { path: 'features', element: <PlaceholderPage title="Features Overview" /> },
+      { path: 'security', element: <PlaceholderPage title="Security Architecture" /> },
       { path: 'contact', element: <PlaceholderPage title="Contact Us" /> },
-      { path: 'privacy', element: <PlaceholderPage title="Privacy Policy" /> },
       { path: 'terms', element: <PlaceholderPage title="Terms of Service" /> },
-      {
-        path: 'docs',
-        element: <PlaceholderPage title="Documentation Portal" />,
-      },
-      {
-        path: 'manifesto',
-        element: <PlaceholderPage title="Our Platform Manifesto" />,
-      },
+      { path: 'privacy', element: <PlaceholderPage title="Privacy Policy" /> },
     ],
   },
   // Auth Routes
   {
-    path: '/',
-    element: <AuthLayout />,
+    path: '/auth',
+    element: <PublicRoute><AuthLayout /></PublicRoute>,
     children: [
-      {
-        path: 'login',
-        element: <PlaceholderPage title="Login Authentication" />,
-      },
-      {
-        path: 'forgot-password',
-        element: <PlaceholderPage title="Forgot Password Recovery" />,
-      },
+      { path: 'login', element: <LoginPage /> },
+      { path: 'register', element: <RegisterPage /> },
+      { path: 'forgot-password', element: <ForgotPasswordPage /> },
+      { path: 'reset-password', element: <ResetPasswordPage /> },
+      { path: 'verify-email', element: <VerifyEmailPage /> },
     ],
   },
   // Dashboard Admin Routes
   {
     path: '/dashboard',
-    element: <DashboardLayout />,
+    element: <ProtectedRoute><DashboardLayout /></ProtectedRoute>,
     children: [
       { index: true, element: <DashboardPage /> },
       {
@@ -81,36 +69,33 @@ const router = createBrowserRouter([
           { path: ':id', element: <OrganizationDetailsPage /> },
         ],
       },
-      {
-        path: 'elections',
-        element: <PlaceholderPage title="Manage Elections" />,
-      },
-      {
-        path: 'billing',
-        element: <PlaceholderPage title="Billing Accounts" />,
-      },
+      { path: 'elections', element: <PlaceholderPage title="Manage Elections" /> },
+      { path: 'billing', element: <PlaceholderPage title="Billing Accounts" /> },
       { path: 'audit', element: <PlaceholderPage title="System Audit Logs" /> },
       {
         path: 'settings',
-        element: <PlaceholderPage title="Administration Settings" />,
+        children: [
+          { index: true, element: <ProfilePage /> },
+          { path: 'profile', element: <ProfilePage /> },
+          { path: 'security', element: <SecurityPage /> },
+          { path: 'sessions', element: <SessionsPage /> },
+        ]
       },
     ],
   },
-  // Distraction-free Voting Routes
+  // Public Voting UI
   {
     path: '/vote',
     element: <VotingLayout />,
-    children: [{ index: true, element: <VotingPage /> }],
-  },
-  // System Error Pages
-  {
-    path: '/',
-    element: <ErrorLayout />,
     children: [
-      { path: '403', element: <ForbiddenPage /> },
-      { path: '500', element: <ServerErrorPage /> },
-      { path: 'maintenance', element: <MaintenancePage /> },
-      { path: '*', element: <NotFoundPage /> },
+      {
+        path: ':electionId',
+        element: <PlaceholderPage title="Voter Ballot" />,
+      },
+      {
+        path: ':electionId/receipt',
+        element: <PlaceholderPage title="Vote Receipt" />,
+      },
     ],
   },
 ]);

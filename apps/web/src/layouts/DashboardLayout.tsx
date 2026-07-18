@@ -20,13 +20,26 @@ import {
 } from 'lucide-react';
 import { useSidebarStore } from '../stores/sidebarStore';
 import { useTheme } from '../providers/theme-provider';
+import { useSessionStore } from '../stores/sessionStore';
+import { identityApi } from '../features/identity/services/identityApi';
 
 export default function DashboardLayout() {
   const { isOpen, toggle } = useSidebarStore();
   const { theme, setTheme } = useTheme();
+  const { user, logout } = useSessionStore();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const location = useLocation();
+
+  const handleLogout = async () => {
+    try {
+      await identityApi.logout();
+    } catch (e) {
+      console.error('Logout failed:', e);
+    } finally {
+      logout();
+    }
+  };
 
   // Helper to detect active paths
   const isActive = (path: string) => location.pathname.startsWith(path) && (path !== '/dashboard' || location.pathname === '/dashboard');
@@ -238,11 +251,11 @@ export default function DashboardLayout() {
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 className="flex items-center gap-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 px-3 py-1.5 rounded-full border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] transition-colors select-none"
               >
-                <div className="w-6 h-6 rounded-full bg-indigo-100 text-primary font-bold text-xs flex items-center justify-center">
-                  JD
+                <div className="w-6 h-6 rounded-full bg-indigo-100 text-primary font-bold text-xs flex items-center justify-center uppercase">
+                  {user?.first_name?.[0]}{user?.last_name?.[0]}
                 </div>
                 <span className="hidden sm:inline text-xs font-semibold">
-                  Jane Doe
+                  {user?.first_name} {user?.last_name}
                 </span>
                 <ChevronDown size={12} className="text-zinc-400" />
               </button>
@@ -255,22 +268,37 @@ export default function DashboardLayout() {
                   />
                   <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#18181B] border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] rounded-xl shadow-lg p-2 z-20 animate-fade-in">
                     <div className="px-3 py-2 text-xs border-b border-zinc-100 dark:border-zinc-800 mb-1">
-                      <p className="font-semibold">Jane Doe</p>
-                      <p className="text-[var(--color-neutral-muted-light)]">
-                        jane.doe@veroseven.com
+                      <p className="font-semibold">{user?.first_name} {user?.last_name}</p>
+                      <p className="text-[var(--color-neutral-muted-light)] truncate">
+                        {user?.email}
                       </p>
                     </div>
                     <Link
-                      to="/dashboard/settings"
+                      to="/dashboard/settings/profile"
                       onClick={() => setShowUserMenu(false)}
                       className="flex items-center gap-2 px-3 py-2 text-xs rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                     >
-                      <User size={14} /> Profile Settings
+                      <User size={14} /> Profile
                     </Link>
+                    <Link
+                      to="/dashboard/settings/security"
+                      onClick={() => setShowUserMenu(false)}
+                      className="flex items-center gap-2 px-3 py-2 text-xs rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                    >
+                      <Settings size={14} /> Security
+                    </Link>
+                    <Link
+                      to="/dashboard/settings/sessions"
+                      onClick={() => setShowUserMenu(false)}
+                      className="flex items-center gap-2 px-3 py-2 text-xs rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                    >
+                      <LogOut size={14} /> Sessions
+                    </Link>
+                    <div className="my-1 border-t border-zinc-100 dark:border-zinc-800"></div>
                     <button
                       onClick={() => {
                         setShowUserMenu(false);
-                        alert('Logout clicked');
+                        handleLogout();
                       }}
                       className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors text-left"
                     >

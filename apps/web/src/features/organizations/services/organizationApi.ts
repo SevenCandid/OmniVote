@@ -1,15 +1,30 @@
 import { Organization, OrganizationCreateInput, OrganizationUpdateInput } from '../schemas/organizationSchema';
+import { useSessionStore } from '../../../stores/sessionStore';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+
+
 
 async function fetchWithConfig(endpoint: string, options: RequestInit = {}) {
+  const { accessToken, logout } = useSessionStore.getState();
+
+  const headers = new Headers(options.headers || {});
+  if (accessToken) {
+    headers.set('Authorization', `Bearer ${accessToken}`);
+  }
+  if (!headers.has('Content-Type') && !(options.body instanceof FormData)) {
+    headers.set('Content-Type', 'application/json');
+  }
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
+    headers,
   });
+
+  if (response.status === 401) {
+    logout();
+    throw new Error('Unauthorized');
+  }
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => null);

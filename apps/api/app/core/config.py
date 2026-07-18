@@ -25,6 +25,16 @@ class Settings(BaseSettings):
     REDIS_DB: int = 0
     REDIS_URL: str = ""
 
+    # SMTP Configurations
+    SMTP_TLS: bool = False
+    SMTP_SSL: bool = False
+    SMTP_PORT: int | None = 1025
+    SMTP_HOST: str | None = "omnivote-mail"
+    SMTP_USER: str | None = ""
+    SMTP_PASSWORD: str | None = ""
+    EMAILS_FROM_EMAIL: str | None = "noreply@veroseven.com"
+    EMAILS_FROM_NAME: str | None = "VeroSeven Identity Platform"
+
     @model_validator(mode="after")
     def validate_and_build_urls(self) -> "Settings":
         if self.ENV != "testing":

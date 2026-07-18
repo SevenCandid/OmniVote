@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   AreaChart,
   Area,
@@ -19,87 +20,74 @@ import {
 import { BaseCard } from '../components/ui/BaseCard';
 import { BaseBadge } from '../components/ui/BaseBadge';
 import { BaseButton } from '../components/ui/BaseButton';
+import { useSessionStore } from '../stores/sessionStore';
+import { organizationApi } from '../features/organizations/services/organizationApi';
 
 export default function DashboardPage() {
+  const { user } = useSessionStore();
+  const [orgCount, setOrgCount] = useState(0);
+
+  useEffect(() => {
+    const fetchOrgs = async () => {
+      try {
+        const orgs = await organizationApi.list();
+        setOrgCount(orgs.length);
+      } catch (err) {
+        console.error('Failed to fetch organizations:', err);
+      }
+    };
+    fetchOrgs();
+  }, []);
+
   // Metric stats
   const stats = [
     {
       title: 'Total Turnout',
-      value: '14,203',
+      value: '0',
       desc: 'Votes cast across all events',
-      trend: '+12.4%',
+      trend: '0%',
       icon: TrendingUp,
       variant: 'primary' as const,
     },
     {
       title: 'Registered Voters',
-      value: '25,000',
+      value: '0',
       desc: 'Imported whitelisted entities',
-      trend: '+5.2%',
+      trend: '0%',
       icon: Users,
       variant: 'success' as const,
     },
     {
       title: 'Active Elections',
-      value: '3',
+      value: '0',
       desc: 'Events currently open',
-      trend: 'Live',
+      trend: '0',
       icon: CheckCircle,
       variant: 'info' as const,
     },
     {
-      title: 'Turnout Rate',
-      value: '56.81%',
-      desc: 'Average ballot completion',
-      trend: '+8.1%',
-      icon: Award,
+      title: 'Organizations',
+      value: orgCount.toString(),
+      desc: 'Tenants you belong to',
+      trend: 'Total',
+      icon: Users,
       variant: 'warning' as const,
     },
   ];
 
   // Recharts Chart mock data
-  const data = [
-    { time: '08:00', turnout: 1200 },
-    { time: '10:00', turnout: 3500 },
-    { time: '12:00', turnout: 5800 },
-    { time: '14:00', turnout: 8900 },
-    { time: '16:00', turnout: 12100 },
-    { time: '17:00', turnout: 14203 },
-  ];
+  const data: any[] = [];
 
-  const recentActivity = [
-    {
-      id: 'act-1',
-      event: 'SRC Presidential Elections',
-      user: 'Officer J. Smith',
-      action: 'Uploaded whitelist CSV',
-      time: '10 mins ago',
-    },
-    {
-      id: 'act-2',
-      event: 'Public Poll Contest #2',
-      user: 'System Relay',
-      action: 'Began payment callbacks',
-      time: '23 mins ago',
-    },
-    {
-      id: 'act-3',
-      event: 'Board Election 2026',
-      user: 'Admin J. Doe',
-      action: 'Published Draft Ballot',
-      time: '1 hour ago',
-    },
-  ];
+  const recentActivity: any[] = [];
 
   return (
     <div className="flex flex-col gap-8 w-full">
       {/* Welcome banner */}
       <section className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-indigo-500/10 border border-primary/20 rounded-2xl p-6">
         <div>
-          <h2 className="text-xl font-bold font-sans">Welcome Back, Jane!</h2>
+          <h2 className="text-xl font-bold font-sans">Welcome Back, {user?.first_name || 'User'}!</h2>
           <p className="text-sm text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)] mt-1">
-            OmniVote platform metrics are online. You have 3 open elections and
-            no critical alerts.
+            OmniVote platform metrics are online. You belong to {orgCount} organization{orgCount !== 1 ? 's' : ''}.
           </p>
         </div>
         <div className="flex gap-3 shrink-0">

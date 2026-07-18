@@ -14,6 +14,9 @@ sqlalchemy = {extras = ["asyncio"], version = "^2.0.30"}
 asyncpg = "^0.29.0"
 alembic = "^1.13.0"
 pydantic = {extras = ["email"], version = "^2.7.0"}
+passlib = {extras = ["argon2"], version = "^1.7.4"}
+python-multipart = "^0.0.18"
+fastapi-mail = "^1.4.1"
 pydantic-settings = "^2.3.0"
 redis = "^5.0.0"
 arq = "^0.26.0"
