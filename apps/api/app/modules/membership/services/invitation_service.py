@@ -10,7 +10,8 @@ from app.modules.membership.models.invitation import Invitation, InvitationStatu
 from app.modules.membership.repositories.invitation_repository import InvitationRepository
 from app.modules.membership.models.membership import Membership, MembershipStatus
 from app.modules.membership.repositories.membership_repository import MembershipRepository
-from app.identity.repositories.user_repository import UserRepository
+from sqlalchemy import select
+from app.identity.models.user import User
 from app.modules.rbac.repositories.rbac_repository import RBACRepository
 
 class InvitationService:
@@ -18,7 +19,6 @@ class InvitationService:
         self.session = session
         self.repository = InvitationRepository(session)
         self.membership_repo = MembershipRepository(session)
-        self.user_repo = UserRepository(session)
         self.audit_service = AuditService()
 
     async def _get_utc_now(self) -> datetime:
@@ -28,7 +28,9 @@ class InvitationService:
         self, current_user_id: uuid.UUID, org_id: uuid.UUID, recipient_email: str, roles: list[str] | None = None
     ) -> Invitation:
         # Check if recipient already has an active membership
-        recipient_user = await self.user_repo.get_user_by_email(recipient_email)
+        stmt = select(User).where(User.email == recipient_email, User.is_deleted == False)
+        result = await self.session.execute(stmt)
+        recipient_user = result.scalar_one_or_none()
         
         if recipient_user:
             existing_membership = await self.membership_repo.get_membership_by_user_and_org(recipient_user.id, org_id)
@@ -93,8 +95,10 @@ class InvitationService:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invitation has expired.")
             
         # Verify the accepting user matches the intended recipient if email/user was specified
-        user = await self.user_repo.get_by_id(user_id)
-        if user.email != invitation.recipient_email:
+        stmt = select(User).where(User.id == user_id, User.is_deleted == False)
+        result = await self.session.execute(stmt)
+        user = result.scalar_one_or_none()
+        if not user or user.email != invitation.recipient_email:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="This invitation was sent to a different email address.")
 
         # Create membership
@@ -156,8 +160,10 @@ class InvitationService:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invitation is no longer pending.")
             
         # Verify the declining user matches the intended recipient
-        user = await self.user_repo.get_by_id(user_id)
-        if user.email != invitation.recipient_email:
+        stmt = select(User).where(User.id == user_id, User.is_deleted == False)
+        result = await self.session.execute(stmt)
+        user = result.scalar_one_or_none()
+        if not user or user.email != invitation.recipient_email:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="This invitation was sent to a different email address.")
 
         invitation.status = InvitationStatus.DECLINED
@@ -180,5 +186,9 @@ class InvitationService:
         return await self.repository.get_pending_invitations_for_org(org_id)
 
     async def get_pending_invitations_for_user(self, user_id: uuid.UUID) -> Sequence[Invitation]:
-        user = await self.user_repo.get_by_id(user_id)
+        stmt = select(User).where(User.id == user_id, User.is_deleted == False)
+        result = await self.session.execute(stmt)
+        user = result.scalar_one_or_none()
+        if not user:
+            return []
         return await self.repository.get_pending_invitations_for_user(email=user.email, user_id=user_id)
