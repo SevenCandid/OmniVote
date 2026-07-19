@@ -1,5 +1,5 @@
 import React from 'react';
-import { BaseModal } from '../../../components/ui/BaseModal';
+import { BaseDialog } from '../../../components/ui/BaseDialog';
 import { BaseButton } from '../../../components/ui/BaseButton';
 
 interface RevokeInvitationModalProps {
@@ -16,7 +16,7 @@ export function RevokeInvitationModal({
   isRevoking,
 }: RevokeInvitationModalProps) {
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose} title="Revoke Invitation">
+    <BaseDialog isOpen={isOpen} onClose={onClose} title="Revoke Invitation">
       <div className="space-y-4">
         <p className="text-zinc-600 dark:text-zinc-300">
           Are you sure you want to revoke this invitation? The recipient will no longer be able to accept it and the invite link will become invalid.
@@ -30,6 +30,6 @@ export function RevokeInvitationModal({
           </BaseButton>
         </div>
       </div>
-    </BaseModal>
+    </BaseDialog>
   );
 }
