@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BaseDialog } from '../../../components/ui/BaseDialog';
@@ -7,15 +7,26 @@ import { BaseButton } from '../../../components/ui/BaseButton';
 import { InviteMemberInput, InviteMemberSchema } from '../schemas/membershipSchema';
 import { useInviteMember } from '../hooks/useMemberships';
 import { toast } from 'react-hot-toast';
+import { useOrganizations } from '../../organizations/hooks/useOrganizations';
 
 interface InviteMemberDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  organizationId: string;
+  organizationId?: string;
 }
 
 export function InviteMemberDialog({ isOpen, onClose, organizationId }: InviteMemberDialogProps) {
   const { mutateAsync: inviteMember, isPending } = useInviteMember();
+  const { data: organizations } = useOrganizations();
+  const [selectedOrgId, setSelectedOrgId] = useState(organizationId || '');
+
+  useEffect(() => {
+    if (organizationId) {
+      setSelectedOrgId(organizationId);
+    } else if (organizations && organizations.length > 0 && !selectedOrgId) {
+      setSelectedOrgId(organizations[0].id);
+    }
+  }, [organizationId, organizations]);
 
   const {
     register,
@@ -27,8 +38,12 @@ export function InviteMemberDialog({ isOpen, onClose, organizationId }: InviteMe
   });
 
   const onSubmit = async (data: InviteMemberInput) => {
+    if (!selectedOrgId) {
+      toast.error('Please select an organization');
+      return;
+    }
     try {
-      await inviteMember({ organizationId, data });
+      await inviteMember({ organizationId: selectedOrgId, data });
       toast.success('Invitation sent successfully');
       reset();
       onClose();
@@ -45,6 +60,22 @@ export function InviteMemberDialog({ isOpen, onClose, organizationId }: InviteMe
   return (
     <BaseDialog isOpen={isOpen} onClose={handleClose} title="Invite Member">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-4">
+        {!organizationId && (
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Organization
+            </label>
+            <select
+              value={selectedOrgId}
+              onChange={(e) => setSelectedOrgId(e.target.value)}
+              className="w-full px-4 py-2 bg-white dark:bg-[#18181B] border border-gray-200 dark:border-gray-800 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+            >
+              {organizations?.map((org) => (
+                <option key={org.id} value={org.id}>{org.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
         <BaseInput
           label="Email Address"
           type="email"

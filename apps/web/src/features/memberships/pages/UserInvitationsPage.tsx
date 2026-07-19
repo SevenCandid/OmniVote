@@ -7,8 +7,11 @@ import { BaseBadge } from '../../../components/ui/BaseBadge';
 import { Mail, Building2 } from 'lucide-react';
 import { BaseButton } from '../../../components/ui/BaseButton';
 import { toast } from 'react-hot-toast';
+import { InviteMemberDialog } from '../components/InviteMemberDialog';
+import { useState } from 'react';
 
 export default function UserInvitationsPage() {
+  const [isInviteOpen, setIsInviteOpen] = useState(false);
   const { data: invitations, isLoading, error } = useUserInvitations();
   const { mutateAsync: acceptInvitation, isPending: isAccepting } = useAcceptInvitation();
   const { mutateAsync: declineInvitation, isPending: isDeclining } = useDeclineInvitation();
@@ -56,11 +59,16 @@ export default function UserInvitationsPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">My Invitations</h1>
-        <p className="text-gray-500 dark:text-gray-400">
-          Manage your pending organization invitations.
-        </p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold">My Invitations</h1>
+          <p className="text-gray-500 dark:text-gray-400">
+            Manage your pending organization invitations.
+          </p>
+        </div>
+        <BaseButton onClick={() => setIsInviteOpen(true)}>
+          + Invite Member
+        </BaseButton>
       </div>
 
       {pendingInvitations.length === 0 ? (
@@ -109,6 +117,11 @@ export default function UserInvitationsPage() {
           ))}
         </div>
       )}
+
+      <InviteMemberDialog
+        isOpen={isInviteOpen}
+        onClose={() => setIsInviteOpen(false)}
+      />
     </div>
   );
 }
