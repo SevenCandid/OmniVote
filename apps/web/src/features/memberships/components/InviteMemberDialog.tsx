@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { BaseDialog } from '../../../components/ui/BaseDialog';
 import { BaseInput } from '../../../components/ui/BaseInput';
 import { BaseButton } from '../../../components/ui/BaseButton';
-import { InviteMemberInput, InviteMemberSchema } from '../schemas/membershipSchema';
+import { InviteMemberInput, InviteMemberSchema } from '../schemas/invitationSchema';
 import { useInviteMember } from '../hooks/useMemberships';
 import { toast } from 'react-hot-toast';
 import { useOrganizations } from '../../organizations/hooks/useOrganizations';

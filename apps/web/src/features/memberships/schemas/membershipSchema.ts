@@ -27,8 +27,3 @@ export const MembershipSchema = z.object({
 
 export type Membership = z.infer<typeof MembershipSchema>;
 
-export const InviteMemberSchema = z.object({
-  user_id: z.string().min(1, 'User ID is required').uuid('Must be a valid User ID (UUID)'),
-});
-
-export type InviteMemberInput = z.infer<typeof InviteMemberSchema>;
