@@ -19,6 +19,7 @@ export function InviteMemberDialog({ isOpen, onClose, organizationId }: InviteMe
   const { mutateAsync: inviteMember, isPending } = useInviteMember();
   const { data: organizations } = useOrganizations();
   const [selectedOrgId, setSelectedOrgId] = useState(organizationId || '');
+  const [successToken, setSuccessToken] = useState<string | null>(null);
 
   useEffect(() => {
     if (organizationId) {
@@ -43,10 +44,10 @@ export function InviteMemberDialog({ isOpen, onClose, organizationId }: InviteMe
       return;
     }
     try {
-      await inviteMember({ organizationId: selectedOrgId, data });
+      const result = await inviteMember({ organizationId: selectedOrgId, data });
+      setSuccessToken(result.invitation_token);
       toast.success('Invitation sent successfully');
       reset();
-      onClose();
     } catch (err: any) {
       toast.error(err.message || 'Failed to send invitation');
     }
@@ -54,8 +55,40 @@ export function InviteMemberDialog({ isOpen, onClose, organizationId }: InviteMe
 
   const handleClose = () => {
     reset();
+    setSuccessToken(null);
     onClose();
   };
+
+  if (successToken) {
+    const url = `${window.location.origin}/invite/${successToken}`;
+    return (
+      <BaseDialog isOpen={isOpen} onClose={handleClose} title="Invitation Created!">
+        <div className="space-y-4 mt-4">
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            The invitation was created successfully. You can copy the link below and share it with the recipient.
+          </p>
+          <div className="flex items-center gap-2 p-3 bg-zinc-50 dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800">
+            <input 
+              readOnly 
+              value={url} 
+              className="flex-1 bg-transparent text-sm outline-none text-zinc-600 dark:text-zinc-300"
+            />
+          </div>
+          <div className="flex justify-end gap-3 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+            <BaseButton variant="secondary" onClick={handleClose}>
+              Done
+            </BaseButton>
+            <BaseButton onClick={() => {
+              navigator.clipboard.writeText(url);
+              toast.success('Copied to clipboard!');
+            }}>
+              Copy Link
+            </BaseButton>
+          </div>
+        </div>
+      </BaseDialog>
+    );
+  }
 
   return (
     <BaseDialog isOpen={isOpen} onClose={handleClose} title="Invite Member">
