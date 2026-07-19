@@ -9,8 +9,11 @@ from app.schemas.organization import (
     OrganizationCreate,
     OrganizationResponse,
     OrganizationUpdate,
+    TransferOwnershipRequest,
 )
 from app.services.organization_service import OrganizationService
+from app.identity.api.dependencies import get_current_user
+from app.identity.models.user import User
 
 router = APIRouter()
 
@@ -19,13 +22,14 @@ router = APIRouter()
 async def create_organization(
     org_in: OrganizationCreate,
     db: AsyncSession = Depends(get_db_session),
+    current_user: User = Depends(get_current_user),
 ) -> OrganizationResponse:
     """
     Create a new organization.
     Automatically generates default Settings, Branding, and Subscription records.
     """
     service = OrganizationService(db)
-    return await service.create_organization(org_in)
+    return await service.create_organization(org_in, current_user.id)
 
 
 @router.get("/", response_model=list[OrganizationResponse])
@@ -76,3 +80,18 @@ async def delete_organization(
     """
     service = OrganizationService(db)
     await service.delete_organization(org_id)
+
+
+@router.post("/{org_id}/transfer-ownership", status_code=status.HTTP_200_OK)
+async def transfer_ownership(
+    org_id: uuid.UUID,
+    transfer_data: TransferOwnershipRequest,
+    db: AsyncSession = Depends(get_db_session),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Transfer ownership of the organization to another member.
+    """
+    service = OrganizationService(db)
+    await service.transfer_ownership(org_id, current_user.id, transfer_data)
+    return {"message": "Ownership transferred successfully"}

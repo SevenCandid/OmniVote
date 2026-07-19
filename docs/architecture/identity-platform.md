@@ -13,8 +13,8 @@ The VeroSeven Identity Platform is a foundational module providing authenticatio
 * **Security Events**: Auditable authentication logs (e.g., logins, failed attempts, password changes).
 
 ### What the Identity Platform Does NOT Own
-* **Organizations / Workspaces**: Multi-tenant isolation belongs to the Organization Context.
-* **Roles / Permissions (RBAC)**: App-specific access control belongs to the consuming application.
+* **Organizations / Workspaces**: Multi-tenant isolation belongs to the Organization Context. A User always owns their own platform account, and establishes relationships with Organizations via Memberships.
+* **Roles / Permissions (RBAC)**: App-specific access control belongs to the consuming application. Ownership is an RBAC role on a Membership, not an Identity property.
 * **Elections / Voting**: Event business logic remains in the OmniVote Event Engine.
 
 ---

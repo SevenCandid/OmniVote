@@ -7,12 +7,17 @@ OmniVote is divided into distinct Bounded Contexts. This separation ensures loos
 ### 1. Identity & Access Context
 * **Responsibility**: Manages authentication, authorization, user profiles, and API access.
 * **Inclusions**: Users, Sessions, API Keys, Passwords, MFA.
-* **Exclusions**: Organization membership details (belongs to Organization Context).
+* **Exclusions**: Organization membership details (belongs to Membership Context).
 
 ### 2. Organization Context
-* **Responsibility**: Manages tenant isolation, workspaces, team members, roles, and platform branding.
-* **Inclusions**: Organizations, Workspaces, Members, Roles, Permissions, Organization Settings.
-* **Exclusions**: Billing and invoicing (belongs to Billing Context).
+* **Responsibility**: Manages tenant isolation, workspaces, and platform branding.
+* **Inclusions**: Organizations, Workspaces, Organization Settings.
+* **Exclusions**: Organization membership details (belongs to Membership Context), Billing and invoicing (belongs to Billing Context).
+
+### 3. Membership Context
+* **Responsibility**: Represents and manages the relationship between a User and an Organization.
+* **Inclusions**: Memberships, Invitations, Membership Lifecycle.
+* **Exclusions**: Authentication (Identity Context), Roles & Permissions (Future Context).
 
 ### 3. Event Management Context
 * **Responsibility**: Handles the lifecycle, configuration, and setup of voting events before and after they run.
@@ -47,7 +52,9 @@ OmniVote is divided into distinct Bounded Contexts. This separation ensures loos
 ```mermaid
 graph TD
     IAC[Identity & Access] -->|Authenticates| OC[Organization]
-    OC -->|Configures| EMC[Event Management]
+    IAC -->|Authenticates| MC[Membership]
+    OC -->|Hosts| MC
+    MC -->|Enables| EMC[Event Management]
     EMC -->|Defines Rules for| VE[Voting Engine]
     VE <-->|Verifies| PC[Payment]
     VE -->|Streams Votes to| RAC[Reporting & Analytics]
@@ -58,6 +65,6 @@ graph TD
     classDef core fill:#2563eb,stroke:#1e40af,stroke-width:2px,color:#fff;
     classDef support fill:#4b5563,stroke:#374151,stroke-width:2px,color:#fff;
     
-    class VE,EMC,OC core;
+    class VE,EMC,OC,MC core;
     class IAC,PC,RAC,NC,BC support;
 ```

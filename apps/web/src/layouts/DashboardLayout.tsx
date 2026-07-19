@@ -17,6 +17,7 @@ import {
   LogOut,
   Sun,
   Moon,
+  Mail,
 } from 'lucide-react';
 import { useSidebarStore } from '../stores/sidebarStore';
 import { useTheme } from '../providers/theme-provider';
@@ -48,6 +49,7 @@ export default function DashboardLayout() {
   const menuItems = [
     { title: 'Home', path: '/dashboard', icon: Home },
     { title: 'Organizations', path: '/dashboard/organizations', icon: Building2 },
+    { title: 'Invitations', path: '/dashboard/invitations', icon: Mail },
     { title: 'Elections', path: '/dashboard/elections', icon: Calendar },
     { title: 'Billing', path: '/dashboard/billing', icon: CreditCard },
     { title: 'Audit Logs', path: '/dashboard/audit', icon: FileText },
@@ -279,6 +281,20 @@ export default function DashboardLayout() {
                       className="flex items-center gap-2 px-3 py-2 text-xs rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                     >
                       <User size={14} /> Profile
+                    </Link>
+                    <Link
+                      to="/dashboard/settings/organizations"
+                      onClick={() => setShowUserMenu(false)}
+                      className="flex items-center gap-2 px-3 py-2 text-xs rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                    >
+                      <Building2 size={14} /> My Organizations
+                    </Link>
+                    <Link
+                      to="/dashboard/invitations"
+                      onClick={() => setShowUserMenu(false)}
+                      className="flex items-center gap-2 px-3 py-2 text-xs rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                    >
+                      <Mail size={14} /> My Invitations
                     </Link>
                     <Link
                       to="/dashboard/settings/security"

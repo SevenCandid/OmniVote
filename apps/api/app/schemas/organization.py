@@ -2,7 +2,7 @@ import uuid
 from typing import Optional
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, HttpUrl
 
-from app.models.organization import OrganizationStatus, SubscriptionStatus
+from app.models.organization import OrganizationStatus, SubscriptionStatus, OrganizationVerificationStatus
 
 # --- Base Models ---
 
@@ -61,6 +61,10 @@ class OrganizationUpdate(BaseModel):
     preferred_language: Optional[str] = Field(None, max_length=10)
     currency: Optional[str] = Field(None, min_length=3, max_length=3)
     status: Optional[OrganizationStatus] = None
+    verification_status: Optional[OrganizationVerificationStatus] = None
+
+class TransferOwnershipRequest(BaseModel):
+    target_membership_id: uuid.UUID
 
 class OrganizationSettingsUpdate(BaseModel):
     default_timezone: Optional[str] = Field(None, max_length=100)
@@ -99,6 +103,7 @@ class OrganizationSubscriptionResponse(OrganizationSubscriptionBase):
 class OrganizationResponse(OrganizationBase):
     id: uuid.UUID
     status: OrganizationStatus
+    verification_status: OrganizationVerificationStatus
     is_deleted: bool
     
     settings: Optional[OrganizationSettingsResponse] = None

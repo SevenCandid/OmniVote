@@ -7,9 +7,10 @@ interface Props {
   initialData?: Partial<OrganizationCreateInput>;
   onSubmit: (data: OrganizationCreateInput) => void;
   isLoading?: boolean;
+  isReadOnly?: boolean;
 }
 
-export function OrganizationForm({ initialData, onSubmit, isLoading }: Props) {
+export function OrganizationForm({ initialData, onSubmit, isLoading, isReadOnly = false }: Props) {
   const {
     register,
     handleSubmit,
@@ -51,7 +52,8 @@ export function OrganizationForm({ initialData, onSubmit, isLoading }: Props) {
         </div>
       )}
 
-      <div className="bg-white dark:bg-[#18181B] p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
+      <fieldset disabled={isReadOnly} className="space-y-6">
+        <div className="bg-white dark:bg-[#18181B] p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
         <h3 className="text-lg font-semibold mb-4">Core Profile</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -110,22 +112,25 @@ export function OrganizationForm({ initialData, onSubmit, isLoading }: Props) {
           </div>
         </div>
       </div>
+      </fieldset>
 
-      <div className="flex justify-end space-x-4">
-        <button
-          type="button"
-          className="px-6 py-2 rounded-full border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="px-6 py-2 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
-        >
-          {isLoading ? 'Saving...' : 'Save Organization'}
-        </button>
-      </div>
+      {!isReadOnly && (
+        <div className="flex justify-end space-x-4">
+          <button
+            type="button"
+            className="px-6 py-2 rounded-full border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="px-6 py-2 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
+          >
+            {isLoading ? 'Saving...' : 'Save Organization'}
+          </button>
+        </div>
+      )}
     </form>
   );
 }

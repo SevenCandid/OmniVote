@@ -38,7 +38,7 @@ def test_register_duplicate_email(client: TestClient):
         }
     )
     assert response.status_code == 409
-    assert response.json()["detail"] == "Email is already registered"
+    assert response.json()["message"] == "Email is already registered"
 
 def test_login_success(client: TestClient):
     client.post(
@@ -81,4 +81,4 @@ def test_login_invalid_password(client: TestClient):
         }
     )
     assert response.status_code == 401
-    assert response.json()["detail"] == "Incorrect email or password"
+    assert response.json()["message"] == "Incorrect email or password"

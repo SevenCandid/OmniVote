@@ -5,21 +5,36 @@ import enum
 
 from app.database.base import BaseModel
 from app.database.mixins import AuditMixin, SoftDeleteMixin, TimestampMixin
+from sqlalchemy import Index, text
 
 
 class OrganizationStatus(str, enum.Enum):
     ACTIVE = "active"
     SUSPENDED = "suspended"
     ARCHIVED = "archived"
+
+
+class OrganizationVerificationStatus(str, enum.Enum):
+    UNVERIFIED = "unverified"
     PENDING_VERIFICATION = "pending_verification"
+    VERIFIED = "verified"
+    REJECTED = "rejected"
 
 
 class Organization(BaseModel, TimestampMixin, SoftDeleteMixin, AuditMixin):
     __tablename__ = "organizations"
+    __table_args__ = (
+        Index(
+            "ix_organizations_slug",
+            "slug",
+            unique=True,
+            postgresql_where=text("is_deleted = false"),
+        ),
+    )
 
     name: Mapped[str] = mapped_column(String(255), index=True, nullable=False)
     legal_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    slug: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
+    slug: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     
     website: Mapped[str | None] = mapped_column(String(255), nullable=True)
@@ -33,7 +48,13 @@ class Organization(BaseModel, TimestampMixin, SoftDeleteMixin, AuditMixin):
     
     status: Mapped[OrganizationStatus] = mapped_column(
         Enum(OrganizationStatus, name="organization_status_enum"),
-        default=OrganizationStatus.PENDING_VERIFICATION,
+        default=OrganizationStatus.ACTIVE,
+        nullable=False
+    )
+    
+    verification_status: Mapped[OrganizationVerificationStatus] = mapped_column(
+        Enum(OrganizationVerificationStatus, name="organization_verification_status_enum"),
+        default=OrganizationVerificationStatus.UNVERIFIED,
         nullable=False
     )
 

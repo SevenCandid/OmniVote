@@ -21,3 +21,11 @@ Domain Services encapsulate business logic that doesn't naturally fit within a s
 ## 5. Audit Service
 *   **Responsibility**: Centralizes the secure recording of immutable audit logs.
 *   **Interaction**: Listens to Domain Events across all contexts and translates them into standardized, tamper-evident audit records.
+
+## 6. Membership Service
+*   **Responsibility**: Manages the lifecycle of user relationships with Organizations.
+*   **Interaction**: Validates invitations, handles accept/decline workflows, suspends/removes members, and ensures audit trails are generated for all membership actions. Boundaries strictly isolated from Identity (Auth) and Roles (Permissions).
+
+## 7. RBAC Service
+*   **Responsibility**: Manages the platform's Roles, Permissions, and their assignments to Memberships.
+*   **Interaction**: Computes the active permissions for a given Membership context during API requests to guard secured endpoints. Responsible only for "Authorization", heavily isolated from "Authentication" and the "Membership Lifecycle".

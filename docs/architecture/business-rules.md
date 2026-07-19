@@ -9,6 +9,7 @@ This document outlines the fundamental, invariant business rules that govern the
 
 ## Organization & Access Rules
 4. **Event Ownership**: Every Event belongs to exactly one Organization.
+5. **Organization Ownership**: Users never belong to an organization's account; they establish relationships through Memberships. Ownership of an organization is represented by assigning the reserved "Owner" role to a Membership. Every organization must always have at least one Owner.
 5. **Role Assignment**: A Member can possess multiple Roles within an Organization. Their effective permissions are the union of all permissions granted by their Roles.
 6. **Platform Administration**: System Administrators cannot view identifying Voter data for strict democratic elections without an explicit, audited override (e.g., court order).
 

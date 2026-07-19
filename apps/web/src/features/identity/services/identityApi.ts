@@ -26,7 +26,7 @@ async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.detail || 'An error occurred');
+    throw new Error(errorData.message || errorData.detail || 'An error occurred');
   }
 
   if (response.status === 204) {
@@ -52,7 +52,7 @@ export const identityApi = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.detail || 'Login failed');
+      throw new Error(errorData.message || errorData.detail || 'Login failed');
     }
 
     return response.json();

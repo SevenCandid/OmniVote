@@ -40,6 +40,9 @@ graph LR
     subgraph apps/api
         main[app.main] --> factory[app.factory]
         factory --> routes[app.api.v1.router]
+        routes --> identity[app.identity]
+        routes --> organizations[app.organizations]
+        routes --> membership[app.membership]
         routes --> db[app.database]
         routes --> cache[app.cache]
         routes --> workers[app.workers]

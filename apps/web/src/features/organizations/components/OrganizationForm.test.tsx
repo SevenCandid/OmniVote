@@ -22,8 +22,8 @@ describe('OrganizationForm Component', () => {
     if (form) fireEvent.submit(form);
 
     await waitFor(() => {
-      expect(screen.getByText(/name must be at least/i)).toBeInTheDocument();
-      expect(screen.getByText(/slug must be at least/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/name must be at least/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/slug must be at least/i).length).toBeGreaterThan(0);
     });
 
     expect(mockOnSubmit).not.toHaveBeenCalled();

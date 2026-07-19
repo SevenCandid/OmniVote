@@ -137,6 +137,7 @@ async def sqlalchemy_exception_handler(
         error_class=exc.__class__.__name__,
         request_id=request_id,
         correlation_id=correlation_id,
+        exc_info=exc,
     )
 
     return JSONResponse(

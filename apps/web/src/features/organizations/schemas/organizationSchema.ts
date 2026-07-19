@@ -4,7 +4,13 @@ export const OrganizationStatusSchema = z.enum([
   'active',
   'suspended',
   'archived',
+]);
+
+export const OrganizationVerificationStatusSchema = z.enum([
+  'unverified',
   'pending_verification',
+  'verified',
+  'rejected',
 ]);
 
 export const SubscriptionStatusSchema = z.enum([
@@ -39,6 +45,7 @@ export type OrganizationCreateInput = z.infer<typeof OrganizationCreateSchema>;
 // Update Schema
 export const OrganizationUpdateSchema = OrganizationCreateSchema.partial().extend({
   status: OrganizationStatusSchema.optional(),
+  verification_status: OrganizationVerificationStatusSchema.optional(),
 });
 
 export type OrganizationUpdateInput = z.infer<typeof OrganizationUpdateSchema>;
@@ -75,6 +82,7 @@ export const OrganizationSubscriptionSchema = z.object({
 export const OrganizationResponseSchema = OrganizationCreateSchema.extend({
   id: z.string().uuid(),
   status: OrganizationStatusSchema,
+  verification_status: OrganizationVerificationStatusSchema,
   is_deleted: z.boolean(),
   settings: OrganizationSettingsSchema.optional(),
   branding: OrganizationBrandingSchema.optional(),

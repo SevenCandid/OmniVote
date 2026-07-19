@@ -24,6 +24,15 @@ import LandingPage from '../pages/LandingPage';
 import DashboardPage from '../pages/DashboardPage';
 import OrganizationListPage from '../features/organizations/pages/OrganizationListPage';
 import OrganizationDetailsPage from '../features/organizations/pages/OrganizationDetailsPage';
+import OrganizationMembersPage from '../features/memberships/pages/OrganizationMembersPage';
+import PendingInvitationsPage from '../features/memberships/pages/PendingInvitationsPage';
+import UserInvitationsPage from '../features/memberships/pages/UserInvitationsPage';
+import InvitationDetailsPage from '../features/memberships/pages/InvitationDetailsPage';
+import OrganizationSettingsPage from '../features/memberships/pages/OrganizationSettingsPage';
+import OrganizationRolesPage from '../features/rbac/pages/OrganizationRolesPage';
+import RoleDetailsPage from '../features/rbac/pages/RoleDetailsPage';
+import MembershipRolesPage from '../features/rbac/pages/MembershipRolesPage';
+import SystemPermissionsPage from '../features/rbac/pages/SystemPermissionsPage';
 import { PlaceholderPage } from '../pages/PlaceholderPage';
 
 export const router = createBrowserRouter([
@@ -42,6 +51,11 @@ export const router = createBrowserRouter([
       { path: 'terms', element: <PlaceholderPage title="Terms of Service" /> },
       { path: 'privacy', element: <PlaceholderPage title="Privacy Policy" /> },
     ],
+  },
+  // Public Invitation Link (Doesn't force auth until user decides to accept)
+  {
+    path: '/invite/:token',
+    element: <InvitationDetailsPage />,
   },
   // Auth Routes
   {
@@ -67,8 +81,14 @@ export const router = createBrowserRouter([
           { index: true, element: <OrganizationListPage /> },
           { path: 'new', element: <OrganizationDetailsPage /> },
           { path: ':id', element: <OrganizationDetailsPage /> },
+          { path: ':id/members', element: <OrganizationMembersPage /> },
+          { path: ':id/members/invitations', element: <PendingInvitationsPage /> },
+          { path: ':id/members/:membershipId/roles', element: <MembershipRolesPage /> },
+          { path: ':id/roles', element: <OrganizationRolesPage /> },
+          { path: ':id/roles/:roleId', element: <RoleDetailsPage /> },
         ],
       },
+      { path: 'invitations', element: <UserInvitationsPage /> },
       { path: 'elections', element: <PlaceholderPage title="Manage Elections" /> },
       { path: 'billing', element: <PlaceholderPage title="Billing Accounts" /> },
       { path: 'audit', element: <PlaceholderPage title="System Audit Logs" /> },
@@ -79,6 +99,8 @@ export const router = createBrowserRouter([
           { path: 'profile', element: <ProfilePage /> },
           { path: 'security', element: <SecurityPage /> },
           { path: 'sessions', element: <SessionsPage /> },
+          { path: 'organizations', element: <OrganizationSettingsPage /> },
+          { path: 'system/permissions', element: <SystemPermissionsPage /> },
         ]
       },
     ],

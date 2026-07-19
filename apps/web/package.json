@@ -1,7 +1,7 @@
 {
   "name": "@omnivote/web",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.2.3-alpha",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -25,6 +25,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.50.0",
+    "react-hot-toast": "^2.6.0",
     "react-router-dom": "^6.22.0",
     "recharts": "^2.12.0",
     "tailwind-merge": "^2.2.0",

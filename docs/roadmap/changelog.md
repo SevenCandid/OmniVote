@@ -8,6 +8,17 @@ All notable changes to the OmniVote platform will be documented in this file. Th
 
 ---
 
+## [0.2.3-alpha] - 2026-07-18
+
+### Added
+- **Membership Platform**: Introduced the foundational module for linking Users to Organizations.
+- **Membership Lifecycle**: Support for creating invitations, accepting/declining them, and suspending/removing members.
+- **Frontend Membership Management**: Added UI pages for managing organization members and pending user invitations.
+- **Platform Separation**: Maintained strict architectural boundaries between Identity, Organization, and Membership contexts.
+- **Automated Tests**: Completed comprehensive API testing and testing fixtures for membership workflows.
+
+---
+
 ## [0.2.2-alpha] - 2026-07-18
 
 ### Added

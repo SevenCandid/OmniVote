@@ -18,6 +18,24 @@ from app.identity.models import (
     SecurityEvent,
 )
 
+# Membership Platform Models
+from app.modules.membership.models.membership import (
+    Membership,
+    MembershipStatus,
+)
+from app.modules.membership.models.invitation import (
+    Invitation,
+    InvitationStatus,
+)
+
+# RBAC Platform Models
+from app.modules.rbac.models.rbac import (
+    Permission,
+    Role,
+    RolePermission,
+    MembershipRole,
+)
+
 __all__ = [
     # Organization
     "Organization",
@@ -35,4 +53,16 @@ __all__ = [
     "VerificationToken",
     "PasswordResetToken",
     "SecurityEvent",
+    
+    # Membership
+    "Membership",
+    "MembershipStatus",
+    "Invitation",
+    "InvitationStatus",
+    
+    # RBAC
+    "Permission",
+    "Role",
+    "RolePermission",
+    "MembershipRole",
 ]
