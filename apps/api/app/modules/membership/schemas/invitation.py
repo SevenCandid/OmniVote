@@ -12,7 +12,6 @@ class OrganizationBasicResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 class InvitationCreate(BaseModel):
-    organization_id: uuid.UUID
     recipient_email: EmailStr
     initial_roles: list[str] = Field(default_factory=list, description="List of role names to assign upon acceptance")
 
