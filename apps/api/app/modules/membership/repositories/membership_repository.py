@@ -15,20 +15,28 @@ class MembershipRepository:
         self.session.add(membership)
         await self.session.commit()
         await self.session.refresh(membership)
-        return membership
+        return await self.get_membership_by_id(membership.id)
 
     async def get_membership_by_id(self, membership_id: uuid.UUID) -> Membership | None:
-        query = select(Membership).where(Membership.id == membership_id)
+        query = (
+            select(Membership)
+            .options(selectinload(Membership.organization))
+            .where(Membership.id == membership_id)
+        )
         result = await self.session.execute(query)
         return result.scalars().first()
 
     async def get_membership_by_user_and_org(
         self, user_id: uuid.UUID, organization_id: uuid.UUID
     ) -> Membership | None:
-        query = select(Membership).where(
-            and_(
-                Membership.user_id == user_id,
-                Membership.organization_id == organization_id
+        query = (
+            select(Membership)
+            .options(selectinload(Membership.organization))
+            .where(
+                and_(
+                    Membership.user_id == user_id,
+                    Membership.organization_id == organization_id
+                )
             )
         )
         result = await self.session.execute(query)
@@ -50,7 +58,11 @@ class MembershipRepository:
         return result.scalars().all()
 
     async def get_organization_memberships(self, org_id: uuid.UUID) -> Sequence[Membership]:
-        query = select(Membership).where(Membership.organization_id == org_id)
+        query = (
+            select(Membership)
+            .options(selectinload(Membership.organization))
+            .where(Membership.organization_id == org_id)
+        )
         result = await self.session.execute(query)
         return result.scalars().all()
 
@@ -58,4 +70,4 @@ class MembershipRepository:
         self.session.add(membership)
         await self.session.commit()
         await self.session.refresh(membership)
-        return membership
+        return await self.get_membership_by_id(membership.id)

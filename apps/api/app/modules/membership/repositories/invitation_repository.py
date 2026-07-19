@@ -15,10 +15,14 @@ class InvitationRepository:
         self.session.add(invitation)
         await self.session.commit()
         await self.session.refresh(invitation)
-        return invitation
+        return await self.get_invitation_by_id(invitation.id)
 
     async def get_invitation_by_id(self, invitation_id: uuid.UUID) -> Invitation | None:
-        query = select(Invitation).where(Invitation.id == invitation_id)
+        query = (
+            select(Invitation)
+            .options(selectinload(Invitation.organization))
+            .where(Invitation.id == invitation_id)
+        )
         result = await self.session.execute(query)
         return result.scalars().first()
 
@@ -32,10 +36,14 @@ class InvitationRepository:
         return result.scalars().first()
 
     async def get_pending_invitations_for_org(self, org_id: uuid.UUID) -> Sequence[Invitation]:
-        query = select(Invitation).where(
-            and_(
-                Invitation.organization_id == org_id,
-                Invitation.status == InvitationStatus.PENDING
+        query = (
+            select(Invitation)
+            .options(selectinload(Invitation.organization))
+            .where(
+                and_(
+                    Invitation.organization_id == org_id,
+                    Invitation.status == InvitationStatus.PENDING
+                )
             )
         )
         result = await self.session.execute(query)
@@ -65,4 +73,4 @@ class InvitationRepository:
         self.session.add(invitation)
         await self.session.commit()
         await self.session.refresh(invitation)
-        return invitation
+        return await self.get_invitation_by_id(invitation.id)
