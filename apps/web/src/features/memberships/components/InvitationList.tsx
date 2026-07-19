@@ -3,9 +3,10 @@ import { Invitation, InvitationStatus } from '../schemas/invitationSchema';
 import { BaseCard } from '../../../components/ui/BaseCard';
 import { EmptyState } from '../../../components/ui/EmptyState';
 import { BaseBadge } from '../../../components/ui/BaseBadge';
-import { Mail } from 'lucide-react';
+import { Mail, Copy, CheckCircle } from 'lucide-react';
 import { BaseButton } from '../../../components/ui/BaseButton';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 interface InvitationListProps {
   invitations: Invitation[] | undefined;
@@ -68,6 +69,9 @@ export function InvitationList({
             </div>
           </div>
           <div className="flex gap-2">
+            {invitation.status === InvitationStatus.PENDING && (
+              <CopyLinkButton token={invitation.invitation_token} />
+            )}
             {onRevoke && invitation.status === InvitationStatus.PENDING && (
               <BaseButton
                 variant="danger"
@@ -98,4 +102,33 @@ function InvitationStatusBadge({ status }: { status: InvitationStatus }) {
     default:
       return <BaseBadge variant="neutral">{status}</BaseBadge>;
   }
+}
+
+function CopyLinkButton({ token }: { token: string }) {
+  const [copied, setCopied] = React.useState(false);
+
+  const handleCopy = async () => {
+    const url = `${window.location.origin}/invite/${token}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      toast.success('Invite link copied to clipboard!');
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      toast.error('Failed to copy link');
+    }
+  };
+
+  return (
+    <BaseButton
+      variant="secondary"
+      size="sm"
+      onClick={handleCopy}
+      title="Copy Invite Link"
+      className="flex items-center gap-1.5"
+    >
+      {copied ? <CheckCircle className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+      {copied ? 'Copied!' : 'Copy Link'}
+    </BaseButton>
+  );
 }

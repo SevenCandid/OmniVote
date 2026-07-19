@@ -21,6 +21,7 @@ class InvitationResponse(BaseModel):
     invited_by: uuid.UUID
     recipient_email: str
     recipient_user_id: uuid.UUID | None = None
+    invitation_token: str
     status: InvitationStatus
     initial_roles: list[str]
     expires_at: datetime

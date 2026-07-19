@@ -13,6 +13,7 @@ export const InvitationSchema = z.object({
   invited_by: z.string().uuid(),
   recipient_email: z.string().email(),
   recipient_user_id: z.string().uuid().nullable().optional(),
+  invitation_token: z.string(),
   status: z.nativeEnum(InvitationStatus),
   initial_roles: z.array(z.string()),
   expires_at: z.string(),
