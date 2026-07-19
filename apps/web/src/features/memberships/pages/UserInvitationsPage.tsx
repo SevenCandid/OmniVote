@@ -19,6 +19,7 @@ export default function UserInvitationsPage() {
   const { data: invitations, isLoading, error } = useUserInvitations();
   const { mutateAsync: acceptInvitation, isPending: isAccepting } = useAcceptInvitation();
   const { mutateAsync: declineInvitation, isPending: isDeclining } = useDeclineInvitation();
+  const { mutateAsync: revokeInvitation, isPending: isRevoking } = useRevokeInvitation();
 
   const handleAccept = async (token: string) => {
     try {
@@ -35,6 +36,15 @@ export default function UserInvitationsPage() {
       toast.success('Invitation declined');
     } catch (err: any) {
       toast.error(err.message || 'Failed to decline invitation');
+    }
+  };
+
+  const handleRevoke = async (invitationId: string) => {
+    try {
+      await revokeInvitation(invitationId);
+      toast.success('Invitation revoked successfully');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to revoke invitation');
     }
   };
 
@@ -171,6 +181,8 @@ export default function UserInvitationsPage() {
         isLoading={false} 
         error={null} 
         emptyMessage="You haven't sent any invitations yet."
+        onRevoke={handleRevoke}
+        isRevoking={isRevoking}
       />
     )}
 

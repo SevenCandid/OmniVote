@@ -71,3 +71,7 @@ class InvitationRepository:
         await self.session.commit()
         await self.session.refresh(invitation)
         return await self.get_invitation_by_id(invitation.id)
+
+    async def delete_invitation(self, invitation: Invitation) -> None:
+        await self.session.delete(invitation)
+        await self.session.commit()

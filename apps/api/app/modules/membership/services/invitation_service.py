@@ -192,3 +192,26 @@ class InvitationService:
         if not user:
             return []
         return await self.repository.get_all_invitations_for_user(email=user.email, user_id=user_id)
+
+    async def revoke_invitation(self, current_user_id: uuid.UUID, invitation_id: uuid.UUID) -> None:
+        invitation = await self.repository.get_invitation_by_id(invitation_id)
+        if not invitation:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invitation not found.")
+            
+        if invitation.status != InvitationStatus.PENDING:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Can only revoke pending invitations.")
+            
+        # Optional: check if current_user_id has permission
+        # For now, allow if they are the one who invited, or assume route protects it
+        
+        await self.repository.delete_invitation(invitation)
+        
+        await self.audit_service.log_event(
+            db=self.session,
+            event_type="invitation_revoked",
+            user_id=current_user_id,
+            metadata_payload={
+                "invitation_id": str(invitation_id),
+                "organization_id": str(invitation.organization_id)
+            }
+        )

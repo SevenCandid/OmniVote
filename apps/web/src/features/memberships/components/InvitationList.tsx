@@ -7,6 +7,7 @@ import { Mail, Copy, CheckCircle } from 'lucide-react';
 import { BaseButton } from '../../../components/ui/BaseButton';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { RevokeInvitationModal } from './RevokeInvitationModal';
 
 interface InvitationListProps {
   invitations: Invitation[] | undefined;
@@ -25,6 +26,14 @@ export function InvitationList({
   onRevoke,
   isRevoking,
 }: InvitationListProps) {
+  const [revokingId, setRevokingId] = React.useState<string | null>(null);
+
+  const handleConfirmRevoke = () => {
+    if (revokingId && onRevoke) {
+      onRevoke(revokingId);
+      setRevokingId(null);
+    }
+  };
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -76,8 +85,7 @@ export function InvitationList({
               <BaseButton
                 variant="danger"
                 size="sm"
-                onClick={() => onRevoke(invitation.id)}
-                isLoading={isRevoking}
+                onClick={() => setRevokingId(invitation.id)}
               >
                 Revoke
               </BaseButton>
@@ -85,6 +93,15 @@ export function InvitationList({
           </div>
         </BaseCard>
       ))}
+
+      {onRevoke && (
+        <RevokeInvitationModal
+          isOpen={!!revokingId}
+          onClose={() => setRevokingId(null)}
+          onConfirm={handleConfirmRevoke}
+          isRevoking={!!isRevoking}
+        />
+      )}
     </div>
   );
 }

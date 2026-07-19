@@ -87,3 +87,14 @@ export const useRemoveMembership = () => {
     },
   });
 };
+
+export const useRevokeInvitation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (invitationId: string) => membershipApi.revokeInvitation(invitationId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: membershipKeys.all });
+    },
+  });
+};

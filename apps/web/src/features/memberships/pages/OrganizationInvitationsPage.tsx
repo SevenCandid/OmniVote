@@ -1,7 +1,8 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useOrganizationInvitations } from '../hooks/useMemberships';
+import { useOrganizationInvitations, useRevokeInvitation } from '../hooks/useMemberships';
 import { InvitationList } from '../components/InvitationList';
+import { toast } from 'react-hot-toast';
 import { useOrganization } from '../../organizations/hooks/useOrganizations';
 import { BaseButton } from '../../../components/ui/BaseButton';
 import { InviteMemberDialog } from '../components/InviteMemberDialog';
@@ -14,6 +15,16 @@ export default function OrganizationInvitationsPage() {
 
   const { data: organization } = useOrganization(organizationId!);
   const { data: invitations, isLoading, error } = useOrganizationInvitations(organizationId!);
+  const { mutateAsync: revokeInvitation, isPending: isRevoking } = useRevokeInvitation();
+
+  const handleRevoke = async (invitationId: string) => {
+    try {
+      await revokeInvitation(invitationId);
+      toast.success('Invitation revoked successfully');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to revoke invitation');
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
@@ -44,6 +55,8 @@ export default function OrganizationInvitationsPage() {
         isLoading={isLoading}
         error={error}
         emptyMessage="No invitations found."
+        onRevoke={handleRevoke}
+        isRevoking={isRevoking}
       />
 
       {organizationId && (

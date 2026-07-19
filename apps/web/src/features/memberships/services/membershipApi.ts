@@ -91,6 +91,12 @@ export const membershipApi = {
     });
   },
 
+  revokeInvitation: async (invitationId: string): Promise<void> => {
+    return fetchWithConfig(`/invitations/${invitationId}`, {
+      method: 'DELETE',
+    });
+  },
+
   removeMembership: async (organizationId: string, membershipId: string): Promise<void> => {
     return fetchWithConfig(`/memberships/${membershipId}?organization_id=${organizationId}`, {
       method: 'DELETE',

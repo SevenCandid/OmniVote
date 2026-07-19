@@ -54,3 +54,12 @@ async def decline_invitation(
     service = InvitationService(db)
     invitation = await service.decline_invitation(current_user.id, token)
     return invitation
+
+@router.delete("/{invitation_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def revoke_invitation(
+    invitation_id: uuid.UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db_session)
+):
+    service = InvitationService(db)
+    await service.revoke_invitation(current_user.id, invitation_id)
