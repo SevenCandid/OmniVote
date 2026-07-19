@@ -12,7 +12,8 @@ export default function OrganizationSettingsPage() {
   const { data: memberships, isLoading, error } = useUserOrganizations();
 
   const activeMemberships = memberships?.filter(
-    m => m.status === MembershipStatus.ACCEPTED || m.status === MembershipStatus.SUSPENDED
+    m => (m.status === MembershipStatus.ACCEPTED || m.status === MembershipStatus.SUSPENDED) &&
+         !m.organization?.is_deleted
   );
 
   if (isLoading) {

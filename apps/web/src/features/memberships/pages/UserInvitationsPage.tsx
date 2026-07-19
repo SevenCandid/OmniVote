@@ -9,9 +9,13 @@ import { BaseButton } from '../../../components/ui/BaseButton';
 import { toast } from 'react-hot-toast';
 import { InviteMemberDialog } from '../components/InviteMemberDialog';
 import { useState } from 'react';
+import { useAuth } from '../../../contexts/AuthContext';
+import { InvitationList } from '../components/InvitationList';
 
 export default function UserInvitationsPage() {
+  const { user } = useAuth();
   const [isInviteOpen, setIsInviteOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'received' | 'sent'>('received');
   const { data: invitations, isLoading, error } = useUserInvitations();
   const { mutateAsync: acceptInvitation, isPending: isAccepting } = useAcceptInvitation();
   const { mutateAsync: declineInvitation, isPending: isDeclining } = useDeclineInvitation();
@@ -55,7 +59,13 @@ export default function UserInvitationsPage() {
     );
   }
 
-  const pendingInvitations = invitations?.filter((inv) => inv.status === InvitationStatus.PENDING) || [];
+  const receivedInvitations = invitations?.filter((inv) => 
+    inv.recipient_email === user?.email || inv.recipient_user_id === user?.id
+  ) || [];
+  
+  const sentInvitations = invitations?.filter((inv) => 
+    inv.invited_by === user?.id
+  ) || [];
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
@@ -71,15 +81,45 @@ export default function UserInvitationsPage() {
         </BaseButton>
       </div>
 
-      {pendingInvitations.length === 0 ? (
-        <EmptyState
-          icon={Mail}
-          title="No pending invitations"
-          description="You don't have any pending invitations to join organizations."
-        />
-      ) : (
-        <div className="space-y-4">
-          {pendingInvitations.map((invitation) => (
+        <div className="flex border-b border-zinc-200 dark:border-zinc-800">
+          <button
+            className={`px-4 py-2 font-medium text-sm transition-colors relative ${
+              activeTab === 'received' 
+                ? 'text-blue-600 dark:text-blue-400' 
+                : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
+            }`}
+            onClick={() => setActiveTab('received')}
+          >
+            Received Invitations
+            {activeTab === 'received' && (
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 dark:bg-blue-400" />
+            )}
+          </button>
+          <button
+            className={`px-4 py-2 font-medium text-sm transition-colors relative ${
+              activeTab === 'sent' 
+                ? 'text-blue-600 dark:text-blue-400' 
+                : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
+            }`}
+            onClick={() => setActiveTab('sent')}
+          >
+            Sent Invitations
+            {activeTab === 'sent' && (
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 dark:bg-blue-400" />
+            )}
+          </button>
+        </div>
+
+        {activeTab === 'received' ? (
+          receivedInvitations.length === 0 ? (
+            <EmptyState
+              icon={Mail}
+              title="No received invitations"
+              description="You haven't received any organization invitations."
+            />
+          ) : (
+            <div className="space-y-4">
+              {receivedInvitations.map((invitation) => (
             <BaseCard key={invitation.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 sm:p-6 gap-4">
               <div className="flex items-start gap-4">
                 <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl">
@@ -88,35 +128,51 @@ export default function UserInvitationsPage() {
                 <div>
                   <h3 className="text-lg font-semibold">{invitation.organization?.name || 'Unknown Organization'}</h3>
                   <div className="text-sm text-zinc-500 mt-1">
+                    Status: <BaseBadge variant={
+                      invitation.status === InvitationStatus.PENDING ? 'warning' :
+                      invitation.status === InvitationStatus.ACCEPTED ? 'success' :
+                      invitation.status === InvitationStatus.DECLINED ? 'neutral' : 'error'
+                    }>{invitation.status}</BaseBadge>
+                    <br />
                     Roles offered: {invitation.initial_roles.join(', ') || 'Member'}
                     <br />
-                    Expires: {new Date(invitation.expires_at).toLocaleDateString()}
+                    Sent: {new Date(invitation.created_at).toLocaleDateString()}
                   </div>
                 </div>
               </div>
-              <div className="flex gap-2 w-full sm:w-auto">
-                <BaseButton
-                  variant="secondary"
-                  className="flex-1 sm:flex-none"
-                  onClick={() => handleDecline(invitation.invitation_token)}
-                  isLoading={isDeclining}
-                  disabled={isAccepting}
-                >
-                  Decline
-                </BaseButton>
-                <BaseButton
-                  className="flex-1 sm:flex-none"
-                  onClick={() => handleAccept(invitation.invitation_token)}
-                  isLoading={isAccepting}
-                  disabled={isDeclining}
-                >
-                  Accept
-                </BaseButton>
-              </div>
+              {invitation.status === InvitationStatus.PENDING && (
+                <div className="flex gap-2 w-full sm:w-auto">
+                  <BaseButton
+                    variant="secondary"
+                    className="flex-1 sm:flex-none"
+                    onClick={() => handleDecline(invitation.invitation_token)}
+                    isLoading={isDeclining}
+                    disabled={isAccepting}
+                  >
+                    Decline
+                  </BaseButton>
+                  <BaseButton
+                    className="flex-1 sm:flex-none"
+                    onClick={() => handleAccept(invitation.invitation_token)}
+                    isLoading={isAccepting}
+                    disabled={isDeclining}
+                  >
+                    Accept
+                  </BaseButton>
+                </div>
+              )}
             </BaseCard>
           ))}
         </div>
-      )}
+      )
+    ) : (
+      <InvitationList 
+        invitations={sentInvitations} 
+        isLoading={false} 
+        error={null} 
+        emptyMessage="You haven't sent any invitations yet."
+      />
+    )}
 
       <InviteMemberDialog
         isOpen={isInviteOpen}

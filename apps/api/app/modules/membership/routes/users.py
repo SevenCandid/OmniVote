@@ -27,4 +27,4 @@ async def list_user_invitations(
     db: AsyncSession = Depends(get_db_session)
 ) -> Sequence[InvitationResponse]:
     service = InvitationService(db)
-    return await service.get_pending_invitations_for_user(current_user.id)
+    return await service.get_all_invitations_for_user(current_user.id)

@@ -5,7 +5,7 @@ import { InviteMemberInput } from '../schemas/invitationSchema';
 export const membershipKeys = {
   all: ['memberships'] as const,
   orgMembers: (orgId: string) => [...membershipKeys.all, 'org', orgId, 'members'] as const,
-  orgPending: (orgId: string) => [...membershipKeys.all, 'org', orgId, 'pending'] as const,
+  orgInvitations: (orgId: string) => [...membershipKeys.all, 'org', orgId, 'invitations'] as const,
   userOrganizations: () => [...membershipKeys.all, 'user', 'organizations'] as const,
   userInvitations: () => [...membershipKeys.all, 'user', 'invitations'] as const,
 };
@@ -18,10 +18,10 @@ export const useOrganizationMembers = (organizationId: string) => {
   });
 };
 
-export const usePendingInvitations = (organizationId: string) => {
+export const useOrganizationInvitations = (organizationId: string) => {
   return useQuery({
-    queryKey: membershipKeys.orgPending(organizationId),
-    queryFn: () => membershipApi.getPendingInvitations(organizationId),
+    queryKey: membershipKeys.orgInvitations(organizationId),
+    queryFn: () => membershipApi.getOrganizationInvitations(organizationId),
     enabled: !!organizationId,
   });
 };
@@ -48,7 +48,8 @@ export const useInviteMember = () => {
       membershipApi.inviteMember(organizationId, data),
     onSuccess: (_, { organizationId }) => {
       queryClient.invalidateQueries({ queryKey: membershipKeys.orgMembers(organizationId) });
-      queryClient.invalidateQueries({ queryKey: membershipKeys.orgPending(organizationId) });
+      queryClient.invalidateQueries({ queryKey: membershipKeys.orgInvitations(organizationId) });
+      queryClient.invalidateQueries({ queryKey: membershipKeys.userInvitations() });
     },
   });
 };

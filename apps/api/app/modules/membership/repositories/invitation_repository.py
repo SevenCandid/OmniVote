@@ -35,24 +35,21 @@ class InvitationRepository:
         result = await self.session.execute(query)
         return result.scalars().first()
 
-    async def get_pending_invitations_for_org(self, org_id: uuid.UUID) -> Sequence[Invitation]:
+    async def get_all_invitations_for_org(self, org_id: uuid.UUID) -> Sequence[Invitation]:
         query = (
             select(Invitation)
             .options(selectinload(Invitation.organization))
-            .where(
-                and_(
-                    Invitation.organization_id == org_id,
-                    Invitation.status == InvitationStatus.PENDING
-                )
-            )
+            .where(Invitation.organization_id == org_id)
+            .order_by(Invitation.created_at.desc())
         )
         result = await self.session.execute(query)
         return result.scalars().all()
 
-    async def get_pending_invitations_for_user(self, email: str, user_id: uuid.UUID | None = None) -> Sequence[Invitation]:
+    async def get_all_invitations_for_user(self, email: str, user_id: uuid.UUID | None = None) -> Sequence[Invitation]:
         conditions = [Invitation.recipient_email == email]
         if user_id:
             conditions.append(Invitation.recipient_user_id == user_id)
+            conditions.append(Invitation.invited_by == user_id)
         
         query = (
             select(Invitation)
@@ -61,10 +58,10 @@ class InvitationRepository:
             .where(
                 and_(
                     or_(*conditions),
-                    Invitation.status == InvitationStatus.PENDING,
                     Organization.is_deleted == False
                 )
             )
+            .order_by(Invitation.created_at.desc())
         )
         result = await self.session.execute(query)
         return result.scalars().all()

@@ -182,13 +182,13 @@ class InvitationService:
         )
         return invitation
 
-    async def get_pending_invitations_for_org(self, org_id: uuid.UUID) -> Sequence[Invitation]:
-        return await self.repository.get_pending_invitations_for_org(org_id)
+    async def get_all_invitations_for_org(self, org_id: uuid.UUID) -> Sequence[Invitation]:
+        return await self.repository.get_all_invitations_for_org(org_id)
 
-    async def get_pending_invitations_for_user(self, user_id: uuid.UUID) -> Sequence[Invitation]:
+    async def get_all_invitations_for_user(self, user_id: uuid.UUID) -> Sequence[Invitation]:
         stmt = select(User).where(User.id == user_id, User.is_deleted == False)
         result = await self.session.execute(stmt)
         user = result.scalar_one_or_none()
         if not user:
             return []
-        return await self.repository.get_pending_invitations_for_user(email=user.email, user_id=user_id)
+        return await self.repository.get_all_invitations_for_user(email=user.email, user_id=user_id)

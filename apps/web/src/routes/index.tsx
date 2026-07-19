@@ -25,7 +25,7 @@ import DashboardPage from '../pages/DashboardPage';
 import OrganizationListPage from '../features/organizations/pages/OrganizationListPage';
 import OrganizationDetailsPage from '../features/organizations/pages/OrganizationDetailsPage';
 import OrganizationMembersPage from '../features/memberships/pages/OrganizationMembersPage';
-import PendingInvitationsPage from '../features/memberships/pages/PendingInvitationsPage';
+import OrganizationInvitationsPage from '../features/memberships/pages/OrganizationInvitationsPage';
 import UserInvitationsPage from '../features/memberships/pages/UserInvitationsPage';
 import InvitationDetailsPage from '../features/memberships/pages/InvitationDetailsPage';
 import OrganizationSettingsPage from '../features/memberships/pages/OrganizationSettingsPage';
@@ -82,7 +82,7 @@ export const router = createBrowserRouter([
           { path: 'new', element: <OrganizationDetailsPage /> },
           { path: ':id', element: <OrganizationDetailsPage /> },
           { path: ':id/members', element: <OrganizationMembersPage /> },
-          { path: ':id/members/invitations', element: <PendingInvitationsPage /> },
+          { path: ':id/members/invitations', element: <OrganizationInvitationsPage /> },
           { path: ':id/members/:membershipId/roles', element: <MembershipRolesPage /> },
           { path: ':id/roles', element: <OrganizationRolesPage /> },
           { path: ':id/roles/:roleId', element: <RoleDetailsPage /> },

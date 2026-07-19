@@ -37,11 +37,11 @@ async def list_organization_members(
     service = MembershipService(db)
     return await service.get_organization_members(organization_id)
 
-@router.get("/{organization_id}/members/pending", response_model=list[InvitationResponse])
-async def list_pending_invitations(
+@router.get("/{organization_id}/members/invitations", response_model=list[InvitationResponse])
+async def list_organization_invitations(
     organization_id: uuid.UUID,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db_session)
 ) -> Sequence[InvitationResponse]:
     service = InvitationService(db)
-    return await service.get_pending_invitations_for_org(organization_id)
+    return await service.get_all_invitations_for_org(organization_id)

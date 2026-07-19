@@ -1,19 +1,19 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { usePendingInvitations } from '../hooks/useMemberships';
+import { useOrganizationInvitations } from '../hooks/useMemberships';
 import { InvitationList } from '../components/InvitationList';
 import { useOrganization } from '../../organizations/hooks/useOrganizations';
 import { BaseButton } from '../../../components/ui/BaseButton';
 import { InviteMemberDialog } from '../components/InviteMemberDialog';
 import { useState } from 'react';
 
-export default function PendingInvitationsPage() {
+export default function OrganizationInvitationsPage() {
   const { id: organizationId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isInviteOpen, setIsInviteOpen] = useState(false);
 
   const { data: organization } = useOrganization(organizationId!);
-  const { data: pendingInvitations, isLoading, error } = usePendingInvitations(organizationId!);
+  const { data: invitations, isLoading, error } = useOrganizationInvitations(organizationId!);
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
@@ -27,9 +27,9 @@ export default function PendingInvitationsPage() {
               ← Back to Members
             </button>
           </div>
-          <h1 className="text-2xl font-bold mt-2">Pending Invitations</h1>
+          <h1 className="text-2xl font-bold mt-2">Invitation History</h1>
           <p className="text-gray-500 dark:text-gray-400">
-            {organization ? `View outstanding invitations for ${organization.name}` : 'View outstanding invitations'}
+            View all invitations sent by this organization.
           </p>
         </div>
         <div className="flex gap-3">
@@ -40,10 +40,10 @@ export default function PendingInvitationsPage() {
       </div>
 
       <InvitationList
-        invitations={pendingInvitations}
+        invitations={invitations}
         isLoading={isLoading}
         error={error}
-        emptyMessage="No pending invitations."
+        emptyMessage="No invitations found."
       />
 
       {organizationId && (

@@ -56,8 +56,8 @@ export const membershipApi = {
     return fetchWithConfig(`/organizations/${organizationId}/members`);
   },
 
-  getPendingInvitations: async (organizationId: string): Promise<Invitation[]> => {
-    return fetchWithConfig(`/organizations/${organizationId}/members/pending`);
+  getOrganizationInvitations: async (organizationId: string): Promise<Invitation[]> => {
+    return fetchWithConfig(`/organizations/${organizationId}/members/invitations`);
   },
 
   getUserOrganizations: async (): Promise<Membership[]> => {
