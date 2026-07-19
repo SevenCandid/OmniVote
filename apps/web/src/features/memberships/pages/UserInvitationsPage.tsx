@@ -9,11 +9,11 @@ import { BaseButton } from '../../../components/ui/BaseButton';
 import { toast } from 'react-hot-toast';
 import { InviteMemberDialog } from '../components/InviteMemberDialog';
 import { useState } from 'react';
-import { useAuth } from '../../../contexts/AuthContext';
+import { useSessionStore } from '../../../stores/sessionStore';
 import { InvitationList } from '../components/InvitationList';
 
 export default function UserInvitationsPage() {
-  const { user } = useAuth();
+  const user = useSessionStore((state) => state.user);
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'received' | 'sent'>('received');
   const { data: invitations, isLoading, error } = useUserInvitations();
