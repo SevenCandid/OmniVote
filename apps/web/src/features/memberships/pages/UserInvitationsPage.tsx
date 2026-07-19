@@ -1,5 +1,5 @@
 import React from 'react';
-import { useUserInvitations, useAcceptInvitation, useDeclineInvitation } from '../hooks/useMemberships';
+import { useUserInvitations, useAcceptInvitation, useDeclineInvitation, useRevokeInvitation } from '../hooks/useMemberships';
 import { InvitationStatus } from '../schemas/invitationSchema';
 import { BaseCard } from '../../../components/ui/BaseCard';
 import { EmptyState } from '../../../components/ui/EmptyState';
