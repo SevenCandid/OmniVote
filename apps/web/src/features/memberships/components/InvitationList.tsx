@@ -81,13 +81,13 @@ export function InvitationList({
             {invitation.status === InvitationStatus.PENDING && (
               <CopyLinkButton token={invitation.invitation_token} />
             )}
-            {onRevoke && invitation.status === InvitationStatus.PENDING && (
+            {onRevoke && (
               <BaseButton
                 variant="danger"
                 size="sm"
                 onClick={() => setRevokingId(invitation.id)}
               >
-                Revoke
+                {invitation.status === InvitationStatus.PENDING ? 'Revoke' : 'Delete'}
               </BaseButton>
             )}
           </div>

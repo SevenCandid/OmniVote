@@ -31,18 +31,25 @@ class OrganizationRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def list_organizations(
-        self, skip: int = 0, limit: int = 100, status: str | None = None
+    async def list_user_organizations(
+        self, user_id: uuid.UUID, skip: int = 0, limit: int = 100, status: str | None = None
     ) -> Sequence[Organization]:
-        """List active organizations with optional filters."""
+        """List active organizations the user belongs to with optional filters."""
+        from app.modules.membership.models.membership import Membership, MembershipStatus
+        
         stmt = (
             select(Organization)
+            .join(Membership, Membership.organization_id == Organization.id)
             .options(
                 selectinload(Organization.settings),
                 selectinload(Organization.branding),
                 selectinload(Organization.subscription),
             )
-            .where(Organization.is_deleted == False)
+            .where(
+                Membership.user_id == user_id, 
+                Organization.is_deleted == False,
+                Membership.status.in_([MembershipStatus.ACCEPTED, MembershipStatus.SUSPENDED])
+            )
             .offset(skip)
             .limit(limit)
         )

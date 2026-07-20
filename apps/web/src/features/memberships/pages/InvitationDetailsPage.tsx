@@ -27,8 +27,8 @@ export default function InvitationDetailsPage() {
 
   const handleAccept = async () => {
     if (!isAuthenticated) {
-      // Typically, redirect to register with next=/invite/:token
-      navigate('/auth/register', { state: { returnTo: `/invite/${token}` } });
+      localStorage.setItem('inviteReturnTo', `/invite/${token}`);
+      navigate('/auth/register');
       return;
     }
     
@@ -43,7 +43,8 @@ export default function InvitationDetailsPage() {
 
   const handleDecline = async () => {
     if (!isAuthenticated) {
-      navigate('/auth/login', { state: { returnTo: `/invite/${token}` } });
+      localStorage.setItem('inviteReturnTo', `/invite/${token}`);
+      navigate('/auth/login');
       return;
     }
 

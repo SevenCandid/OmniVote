@@ -29,7 +29,7 @@ async def assign_role_to_membership(
 ):
     # Verify the membership belongs to the organization
     mem_repo = MembershipRepository(db)
-    target_membership = await mem_repo.get_by_id(membership_id)
+    target_membership = await mem_repo.get_membership_by_id(membership_id)
     if not target_membership or target_membership.organization_id != organization_id:
         raise NotFoundException(message="Membership not found in this organization")
 
@@ -54,7 +54,7 @@ async def remove_role_from_membership(
     db: AsyncSession = Depends(get_db_session)
 ):
     mem_repo = MembershipRepository(db)
-    target_membership = await mem_repo.get_by_id(membership_id)
+    target_membership = await mem_repo.get_membership_by_id(membership_id)
     if not target_membership or target_membership.organization_id != organization_id:
         raise NotFoundException(message="Membership not found in this organization")
 
@@ -70,7 +70,7 @@ async def list_membership_roles(
     db: AsyncSession = Depends(get_db_session)
 ) -> Sequence[RoleResponse]:
     mem_repo = MembershipRepository(db)
-    target_membership = await mem_repo.get_by_id(membership_id)
+    target_membership = await mem_repo.get_membership_by_id(membership_id)
     if not target_membership or target_membership.organization_id != organization_id:
         raise NotFoundException(message="Membership not found in this organization")
 

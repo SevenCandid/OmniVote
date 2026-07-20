@@ -8,8 +8,10 @@ import {
 } from '../hooks/useRbac';
 import { BaseCard } from '../../../components/ui/BaseCard';
 import { BaseButton } from '../../../components/ui/BaseButton';
-import { BaseDialog } from '../../../components/ui/BaseDialog';
 import { RequirePermission } from '../components/RequirePermission';
+import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
+import { BaseDialog } from '../../../components/ui/BaseDialog';
+import { toast } from 'react-hot-toast';
 
 export default function MembershipRolesPage() {
   const { id: organizationId, membershipId } = useParams<{ id: string, membershipId: string }>();
@@ -23,29 +25,36 @@ export default function MembershipRolesPage() {
 
   const [isAssignOpen, setIsAssignOpen] = useState(false);
   const [selectedRoleId, setSelectedRoleId] = useState('');
+  const [removingRoleId, setRemovingRoleId] = useState<string | null>(null);
 
   const availableRoles = orgRoles?.filter(
-    (r) => !memberRoles?.some((mr) => mr.id === r.id)
+    (r) => r.name.toLowerCase() !== 'owner' && !memberRoles?.some((mr) => mr.id === r.id)
   );
 
   const handleAssign = async () => {
     if (!selectedRoleId) return;
     try {
       await assignMutation.mutateAsync({ membershipId: membershipId!, data: { role_id: selectedRoleId } });
+      toast.success('Role assigned successfully');
       setIsAssignOpen(false);
       setSelectedRoleId('');
     } catch (e: any) {
-      alert(`Error assigning role: ${e.message}`);
+      toast.error(e.message || 'Failed to assign role');
     }
   };
 
-  const handleRemove = async (roleId: string) => {
-    if (window.confirm("Remove this role from the member?")) {
-      try {
-        await removeMutation.mutateAsync({ membershipId: membershipId!, roleId });
-      } catch (e: any) {
-        alert(`Error removing role: ${e.message}`);
-      }
+  const handleRemove = (roleId: string) => {
+    setRemovingRoleId(roleId);
+  };
+
+  const handleConfirmRemove = async () => {
+    if (!removingRoleId) return;
+    try {
+      await removeMutation.mutateAsync({ membershipId: membershipId!, roleId: removingRoleId });
+      toast.success('Role removed successfully');
+      setRemovingRoleId(null);
+    } catch (e: any) {
+      toast.error(e.message || 'Failed to remove role');
     }
   };
 
@@ -78,14 +87,18 @@ export default function MembershipRolesPage() {
             {memberRoles.map((role) => (
               <li key={role.id} className="p-4 flex justify-between items-center hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
                 <div>
-                  <p className="font-semibold">{role.name}</p>
+                  <p className="font-semibold">
+                    {role.name} {role.name.toLowerCase() === 'owner' ? '(Not Editable)' : ''}
+                  </p>
                   <p className="text-sm text-zinc-500">{role.description}</p>
                 </div>
-                <RequirePermission permissionKey="member.update" organizationId={organizationId}>
-                  <BaseButton variant="danger" size="sm" onClick={() => handleRemove(role.id)} isLoading={removeMutation.isPending}>
-                    Remove
-                  </BaseButton>
-                </RequirePermission>
+                {role.name.toLowerCase() !== 'owner' && (
+                  <RequirePermission permissionKey="member.update" organizationId={organizationId}>
+                    <BaseButton variant="danger" size="sm" onClick={() => handleRemove(role.id)} isLoading={removeMutation.isPending && removingRoleId === role.id}>
+                      Remove
+                    </BaseButton>
+                  </RequirePermission>
+                )}
               </li>
             ))}
           </ul>
@@ -121,6 +134,16 @@ export default function MembershipRolesPage() {
           </div>
         </div>
       </BaseDialog>
+      <ConfirmDialog
+        isOpen={!!removingRoleId}
+        onClose={() => setRemovingRoleId(null)}
+        onConfirm={handleConfirmRemove}
+        title="Remove Role"
+        description="Are you sure you want to remove this role from the member?"
+        confirmText="Remove"
+        variant="danger"
+        isConfirming={removeMutation.isPending}
+      />
     </div>
   );
 }

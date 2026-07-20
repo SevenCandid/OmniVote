@@ -5,6 +5,9 @@ import { MemberList } from '../components/MemberList';
 import { InviteMemberDialog } from '../components/InviteMemberDialog';
 import { BaseButton } from '../../../components/ui/BaseButton';
 import { useOrganization } from '../../organizations/hooks/useOrganizations';
+import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
+import { toast } from 'react-hot-toast';
+import { RequirePermission } from '../../rbac/components/RequirePermission';
 
 export default function OrganizationMembersPage() {
   const { id: organizationId } = useParams<{ id: string }>();
@@ -15,13 +18,21 @@ export default function OrganizationMembersPage() {
   const { data: members, isLoading, error } = useOrganizationMembers(organizationId!);
   const { mutateAsync: removeMembership, isPending: isRemoving } = useRemoveMembership();
 
-  const handleRemoveMember = async (membershipId: string) => {
-    if (window.confirm('Are you sure you want to remove this member?')) {
-      try {
-        await removeMembership({ organizationId: organizationId!, membershipId });
-      } catch (err) {
-        console.error('Failed to remove member', err);
-      }
+  const [removingMembershipId, setRemovingMembershipId] = useState<string | null>(null);
+
+  const handleRemoveMember = (membershipId: string) => {
+    setRemovingMembershipId(membershipId);
+  };
+
+  const handleConfirmRemove = async () => {
+    if (!removingMembershipId) return;
+    try {
+      await removeMembership({ organizationId: organizationId!, membershipId: removingMembershipId });
+      toast.success('Member removed successfully');
+      setRemovingMembershipId(null);
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to remove member');
+      console.error('Failed to remove member', err);
     }
   };
 
@@ -43,12 +54,16 @@ export default function OrganizationMembersPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <BaseButton variant="secondary" onClick={() => navigate(`/dashboard/organizations/${organizationId}/members/invitations`)}>
-            View Invitations
-          </BaseButton>
-          <BaseButton onClick={() => setIsInviteOpen(true)}>
-            + Invite Member
-          </BaseButton>
+          <RequirePermission permissionKey="member.invite" organizationId={organizationId}>
+            <BaseButton variant="secondary" onClick={() => navigate(`/dashboard/organizations/${organizationId}/members/invitations`)}>
+              View Invitations
+            </BaseButton>
+          </RequirePermission>
+          <RequirePermission permissionKey="member.invite" organizationId={organizationId}>
+            <BaseButton onClick={() => setIsInviteOpen(true)}>
+              + Invite Member
+            </BaseButton>
+          </RequirePermission>
         </div>
       </div>
 
@@ -68,6 +83,17 @@ export default function OrganizationMembersPage() {
           organizationId={organizationId}
         />
       )}
+
+      <ConfirmDialog
+        isOpen={!!removingMembershipId}
+        onClose={() => setRemovingMembershipId(null)}
+        onConfirm={handleConfirmRemove}
+        title="Remove Member"
+        description="Are you sure you want to remove this member from the organization? This will revoke all their roles and permissions."
+        confirmText="Remove"
+        variant="danger"
+        isConfirming={isRemoving}
+      />
     </div>
   );
 }

@@ -10,6 +10,7 @@ SYSTEM_PERMISSIONS = [
     # Organization
     {"key": "organization.view", "display_name": "View Organization", "category": "Organization", "description": "View organization details"},
     {"key": "organization.update", "display_name": "Update Organization", "category": "Organization", "description": "Update organization settings"},
+    {"key": "organization.delete", "display_name": "Delete Organization", "category": "Organization", "description": "Delete organization"},
     
     # Membership
     {"key": "member.view", "display_name": "View Members", "category": "Membership", "description": "View organization members"},
@@ -61,19 +62,50 @@ async def seed_permissions(db: AsyncSession):
         db.add(owner_role)
         await db.flush()
 
+    # Create default Admin role
+    result = await db.execute(select(Role).where(Role.name == "Admin", Role.is_system == True))
+    admin_role = result.scalar_one_or_none()
+    if not admin_role:
+        admin_role = Role(
+            name="Admin",
+            description="System Admin role with administrative permissions",
+            is_system=True
+        )
+        db.add(admin_role)
+        await db.flush()
+
+    # Create default Member role
+    result = await db.execute(select(Role).where(Role.name == "Member", Role.is_system == True))
+    member_role = result.scalar_one_or_none()
+    if not member_role:
+        member_role = Role(
+            name="Member",
+            description="System Member role with standard access",
+            is_system=True
+        )
+        db.add(member_role)
+        await db.flush()
+
     # Assign all permissions to Owner
     result = await db.execute(select(Permission))
     all_perms = result.scalars().all()
     for perm in all_perms:
-        result_rp = await db.execute(
-            select(RolePermission).where(
-                RolePermission.role_id == owner_role.id,
-                RolePermission.permission_id == perm.id
-            )
-        )
+        # Owner gets everything
+        result_rp = await db.execute(select(RolePermission).where(RolePermission.role_id == owner_role.id, RolePermission.permission_id == perm.id))
         if not result_rp.scalar_one_or_none():
-            rp = RolePermission(role_id=owner_role.id, permission_id=perm.id)
-            db.add(rp)
+            db.add(RolePermission(role_id=owner_role.id, permission_id=perm.id))
+            
+        # Admin gets everything except audit.view and organization.update/delete
+        if perm.key not in ["audit.view", "organization.update", "organization.delete"]:
+            result_rp_admin = await db.execute(select(RolePermission).where(RolePermission.role_id == admin_role.id, RolePermission.permission_id == perm.id))
+            if not result_rp_admin.scalar_one_or_none():
+                db.add(RolePermission(role_id=admin_role.id, permission_id=perm.id))
+                
+        # Member gets basic view permissions
+        if perm.key in ["organization.view", "member.view", "election.view", "results.view"]:
+            result_rp_member = await db.execute(select(RolePermission).where(RolePermission.role_id == member_role.id, RolePermission.permission_id == perm.id))
+            if not result_rp_member.scalar_one_or_none():
+                db.add(RolePermission(role_id=member_role.id, permission_id=perm.id))
             
     await db.commit()
 

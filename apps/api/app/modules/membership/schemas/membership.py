@@ -10,6 +10,14 @@ class OrganizationBasicResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+class UserBasicResponse(BaseModel):
+    id: uuid.UUID
+    email: str
+    first_name: str
+    last_name: str
+
+    model_config = ConfigDict(from_attributes=True)
+
 class MembershipBase(BaseModel):
     organization_id: uuid.UUID
     status: MembershipStatus = Field(default=MembershipStatus.PENDING)
@@ -33,5 +41,6 @@ class MembershipResponse(MembershipBase):
     created_at: datetime
     updated_at: datetime
     organization: OrganizationBasicResponse | None = None
+    user: UserBasicResponse | None = None
 
     model_config = ConfigDict(from_attributes=True)

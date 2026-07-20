@@ -86,9 +86,9 @@ class OrganizationService:
             raise NotFoundException(message="Organization not found")
         return org
 
-    async def list_organizations(self, skip: int = 0, limit: int = 100) -> Sequence[Organization]:
-        """List active organizations."""
-        return await self.repository.list_organizations(skip=skip, limit=limit)
+    async def list_user_organizations(self, user_id: uuid.UUID, skip: int = 0, limit: int = 100) -> Sequence[Organization]:
+        """List active organizations the user is a member of."""
+        return await self.repository.list_user_organizations(user_id, skip=skip, limit=limit)
 
     async def update_organization(self, org_id: uuid.UUID, org_data: OrganizationUpdate) -> Organization:
         """Partially update an organization."""

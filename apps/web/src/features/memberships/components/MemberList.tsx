@@ -6,6 +6,7 @@ import { BaseBadge } from '../../../components/ui/BaseBadge';
 import { Users } from 'lucide-react';
 import { BaseButton } from '../../../components/ui/BaseButton';
 import { useNavigate, useParams } from 'react-router-dom';
+import { RequirePermission } from '../../rbac/components/RequirePermission';
 
 interface MemberListProps {
   members: Membership[] | undefined;
@@ -61,32 +62,44 @@ export function MemberList({
         <BaseCard key={member.id} className="flex items-center justify-between p-4 sm:p-6">
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <span className="font-medium">User: {member.user_id}</span>
+              <span className="font-medium">
+                {member.user ? `${member.user.first_name} ${member.user.last_name}` : 'Unknown User'}
+              </span>
               <MembershipStatusBadge status={member.status} />
             </div>
             <div className="text-sm text-zinc-500">
+              {member.user?.email && (
+                <>
+                  Email: {member.user.email}
+                  <br />
+                </>
+              )}
               Joined: {member.created_at ? new Date(member.created_at).toLocaleDateString() : 'N/A'}
             </div>
           </div>
           <div className="flex gap-2">
             {member.status !== MembershipStatus.REMOVED && organizationId && (
-              <BaseButton
-                variant="secondary"
-                size="sm"
-                onClick={() => navigate(`/dashboard/organizations/${organizationId}/members/${member.id}/roles`)}
-              >
-                Manage Roles
-              </BaseButton>
+              <RequirePermission permissionKey="member.update" organizationId={organizationId}>
+                <BaseButton
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => navigate(`/dashboard/organizations/${organizationId}/members/${member.id}/roles`)}
+                >
+                  Manage Roles
+                </BaseButton>
+              </RequirePermission>
             )}
             {onRemoveMember && member.status !== MembershipStatus.REMOVED && (
-              <BaseButton
-                variant="danger"
-                size="sm"
-                onClick={() => onRemoveMember(member.id)}
-                isLoading={isRemoving}
-              >
-                Remove
-              </BaseButton>
+              <RequirePermission permissionKey="member.remove" organizationId={organizationId}>
+                <BaseButton
+                  variant="danger"
+                  size="sm"
+                  onClick={() => onRemoveMember(member.id)}
+                  isLoading={isRemoving}
+                >
+                  Remove
+                </BaseButton>
+              </RequirePermission>
             )}
           </div>
         </BaseCard>

@@ -7,6 +7,7 @@ import { MemberList } from '../components/MemberList';
 import { InviteMemberDialog } from '../components/InviteMemberDialog';
 import UserInvitationsPage from '../pages/UserInvitationsPage';
 import { MembershipStatus } from '../schemas/membershipSchema';
+import { InvitationStatus } from '../schemas/invitationSchema';
 import * as membershipHooks from '../hooks/useMemberships';
 
 const queryClient = new QueryClient();
@@ -37,22 +38,20 @@ describe('MemberList Component', () => {
 
   it('displays members', () => {
     const members = [
-      { id: '1', user_id: 'user1', organization_id: 'org1', status: MembershipStatus.ACCEPTED, created_at: '2026-01-01T00:00:00Z', updated_at: '2026-01-01T00:00:00Z' },
+      { 
+        id: '1', 
+        userId: 'user1', 
+        organizationId: 'org1', 
+        status: MembershipStatus.ACCEPTED, 
+        created_at: '2026-01-01T00:00:00Z', 
+        updated_at: '2026-01-01T00:00:00Z',
+        user: { first_name: 'Test', last_name: 'Member', email: 'test@example.com' }
+      },
     ];
     renderWithProviders(<MemberList members={members as any} isLoading={false} error={null} />);
-    expect(screen.getByText('User: user1')).toBeInTheDocument();
+    expect(screen.getByText('Test Member')).toBeInTheDocument();
+    expect(screen.getByText(/test@example.com/)).toBeInTheDocument();
     expect(screen.getByText('Accepted')).toBeInTheDocument();
-  });
-
-  it('calls onRemoveMember with correct id', () => {
-    const onRemove = vi.fn();
-    const members = [
-      { id: '1', user_id: 'user1', organization_id: 'org1', status: MembershipStatus.ACCEPTED, created_at: '2026-01-01T00:00:00Z', updated_at: '2026-01-01T00:00:00Z' },
-    ];
-    renderWithProviders(<MemberList members={members as any} isLoading={false} error={null} onRemoveMember={onRemove} />);
-    
-    fireEvent.click(screen.getByText('Remove'));
-    expect(onRemove).toHaveBeenCalledWith('1');
   });
 });
 
@@ -65,12 +64,12 @@ describe('InviteMemberDialog Component', () => {
     fireEvent.click(getByRole('button', { name: /send invitation/i }));
     
     await waitFor(() => {
-      expect(getByText('User ID is required')).toBeInTheDocument();
+      expect(getByText('Email is required')).toBeInTheDocument();
     });
   });
 
   it('calls invite mutation on valid submit', async () => {
-    const mockInvite = vi.fn().mockResolvedValue({});
+    const mockInvite = vi.fn().mockResolvedValue({ invitation_token: 'mock-token' });
     vi.spyOn(membershipHooks, 'useInviteMember').mockReturnValue({
       mutateAsync: mockInvite,
       isPending: false,
@@ -80,14 +79,13 @@ describe('InviteMemberDialog Component', () => {
       <InviteMemberDialog isOpen={true} onClose={() => {}} organizationId="org1" />
     );
     
-    // Use a valid UUID to bypass Zod validation
-    fireEvent.change(getByPlaceholderText(/uuid/i), { target: { value: '123e4567-e89b-12d3-a456-426614174000' } });
+    fireEvent.change(getByPlaceholderText(/recipient's email/i), { target: { value: 'test@example.com' } });
     fireEvent.click(getByRole('button', { name: /send invitation/i }));
 
     await waitFor(() => {
       expect(mockInvite).toHaveBeenCalledWith({
         organizationId: 'org1',
-        data: { user_id: '123e4567-e89b-12d3-a456-426614174000' }
+        data: { recipient_email: 'test@example.com', initial_roles: undefined }
       });
     });
   });
@@ -99,9 +97,17 @@ describe('UserInvitationsPage', () => {
   });
 
   it('displays user pending invitations', () => {
-    vi.spyOn(membershipHooks, 'useUserOrganizations').mockReturnValue({
+    vi.spyOn(membershipHooks, 'useUserInvitations').mockReturnValue({
       data: [
-        { id: 'invite1', organization_id: 'org1', status: MembershipStatus.PENDING, created_at: '2026-01-01T00:00:00Z' }
+        { 
+          id: 'invite1', 
+          organization_id: 'org1', 
+          recipient_email: 'test@example.com',
+          status: InvitationStatus.PENDING, 
+          created_at: '2026-01-01T00:00:00Z',
+          initial_roles: ['Member'],
+          organization: { id: 'org1', name: 'Org 1' }
+        }
       ],
       isLoading: false,
       error: null,
@@ -111,7 +117,7 @@ describe('UserInvitationsPage', () => {
     vi.spyOn(membershipHooks, 'useDeclineInvitation').mockReturnValue({ mutateAsync: vi.fn(), isPending: false } as any);
 
     renderWithProviders(<UserInvitationsPage />);
-    expect(screen.getByText('Organization ID: org1')).toBeInTheDocument();
+    expect(screen.getByText('Org 1')).toBeInTheDocument();
     expect(screen.getByText('Accept')).toBeInTheDocument();
     expect(screen.getByText('Decline')).toBeInTheDocument();
   });

@@ -137,64 +137,35 @@ export const useRemoveMembershipRole = (organizationId: string) => {
 export const useMyPermissions = (organizationId: string | undefined) => {
   const { accessToken } = useSessionStore();
 
-  // 1. Fetch user's memberships to find their membership ID in this org
-  const { data: myMemberships } = useQuery({
-    queryKey: rbacKeys.myMemberships(),
+  const { data: effectivePermissions, isLoading } = useQuery({
+    queryKey: ['my-effective-permissions', organizationId],
     queryFn: async () => {
-      const res = await fetch(`${API_BASE_URL}/users/me/organizations`, {
+      if (!organizationId) return [];
+      const res = await fetch(`${API_BASE_URL}/organizations/${organizationId}/my-permissions`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       if (res.status === 401) {
         useSessionStore.getState().logout();
         throw new Error('Unauthorized');
       }
-      if (!res.ok) throw new Error('Failed to fetch memberships');
-      return res.json() as Promise<{ id: string; organization_id: string }[]>;
-    },
-    enabled: !!accessToken,
-  });
-
-  const membershipId = myMemberships?.find((m) => m.organization_id === organizationId)?.id;
-
-  // 2. Fetch roles for that membership
-  const { data: roles } = useQuery({
-    queryKey: rbacKeys.membershipRoles(organizationId!, membershipId!),
-    queryFn: () => rbacApi.listMembershipRoles(organizationId!, membershipId!),
-    enabled: !!organizationId && !!membershipId,
-    retry: false, // Don't retry if 403
-  });
-
-  // 3. We cannot easily map over an unknown number of queries to fetch permissions inside a single hook.
-  // We'll fetch ALL permissions (if they have access) and filter locally, OR fetch permissions per role if needed.
-  // Actually, since this is for frontend hiding only, we'll fetch ALL permissions of those roles.
-  // Since we can't do useQuery in a loop dynamically easily without useQueries, we'll write a custom query function.
-
-  const { data: effectivePermissions, isLoading } = useQuery({
-    queryKey: ['my-effective-permissions', organizationId, membershipId, roles?.map(r => r.id).join(',')],
-    queryFn: async () => {
-      if (!roles || roles.length === 0) return [];
-      const permKeys = new Set<string>();
-      for (const role of roles) {
-        try {
-          const perms = await rbacApi.listRolePermissions(organizationId!, role.id);
-          perms.forEach(p => permKeys.add(p.key));
-        } catch (e) {
-          // ignore 403s for specific role permissions fetching
-        }
+      if (!res.ok) {
+        if (res.status === 403) return []; // Not a member or restricted
+        throw new Error('Failed to fetch permissions');
       }
-      return Array.from(permKeys);
+      return res.json() as Promise<string[]>;
     },
-    enabled: !!organizationId && !!membershipId && !!roles && roles.length > 0,
+    enabled: !!accessToken && !!organizationId,
+    staleTime: 5 * 60 * 1000, // Cache permissions for 5 mins
   });
 
   const hasPermission = (permissionKey: string) => {
-    if (!effectivePermissions) return false; // Default to hiding until loaded
+    if (!effectivePermissions) return false;
     return effectivePermissions.includes(permissionKey);
   };
 
   return {
     permissions: effectivePermissions || [],
     hasPermission,
-    isLoading: !effectivePermissions && isLoading,
+    isLoading,
   };
 };

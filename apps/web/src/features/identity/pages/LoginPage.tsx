@@ -29,7 +29,14 @@ export function LoginPage() {
       setServerError(null);
       const response = await identityApi.login(data);
       login(response.user, response.access_token, response.refresh_token);
-      navigate(from, { replace: true });
+      
+      const inviteReturnTo = localStorage.getItem('inviteReturnTo');
+      if (inviteReturnTo) {
+        localStorage.removeItem('inviteReturnTo');
+        navigate(inviteReturnTo, { replace: true });
+      } else {
+        navigate(from, { replace: true });
+      }
     } catch (err: any) {
       setServerError(err.message || 'Invalid email or password');
     }

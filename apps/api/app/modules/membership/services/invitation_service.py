@@ -89,7 +89,15 @@ class InvitationService:
         if invitation.status != InvitationStatus.PENDING:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invitation is no longer pending.")
             
-        if invitation.expires_at < now:
+        # Handle timezone-aware vs timezone-naive datetimes safely (Postgres vs SQLite)
+        now_comparison = now
+        if invitation.expires_at.tzinfo is None and now.tzinfo is not None:
+            now_comparison = now.replace(tzinfo=None)
+        elif invitation.expires_at.tzinfo is not None and now.tzinfo is None:
+            from datetime import timezone
+            now_comparison = now.replace(tzinfo=timezone.utc)
+            
+        if invitation.expires_at < now_comparison:
             invitation.status = InvitationStatus.EXPIRED
             await self.repository.update_invitation(invitation)
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invitation has expired.")
@@ -101,16 +109,29 @@ class InvitationService:
         if not user or user.email != invitation.recipient_email:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="This invitation was sent to a different email address.")
 
-        # Create membership
-        membership = Membership(
-            user_id=user_id,
-            organization_id=invitation.organization_id,
-            status=MembershipStatus.ACCEPTED,
-            invited_by=invitation.invited_by,
-            invited_at=invitation.created_at,
-            accepted_at=now
+        # Check if membership already exists (e.g. they were previously removed)
+        membership = await self.membership_repo.get_membership_by_user_and_org(
+            user_id,
+            invitation.organization_id
         )
-        membership = await self.membership_repo.create_membership(membership)
+        if membership:
+            membership.status = MembershipStatus.ACCEPTED
+            membership.invited_by = invitation.invited_by
+            membership.invited_at = invitation.created_at
+            membership.accepted_at = now
+            membership.removed_at = None
+            membership = await self.membership_repo.update_membership(membership)
+        else:
+            # Create membership
+            membership = Membership(
+                user_id=user_id,
+                organization_id=invitation.organization_id,
+                status=MembershipStatus.ACCEPTED,
+                invited_by=invitation.invited_by,
+                invited_at=invitation.created_at,
+                accepted_at=now
+            )
+            membership = await self.membership_repo.create_membership(membership)
 
         # Assign roles
         rbac_repo = RBACRepository(self.session)
@@ -127,11 +148,14 @@ class InvitationService:
             if not role:
                 role = await rbac_repo.get_role_by_name(role_name, None)
             if role:
-                await rbac_repo.assign_role_to_membership(MembershipRole(
-                    membership_id=membership.id,
-                    role_id=role.id,
-                    assigned_by=invitation.invited_by
-                ))
+                # Eager check if they already have this role to avoid duplicate key error
+                existing_roles = await rbac_repo.list_membership_roles(membership.id)
+                if not any(r.id == role.id for r in existing_roles):
+                    await rbac_repo.assign_role_to_membership(MembershipRole(
+                        membership_id=membership.id,
+                        role_id=role.id,
+                        assigned_by=invitation.invited_by
+                    ))
 
         # Update invitation
         invitation.status = InvitationStatus.ACCEPTED
@@ -198,11 +222,26 @@ class InvitationService:
         if not invitation:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invitation not found.")
             
-        if invitation.status != InvitationStatus.PENDING:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Can only revoke pending invitations.")
-            
+        # Allow deleting invitation history for any status
+        # If it was pending, it prevents them from accepting it.
+        # If it was already accepted/declined, it just cleans up the history.
         # Optional: check if current_user_id has permission
         # For now, allow if they are the one who invited, or assume route protects it
+        
+        # If the invitation was accepted, remove the user from the organization
+        if invitation.status == InvitationStatus.ACCEPTED and invitation.recipient_user_id:
+            from app.modules.membership.services.membership_service import MembershipService
+            membership_service = MembershipService(self.session)
+            membership = await self.membership_repo.get_membership_by_user_and_org(
+                invitation.recipient_user_id,
+                invitation.organization_id
+            )
+            if membership:
+                await membership_service.remove_member(
+                    admin_user_id=current_user_id,
+                    org_id=invitation.organization_id,
+                    membership_id=membership.id
+                )
         
         await self.repository.delete_invitation(invitation)
         

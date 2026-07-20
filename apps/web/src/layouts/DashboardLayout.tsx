@@ -57,10 +57,10 @@ export default function DashboardLayout() {
   ];
 
   return (
-    <div className="min-h-screen flex bg-[var(--color-canvas-light)] dark:bg-[var(--color-canvas-dark)] text-[var(--color-neutral-primary-light)] dark:text-[var(--color-neutral-primary-dark)]">
+    <div className="h-screen flex overflow-hidden bg-[var(--color-canvas-light)] dark:bg-[var(--color-canvas-dark)] text-[var(--color-neutral-primary-light)] dark:text-[var(--color-neutral-primary-dark)]">
       {/* 1. Desktop Sidebar Container */}
       <aside
-        className={`hidden lg:flex flex-col border-r border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-white dark:bg-[#18181B] transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'}`}
+        className={`hidden lg:flex flex-col border-r border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-white dark:bg-[#18181B] transition-all duration-300 h-full shrink-0 ${isOpen ? 'w-64' : 'w-20'}`}
       >
         {/* Header Branding */}
         <div className="sticky top-0 z-10 bg-white/85 dark:bg-[#18181B]/85 backdrop-blur-md h-16 flex items-center justify-between px-4 border-b border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)]">
@@ -110,7 +110,7 @@ export default function DashboardLayout() {
         </nav>
 
         {/* Footer Brand */}
-        <div className="p-4 border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)]">
+        <div className="p-4 border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] sticky bottom-0 z-10 shrink-0 bg-white dark:bg-[#18181B]">
           {isOpen ? (
             <p className="text-[9px] text-[var(--color-neutral-muted-light)] uppercase tracking-[1.5px]">
               Powered by{' '}
@@ -182,7 +182,7 @@ export default function DashboardLayout() {
       )}
 
       {/* 3. Main Dashboard Wrapper */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
         {/* Top Navbar */}
         <header className="sticky top-0 z-40 w-full h-16 border-b border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-white/80 dark:bg-[#18181B]/80 backdrop-blur-md flex items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-4">

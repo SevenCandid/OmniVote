@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "omnivote-api"
-version = "0.2.3-alpha"
+version = "0.2.4-alpha"
 description = "FastAPI Backend for OmniVote SaaS platform"
 authors = ["VeroSeven <engineering@veroseven.com>"]
 readme = "README.md"

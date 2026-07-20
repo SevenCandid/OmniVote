@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useOrganization, useCreateOrganization, useDeleteOrganization } from '../hooks/useOrganizations';
+import { useOrganization, useCreateOrganization, useDeleteOrganization, useUpdateOrganization } from '../hooks/useOrganizations';
 import { OrganizationForm } from '../components/OrganizationForm';
 import { OrganizationCreateInput } from '../schemas/organizationSchema';
+import { useMyPermissions } from '../../rbac/hooks/useRbac';
 
 export default function OrganizationDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -12,7 +13,9 @@ export default function OrganizationDetailsPage() {
   const isNew = id === undefined || id === 'new';
 
   const { data: organization, isLoading } = useOrganization(isNew ? '' : id!);
+  const { hasPermission, isLoading: isLoadingPermissions } = useMyPermissions(isNew ? undefined : id);
   const createMutation = useCreateOrganization();
+  const updateMutation = useUpdateOrganization();
   const deleteMutation = useDeleteOrganization();
 
   const [isEditing, setIsEditing] = useState(isNew);
@@ -41,13 +44,20 @@ export default function OrganizationDetailsPage() {
         onSuccess: () => navigate('/dashboard/organizations'),
       });
     } else {
-      // Update logic would go here
+      updateMutation.mutate({ id: id!, data: sanitizedData }, {
+        onSuccess: () => {
+          setIsEditing(false);
+        }
+      });
     }
   };
 
-  if (isLoading && !isNew) {
+  if ((isLoading || isLoadingPermissions) && !isNew) {
     return <div className="p-6">Loading organization details...</div>;
   }
+
+  const canEdit = isNew || hasPermission('organization.update');
+  const canDelete = !isNew && hasPermission('organization.delete');
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
@@ -80,7 +90,7 @@ export default function OrganizationDetailsPage() {
         <div className="flex-1"></div>
         {!isNew && (
           <div className="flex space-x-3">
-            {!isEditing && (
+            {!isEditing && canEdit && (
               <button
                 onClick={() => setIsEditing(true)}
                 className="px-4 py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 text-sm font-medium focus:outline-none"
@@ -88,12 +98,14 @@ export default function OrganizationDetailsPage() {
                 Edit
               </button>
             )}
-            <button
-              onClick={() => setShowDeleteModal(true)}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50"
-            >
-              Delete
-            </button>
+            {canDelete && (
+              <button
+                onClick={() => setShowDeleteModal(true)}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50"
+              >
+                Delete
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -105,6 +117,12 @@ export default function OrganizationDetailsPage() {
           <button className="pb-2 font-medium text-gray-500 hover:text-gray-900">Branding</button>
           <button 
             className="pb-2 font-medium text-gray-500 hover:text-gray-900"
+            onClick={() => navigate(`/dashboard/organizations/${id}/members`)}
+          >
+            Members
+          </button>
+          <button 
+            className="pb-2 font-medium text-gray-500 hover:text-gray-900"
             onClick={() => navigate(`/dashboard/organizations/${id}/roles`)}
           >
             Roles & Permissions
@@ -114,8 +132,15 @@ export default function OrganizationDetailsPage() {
 
       {createMutation.isError && (
         <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm mb-6">
-          <p className="font-semibold">Failed to save organization</p>
+          <p className="font-semibold">Failed to create organization</p>
           <p>{createMutation.error instanceof Error ? createMutation.error.message : 'Unknown error occurred'}</p>
+        </div>
+      )}
+
+      {updateMutation.isError && (
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm mb-6">
+          <p className="font-semibold">Failed to update organization</p>
+          <p>{updateMutation.error instanceof Error ? updateMutation.error.message : 'Unknown error occurred'}</p>
         </div>
       )}
 
@@ -129,7 +154,7 @@ export default function OrganizationDetailsPage() {
       <OrganizationForm
         initialData={organization}
         onSubmit={handleSubmit}
-        isLoading={createMutation.isPending}
+        isLoading={isNew ? createMutation.isPending : updateMutation.isPending}
         isReadOnly={!isEditing}
       />
 

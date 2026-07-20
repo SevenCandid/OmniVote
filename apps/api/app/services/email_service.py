@@ -1,7 +1,6 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
 from pydantic import EmailStr
 import logging
-from pathlib import Path
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -30,8 +29,8 @@ class EmailService:
         conf = get_mail_config()
         # Ensure mail config is valid before attempting
         if not conf.USE_CREDENTIALS and conf.MAIL_SERVER not in ["localhost", "omnivote-mail"]:
-             logger.warning(f"Simulating verification to {email_to} with token {token} because no SMTP credentials.")
-             return
+            logger.warning(f"Simulating verification to {email_to} with token {token} because no SMTP credentials.")
+            return
              
         # Verification link assumes frontend runs on VITE_API_BASE_URL parent, e.g. localhost:5173
         verify_link = f"http://localhost:5173/auth/verify-email?token={token}"
@@ -65,8 +64,8 @@ class EmailService:
 
         conf = get_mail_config()
         if not conf.USE_CREDENTIALS and conf.MAIL_SERVER not in ["localhost", "omnivote-mail"]:
-             logger.warning(f"Simulating reset to {email_to} with token {token} because no SMTP credentials.")
-             return
+            logger.warning(f"Simulating reset to {email_to} with token {token} because no SMTP credentials.")
+            return
              
         # Reset link
         reset_link = f"http://localhost:5173/auth/reset-password?token={token}"

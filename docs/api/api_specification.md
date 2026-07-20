@@ -317,6 +317,120 @@ Every response returned by the OmniVote API must conform to a standardized JSON 
   }
   ```
 
+### 4.9 Membership & Invitation Subdomain
+
+#### `GET /api/v1/organizations/{organization_id}/members`
+* **Purpose:** List members of an organization. Eager loads basic user profile (name, email).
+* **Auth Required:** Bearer JWT. Requires `member.view` permission.
+* **Success Response:** Status `200 OK`.
+  ```json
+  {
+    "success": true,
+    "message": "Members retrieved successfully.",
+    "data": [
+      {
+        "id": "019f7cd3-197a-773e-9e11-ae9eb5c1ad81",
+        "user_id": "019f7cce-c80c-76da-929a-e130db9a307e",
+        "organization_id": "019f7b17-7dbb-702b-93fd-87d4b6d6b6e6",
+        "status": "ACCEPTED",
+        "invited_by": "019f7af1-4496-771c-9e33-f3177cba0b31",
+        "invited_at": "2026-07-20T20:02:25Z",
+        "accepted_at": "2026-07-20T20:09:37Z",
+        "user": {
+          "email": "candidtech07@gmail.com",
+          "first_name": "Test",
+          "last_name": "User"
+        }
+      }
+    ]
+  }
+  ```
+
+#### `POST /api/v1/organizations/{organization_id}/members`
+* **Purpose:** Invite a new user to join the organization.
+* **Auth Required:** Bearer JWT. Requires `member.invite` permission.
+* **Request Body:**
+  ```json
+  {
+    "recipient_email": "newuser@gmail.com",
+    "initial_roles": ["Member"]
+  }
+  ```
+* **Success Response:** Status `201 Created`.
+  ```json
+  {
+    "success": true,
+    "message": "Invitation created successfully.",
+    "data": {
+      "id": "019f811f-6240-7e3a-86dd-cc06c5fb0f06",
+      "organization_id": "019f7b17-7dbb-702b-93fd-87d4b6d6b6e6",
+      "recipient_email": "newuser@gmail.com",
+      "status": "PENDING"
+    }
+  }
+  ```
+
+#### `DELETE /api/v1/organizations/{organization_id}/members/{membership_id}`
+* **Purpose:** Remove a member from the organization.
+* **Auth Required:** Bearer JWT. Requires `member.remove` permission.
+* **Success Response:** Status `200 OK`.
+
+#### `POST /api/v1/invitations/{token}/accept`
+* **Purpose:** Accept an organization invitation using the single-use token.
+* **Auth Required:** Bearer JWT.
+* **Success Response:** Status `200 OK`. Creates or reactivates user membership.
+
+#### `POST /api/v1/invitations/{token}/decline`
+* **Purpose:** Decline an invitation.
+* **Auth Required:** Bearer JWT.
+* **Success Response:** Status `200 OK`.
+
+#### `DELETE /api/v1/invitations/{invitation_id}`
+* **Purpose:** Revoke/delete an invitation. Cascades and deletes active membership if accepted.
+* **Auth Required:** Bearer JWT. Requires `member.invite` permission.
+* **Success Response:** Status `200 OK`.
+
+### 4.10 Role-Based Access Control (RBAC) Subdomain
+
+#### `GET /api/v1/organizations/{organization_id}/my-permissions`
+* **Purpose:** Fetch permissions resolved for the currently logged in user's membership.
+* **Auth Required:** Bearer JWT.
+* **Success Response:** Status `200 OK`.
+  ```json
+  {
+    "success": true,
+    "data": {
+      "permissions": ["organization.view", "election.create"]
+    }
+  }
+  ```
+
+#### `GET /api/v1/organizations/{organization_id}/roles`
+* **Purpose:** Get all available roles that can be assigned in this organization.
+* **Auth Required:** Bearer JWT. Requires `member.update` permission.
+* **Success Response:** Status `200 OK`.
+
+#### `GET /api/v1/memberships/{membership_id}/roles`
+* **Purpose:** Get assigned roles list for a membership.
+* **Auth Required:** Bearer JWT. Requires `member.update` permission (or checks if requesting own roles).
+* **Success Response:** Status `200 OK`.
+
+#### `POST /api/v1/memberships/{membership_id}/roles`
+* **Purpose:** Assign roles to a membership.
+* **Auth Required:** Bearer JWT. Requires `member.update` permission.
+* **Request Body:**
+  ```json
+  {
+    "role_ids": ["019f7b17-7dbb-702b-93fd-87d4b6d6b6e7"]
+  }
+  ```
+* **Success Response:** Status `200 OK`.
+
+#### `DELETE /api/v1/memberships/{membership_id}/roles/{role_id}`
+* **Purpose:** Remove a role assignment from a membership.
+* **Auth Required:** Bearer JWT. Requires `member.update` permission.
+* **Success Response:** Status `200 OK`.
+
 ---
 
 ## 5. Webhook Specifications

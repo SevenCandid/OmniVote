@@ -36,7 +36,10 @@ async def list_roles(
     db: AsyncSession = Depends(get_db_session)
 ) -> Sequence[RoleResponse]:
     service = AuthorizationService(db)
-    return await service.get_organization_roles(organization_id)
+    has_update = await service.has_permission(membership.id, "organization.update")
+    if has_update:
+        return await service.get_organization_roles(organization_id)
+    return await service.get_membership_roles(membership.id)
 
 @router.get("/{role_id}", response_model=RoleResponse)
 async def get_role(
@@ -51,6 +54,14 @@ async def get_role(
     if not role.is_system and role.organization_id != organization_id:
         from app.exceptions.exceptions import ForbiddenException
         raise ForbiddenException(message="Role does not belong to this organization")
+        
+    has_update = await service.has_permission(membership.id, "organization.update")
+    if not has_update:
+        my_roles = await service.get_membership_roles(membership.id)
+        if not any(r.id == role.id for r in my_roles):
+            from app.exceptions.exceptions import ForbiddenException
+            raise ForbiddenException(message="You can only view details of your own roles")
+            
     return role
 
 @router.patch("/{role_id}", response_model=RoleResponse)
@@ -113,4 +124,12 @@ async def list_role_permissions(
     if not role.is_system and role.organization_id != organization_id:
         from app.exceptions.exceptions import ForbiddenException
         raise ForbiddenException(message="Role does not belong to this organization")
+        
+    has_update = await service.has_permission(membership.id, "organization.update")
+    if not has_update:
+        my_roles = await service.get_membership_roles(membership.id)
+        if not any(r.id == role.id for r in my_roles):
+            from app.exceptions.exceptions import ForbiddenException
+            raise ForbiddenException(message="You can only view details of your own roles")
+            
     return await service.get_role_permissions(role_id)

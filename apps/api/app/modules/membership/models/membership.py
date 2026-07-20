@@ -6,6 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import BaseModel
 from app.database.mixins import TimestampMixin
+from app.identity.models.user import User
 
 class MembershipStatus(str, enum.Enum):
     PENDING = "pending"
@@ -44,3 +45,4 @@ class Membership(BaseModel, TimestampMixin):
 
     # Relationships
     organization: Mapped["Organization"] = relationship("Organization")
+    user: Mapped["User"] = relationship("User", foreign_keys=[user_id])

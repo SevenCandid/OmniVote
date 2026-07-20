@@ -23,6 +23,12 @@ export const MembershipSchema = z.object({
     id: z.string().uuid(),
     name: z.string(),
   }).nullable().optional(),
+  user: z.object({
+    id: z.string().uuid(),
+    email: z.string().email(),
+    first_name: z.string(),
+    last_name: z.string(),
+  }).nullable().optional(),
 });
 
 export type Membership = z.infer<typeof MembershipSchema>;

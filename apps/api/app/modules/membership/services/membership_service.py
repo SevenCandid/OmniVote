@@ -6,9 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.identity.services.audit_service import AuditService
 from app.modules.membership.models.membership import Membership, MembershipStatus
 from app.modules.membership.repositories.membership_repository import MembershipRepository
-from app.modules.membership.schemas.membership import MembershipCreate
 from app.modules.membership.exceptions import (
-    DuplicateMembershipException,
     InvalidStateTransitionException,
     MembershipNotFoundException,
 )

@@ -8,6 +8,18 @@ All notable changes to the OmniVote platform will be documented in this file. Th
 
 ---
 
+## [0.2.4-alpha] - 2026-07-20
+
+### Added
+- **RBAC Foundation**: Database models, services, permission seeding, and route-level authorization guards on the backend (`RequirePermission`).
+- **Organization & Member Security**: Locked down organization update/delete routes, built page-level permission checks, and restricted sensitive role lists for regular members.
+- **Improved UX & Modals**: Built a custom React `ConfirmDialog` component, replacing all native browser pop-ups (`window.confirm`/`alert()`) on the memberships and roles pages with toasts.
+- **Invitation Cascade**: Modified the invitation revocation service to cascade deletion to active memberships for accepted invitations, allowing complete deletion.
+- **Eager Loading Emails**: Integrated SQL eager loading (`selectinload`) to prevent N+1 query loops when listing memberships with nested user names and email fields.
+- **Dashboard Scrolling & Isolated Panels**: Fixed full-viewport scrolling isolation so only the main page content panel scrolls, keeping the sidebar and footer branding static.
+
+---
+
 ## [0.2.3-alpha] - 2026-07-18
 
 ### Added
