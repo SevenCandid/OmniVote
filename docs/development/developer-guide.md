@@ -1,5 +1,8 @@
 # Developer Guide — Authorization & RBAC Systems
 
+> [!NOTE]
+> This guide is an extension of the **[VeroSeven Platform Architecture Book](file:///c:/Users/DELL/omnivote/docs/architecture/veroseven-platform-architecture-book.md)**. Refer to the Architecture Book for the complete multi-tenant, database design, and platform-wide request lifecycle specifications.
+
 This guide describes how to work with the Role-Based Access Control (RBAC), authorization, invitation, and ownership subsystems in OmniVote.
 
 ---

@@ -67,6 +67,7 @@ omnivote/
 ## Platform Core Documentation
 The following documents define the specifications of the OmniVote platform and serve as the entry points for anyone visiting the repository:
 
+* **VeroSeven Platform Architecture Book:** [VeroSeven Architecture Book](file:///c:/Users/DELL/omnivote/docs/architecture/veroseven-platform-architecture-book.md) - The canonical engineering reference detailing vision, security layers, RBAC, domain entities, request lifecycles, and backend/frontend coding conventions.
 * **Product History:** [History & Evolution](file:///c:/Users/DELL/omnivote/docs/roadmap/product-history.md) - Learn why OmniVote exists and its evolutionary timeline.
 * **Engineering Standards:** [Engineering Handbook](file:///c:/Users/DELL/omnivote/docs/handbook/README.md) - The central hub for all development guidelines, code standards, and workflows.
 * **Architectural Blueprint:** [System Architecture](file:///c:/Users/DELL/omnivote/docs/architecture/domain-model.md) - The core Domain-Driven Design architecture, aggregates, and context mapping.

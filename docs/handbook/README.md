@@ -30,6 +30,7 @@ We achieve this by upholding the following development rules across all code wri
 Navigate our guidelines using the links below:
 
 ### Core Standards
+- **[VeroSeven Platform Architecture Book](file:///c:/Users/DELL/omnivote/docs/architecture/veroseven-platform-architecture-book.md)**: The canonical reference detailing vision, security layers, RBAC, domain entities, request lifecycles, and backend/frontend coding conventions.
 - **[Engineering Principles](file:///c:/Users/DELL/omnivote/docs/handbook/engineering-principles.md)**: Details on Quality, Security, Scalability, and Reliability guidelines.
 - **[Architecture Blueprints](file:///c:/Users/DELL/omnivote/docs/handbook/architecture-guidelines.md)**: Monorepo decoupled client-server structures, database migrations, and async processing.
 - **[Coding Standards](file:///c:/Users/DELL/omnivote/docs/handbook/coding-standards.md)**: Python PEP8 configurations, Ruff setups, React JSX hooks, and Zustand rules.
