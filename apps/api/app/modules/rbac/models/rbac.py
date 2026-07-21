@@ -58,3 +58,53 @@ class MembershipRole(BaseModel, TimestampMixin):
     __table_args__ = (
         UniqueConstraint("membership_id", "role_id", name="uq_membership_role"),
     )
+
+
+# --- Platform RBAC Layer ---
+
+class PlatformPermission(BaseModel, TimestampMixin):
+    __tablename__ = "rbac_platform_permissions"
+
+    key: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
+    display_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    category: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str | None] = mapped_column(String(500), nullable=True)
+
+
+
+class PlatformRole(BaseModel, TimestampMixin):
+    __tablename__ = "rbac_platform_roles"
+
+    name: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
+    description: Mapped[str | None] = mapped_column(String(500), nullable=True)
+
+
+class PlatformRolePermission(BaseModel, TimestampMixin):
+    __tablename__ = "rbac_platform_role_permissions"
+
+    role_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("rbac_platform_roles.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    permission_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("rbac_platform_permissions.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+
+    __table_args__ = (
+        UniqueConstraint("role_id", "permission_id", name="uq_platform_role_permission"),
+    )
+
+
+class UserPlatformRole(BaseModel, TimestampMixin):
+    __tablename__ = "rbac_user_platform_roles"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("identity_users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    role_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("rbac_platform_roles.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+
+    __table_args__ = (
+        UniqueConstraint("user_id", "role_id", name="uq_user_platform_role"),
+    )
+

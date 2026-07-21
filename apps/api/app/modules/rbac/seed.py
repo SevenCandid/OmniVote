@@ -1,7 +1,7 @@
 import asyncio
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database.session import async_session_factory
-from app.modules.rbac.models.rbac import Permission, Role, RolePermission
+from app.modules.rbac.models.rbac import Permission, Role, RolePermission, PlatformPermission, PlatformRole, PlatformRolePermission
 from app.models.organization import Organization
 from app.modules.membership.models.membership import Membership
 from sqlalchemy import select
@@ -33,8 +33,17 @@ SYSTEM_PERMISSIONS = [
     {"key": "audit.view", "display_name": "View Audit Logs", "category": "System", "description": "View organization audit logs"},
 ]
 
+PLATFORM_PERMISSIONS = [
+    {"key": "organization.manage", "display_name": "Manage Organizations", "category": "Platform", "description": "Manage all customer organizations"},
+    {"key": "platform.configure", "display_name": "Configure Platform", "category": "Platform", "description": "Configure platform settings"},
+    {"key": "user.manage", "display_name": "Manage Users", "category": "Platform", "description": "Manage platform users globally"},
+    {"key": "organization.verify", "display_name": "Verify Organizations", "category": "Platform", "description": "Perform verification workflows on organizations"},
+    {"key": "support.operate", "display_name": "Operate Support", "category": "Platform", "description": "Review and accept customer support requests"},
+    {"key": "security.operate", "display_name": "Operate Security", "category": "Platform", "description": "Perform security and audit operations"},
+]
+
 async def seed_permissions(db: AsyncSession):
-    # Insert permissions
+    # Insert system permissions
     for perm_data in SYSTEM_PERMISSIONS:
         result = await db.execute(select(Permission).where(Permission.key == perm_data["key"]))
         existing = result.scalar_one_or_none()
@@ -45,6 +54,19 @@ async def seed_permissions(db: AsyncSession):
                 category=perm_data["category"],
                 description=perm_data["description"],
                 is_system=True
+            )
+            db.add(perm)
+            
+    # Insert platform permissions
+    for perm_data in PLATFORM_PERMISSIONS:
+        result = await db.execute(select(PlatformPermission).where(PlatformPermission.key == perm_data["key"]))
+        existing = result.scalar_one_or_none()
+        if not existing:
+            perm = PlatformPermission(
+                key=perm_data["key"],
+                display_name=perm_data["display_name"],
+                category=perm_data["category"],
+                description=perm_data["description"]
             )
             db.add(perm)
     
@@ -86,6 +108,18 @@ async def seed_permissions(db: AsyncSession):
         db.add(member_role)
         await db.flush()
 
+    # Create default Platform Support role
+    result = await db.execute(select(Role).where(Role.name == "Platform Support", Role.is_system == True))
+    support_role = result.scalar_one_or_none()
+    if not support_role:
+        support_role = Role(
+            name="Platform Support",
+            description="System Role for platform administrators during an active support session",
+            is_system=True
+        )
+        db.add(support_role)
+        await db.flush()
+
     # Assign all permissions to Owner
     result = await db.execute(select(Permission))
     all_perms = result.scalars().all()
@@ -106,6 +140,40 @@ async def seed_permissions(db: AsyncSession):
             result_rp_member = await db.execute(select(RolePermission).where(RolePermission.role_id == member_role.id, RolePermission.permission_id == perm.id))
             if not result_rp_member.scalar_one_or_none():
                 db.add(RolePermission(role_id=member_role.id, permission_id=perm.id))
+                
+        # Platform Support gets read-only support permissions
+        if perm.key in ["organization.view", "member.view", "election.view", "results.view", "audit.view"]:
+            result_rp_support = await db.execute(select(RolePermission).where(RolePermission.role_id == support_role.id, RolePermission.permission_id == perm.id))
+            if not result_rp_support.scalar_one_or_none():
+                db.add(RolePermission(role_id=support_role.id, permission_id=perm.id))
+
+    # --- Seed Platform Roles ---
+    platform_roles_data = [
+        {"name": "Platform Owner", "description": "Global Platform Owner with root capabilities", "permissions": [p["key"] for p in PLATFORM_PERMISSIONS]},
+        {"name": "Platform Administrator", "description": "Global Platform Admin with general management rights", "permissions": ["organization.manage", "user.manage", "organization.verify", "support.operate"]},
+        {"name": "Support Administrator", "description": "Global Support Staff with rights to assist organizations", "permissions": ["support.operate"]},
+        {"name": "Security Administrator", "description": "Global Security Auditor with security operations rights", "permissions": ["security.operate"]},
+    ]
+
+    for role_data in platform_roles_data:
+        result_pr = await db.execute(select(PlatformRole).where(PlatformRole.name == role_data["name"]))
+        existing_role = result_pr.scalar_one_or_none()
+        if not existing_role:
+            existing_role = PlatformRole(
+                name=role_data["name"],
+                description=role_data["description"]
+            )
+            db.add(existing_role)
+            await db.flush()
+
+        # Map role permissions
+        for perm_key in role_data["permissions"]:
+            res_p = await db.execute(select(PlatformPermission).where(PlatformPermission.key == perm_key))
+            perm_obj = res_p.scalar_one_or_none()
+            if perm_obj:
+                res_rp = await db.execute(select(PlatformRolePermission).where(PlatformRolePermission.role_id == existing_role.id, PlatformRolePermission.permission_id == perm_obj.id))
+                if not res_rp.scalar_one_or_none():
+                    db.add(PlatformRolePermission(role_id=existing_role.id, permission_id=perm_obj.id))
             
     await db.commit()
 

@@ -34,6 +34,18 @@ from app.modules.rbac.models.rbac import (
     Role,
     RolePermission,
     MembershipRole,
+    PlatformPermission,
+    PlatformRole,
+    PlatformRolePermission,
+    UserPlatformRole,
+)
+
+# Support Models
+from app.modules.support.models.support import (
+    SupportRequest,
+    SupportSession,
+    SupportRequestStatus,
+    SessionStatus,
 )
 
 __all__ = [
@@ -65,4 +77,14 @@ __all__ = [
     "Role",
     "RolePermission",
     "MembershipRole",
+    "PlatformPermission",
+    "PlatformRole",
+    "PlatformRolePermission",
+    "UserPlatformRole",
+    
+    # Support
+    "SupportRequest",
+    "SupportSession",
+    "SupportRequestStatus",
+    "SessionStatus",
 ]

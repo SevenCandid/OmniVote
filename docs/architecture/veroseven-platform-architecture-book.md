@@ -245,6 +245,13 @@ To enforce data integrity, specific relational rules are set:
 * Revoking a pending invitation deletes the invitation history.
 * Deleting/revoking an accepted invitation cascades to automatically delete the associated user membership.
 
+### Platform Administration & Temporary Support Access
+The platform separates global administration from tenant-level operations:
+* **Platform RBAC**: Decoupled from organizations. Global platform roles (e.g. `Platform Owner`, `Platform Administrator`) and platform permissions (e.g. `support.operate`, `organization.verify`) are assigned to users without requiring tenant organization membership. Secured using `RequirePlatformPermission` guards.
+* **Customer Support Access**: Customers can submit a `SupportRequest` to grant platform administrators temporary visibility.
+* **Support Session**: Accepting a support request starts a temporary `SupportSession` with a fixed expiration time and logged reason. Platform admins can also start an "Emergency Support Session" directly by documenting a reason, triggering high-priority audit events.
+* **Bypass and Scope Limitation**: During an active support session, the authorization engine intercepts the tenant-level guard `RequirePermission` and evaluates permissions using the organization's system role `Platform Support`. This role grants strictly controlled read-only capabilities (`organization.view`, `member.view`, `election.view`, `results.view`, `audit.view`) to prevent administrators from modifying configuration settings or executing destructive actions. Every action performed during support sessions is explicitly audited under `support_access_action`.
+
 ---
 
 ## Part VII — API Standards
@@ -374,6 +381,11 @@ The system architecture decisions are captured below:
 * **Context**: Trusted organization operations must run independently of operational suspensions.
 * **Decision**: Decoupled `operational_status` from `verification_status` into separate columns.
 * **Ref**: [0010-separate-organization-verification-status.md](file:///c:/Users/DELL/omnivote/docs/decisions/0010-separate-organization-verification-status.md)
+
+### [ADR-011] Platform Administration and Support Access Model
+* **Context**: Decoupling platform management from tenant organizations while offering secure, time-bound, and audited support access.
+* **Decision**: Decoupled Platform RBAC from Organization RBAC, and implemented a temporary support session bypass where platform administrators are mapped to the read-only system role `Platform Support` with full audit logging.
+* **Ref**: [0011-platform-rbac-and-support-access.md](file:///c:/Users/DELL/omnivote/docs/decisions/0011-platform-rbac-and-support-access.md)
 
 ---
 

@@ -16,6 +16,7 @@ from app.modules.rbac.routes import (
     roles as rbac_roles_routes,
     memberships as rbac_memberships_routes,
 )
+from app.modules.support.routes import support as support_routes
 
 api_router = APIRouter()
 
@@ -38,3 +39,7 @@ api_router.include_router(membership_invitations_routes.router, prefix="/invitat
 api_router.include_router(rbac_permissions_routes.router, prefix="/permissions", tags=["Permissions"])
 api_router.include_router(rbac_roles_routes.router, prefix="/organizations/{organization_id}/roles", tags=["Roles"])
 api_router.include_router(rbac_memberships_routes.router, prefix="/organizations/{organization_id}/memberships", tags=["Membership Roles"])
+
+# Support API
+api_router.include_router(support_routes.router, tags=["Support"])
+
