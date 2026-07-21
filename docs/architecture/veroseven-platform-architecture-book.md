@@ -252,6 +252,15 @@ The platform separates global administration from tenant-level operations:
 * **Support Session**: Accepting a support request starts a temporary `SupportSession` with a fixed expiration time and logged reason. Platform admins can also start an "Emergency Support Session" directly by documenting a reason, triggering high-priority audit events.
 * **Bypass and Scope Limitation**: During an active support session, the authorization engine intercepts the tenant-level guard `RequirePermission` and evaluates permissions using the organization's system role `Platform Support`. This role grants strictly controlled read-only capabilities (`organization.view`, `member.view`, `election.view`, `results.view`, `audit.view`) to prevent administrators from modifying configuration settings or executing destructive actions. Every action performed during support sessions is explicitly audited under `support_access_action`.
 
+### Custom Roles, Protection Rules & Privilege Escalation Prevention
+Organization administrators can create and manage custom roles to delegate specialized authority:
+* **Role Types**:
+  * *Reserved System Roles*: System-seeded roles like `Owner`, `Admin`, `Member` have `organization_id == null` and `is_system == True`. These roles are immutable and cannot be deleted.
+  * *Custom Roles*: Scoped to a specific organization (`organization_id` matches the tenant, `is_system == False`). Custom roles are editable and deletable.
+* **Privilege Escalation Prevention**: An administrator can only create, update, or assign roles containing permissions that the administrator currently possesses.
+* **Deletion Protection**: Reserved system roles cannot be deleted or have their default permissions modified by organization administrators.
+* **Effective Permissions**: The platform provides a fast resolution endpoint `GET /api/v1/organizations/{org_id}/members/me/effective-permissions` returning the current user's flattened roles and distinct permission keys for frontend conditional rendering.
+
 ---
 
 ## Part VII — API Standards
@@ -386,6 +395,11 @@ The system architecture decisions are captured below:
 * **Context**: Decoupling platform management from tenant organizations while offering secure, time-bound, and audited support access.
 * **Decision**: Decoupled Platform RBAC from Organization RBAC, and implemented a temporary support session bypass where platform administrators are mapped to the read-only system role `Platform Support` with full audit logging.
 * **Ref**: [0011-platform-rbac-and-support-access.md](file:///c:/Users/DELL/omnivote/docs/decisions/0011-platform-rbac-and-support-access.md)
+
+### [ADR-012] Role Management, Protection Rules and Privilege Escalation Prevention
+* **Context**: Securing the creation, update, and assignment of custom organization roles against privilege escalation while keeping system roles immutable.
+* **Decision**: Enforced subset-permission checks at role creation/assignment time, protected system roles from mutation, and added a fast-flattening effective permissions query endpoint.
+* **Ref**: [0012-role-management-and-protection-rules.md](file:///c:/Users/DELL/omnivote/docs/decisions/0012-role-management-and-protection-rules.md)
 
 ---
 
