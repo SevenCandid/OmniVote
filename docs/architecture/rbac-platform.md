@@ -150,3 +150,82 @@ The RBAC Foundation is designed to support the following future capabilities wit
 4. **ABAC (Attribute-Based Access Control)**: Future integration allowing policies such as "User can manage Event ONLY IF User is Event Owner."
 
 5. **Policy Engine**: Integration with OPA (Open Policy Agent) or similar sidecars for decentralized policy evaluation across microservices, using this DB schema as the source of truth.
+
+---
+
+## Role Management Administration API
+
+> [!IMPORTANT]
+> Implemented in **Sprint 2.0.5**. All endpoints require an active organization membership with the relevant permission.
+
+### Roles
+
+| Method | Path | Permission Required | Description |
+|---|---|---|---|
+| `GET` | `/organizations/{id}/roles` | `organization.view` | List all roles (system + custom) for the org |
+| `GET` | `/organizations/{id}/roles/{role_id}` | `organization.view` | Get a single role by ID |
+| `POST` | `/organizations/{id}/roles` | `organization.update` | Create a new custom role |
+| `PATCH` | `/organizations/{id}/roles/{role_id}` | `organization.update` | Update a custom role name/description |
+| `DELETE` | `/organizations/{id}/roles/{role_id}` | `organization.update` | Delete a custom role |
+
+### Role Permissions
+
+| Method | Path | Permission Required | Description |
+|---|---|---|---|
+| `GET` | `/organizations/{id}/roles/{role_id}/permissions` | `organization.view` | List all permissions on a role |
+| `POST` | `/organizations/{id}/roles/{role_id}/permissions` | `organization.update` | Add a single permission to a role |
+| `PUT` | `/organizations/{id}/roles/{role_id}/permissions` | `organization.update` | **Atomically replace** entire permission set |
+| `DELETE` | `/organizations/{id}/roles/{role_id}/permissions/{perm_id}` | `organization.update` | Remove a single permission from a role |
+
+### Membership Roles
+
+| Method | Path | Permission Required | Description |
+|---|---|---|---|
+| `GET` | `/organizations/{id}/memberships/{mid}/roles` | `member.view` | List all roles assigned to a membership |
+| `POST` | `/organizations/{id}/memberships/{mid}/roles` | `member.update` | Assign a single role to a membership |
+| `PUT` | `/organizations/{id}/memberships/{mid}/roles` | `member.update` | **Atomically replace** entire role set |
+| `DELETE` | `/organizations/{id}/memberships/{mid}/roles/{role_id}` | `member.update` | Remove a single role from a membership |
+
+### Effective Permissions
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/organizations/{id}/memberships/me/effective-permissions` | Full effective roles + permission keys |
+| `GET` | `/organizations/{id}/memberships/my-permissions` | Alias — same response, frontend-friendly path |
+
+---
+
+## System Invariants
+
+### 1. System Role Immutability
+System roles (`Owner`, `Admin`, `Member`, `Platform Support`) **cannot** be renamed, deleted, or have permissions reassigned via the API. Attempts return `403 Forbidden` and produce a `role.protected_action_blocked` audit event.
+
+### 2. Privilege Escalation Prevention
+A caller cannot grant a permission (or assign a role containing a permission) that they do not themselves possess. Enforced at service layer in `assign_permission` and `assign_role_to_membership`. Returns `403 Forbidden`.
+
+### 3. Last Owner Protection
+At least one active membership must always hold the `Owner` system role. Any operation that would remove the final owner is rejected with `409 Conflict`. Applies to both individual `DELETE` and bulk `PUT` role replacement.
+
+### 4. Organization Isolation
+All role operations are scoped to a single organization. Roles from a different organization cannot be assigned to memberships in another organization.
+
+---
+
+## Audit Event Catalogue
+
+Every role mutation emits a `SecurityEvent` to the audit log.
+
+| Event Type | Trigger |
+|---|---|
+| `role.created` | A new custom role was created |
+| `role.updated` | A custom role's name or description was changed |
+| `role.deleted` | A custom role was deleted |
+| `role.permission_assigned` | A permission was added to a role (single POST) |
+| `role.permission_removed` | A permission was removed from a role (single DELETE) |
+| `role.permissions_replaced` | All permissions on a role were atomically replaced (PUT) |
+| `membership.role_assigned` | A role was added to a membership (single POST) |
+| `membership.role_removed` | A role was removed from a membership (single DELETE) |
+| `membership.roles_replaced` | All roles on a membership were atomically replaced (PUT) |
+| `role.protected_action_blocked` | A privileged operation was blocked (system role guard or escalation check) |
+
+All events include `actor (user_id)`, `organization_id`, target entity ID, and relevant metadata.

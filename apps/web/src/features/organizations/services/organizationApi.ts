@@ -1,9 +1,12 @@
-import { Organization, OrganizationCreateInput, OrganizationUpdateInput } from '../schemas/organizationSchema';
+import {
+  Organization,
+  OrganizationCreateInput,
+  OrganizationUpdateInput,
+} from '../schemas/organizationSchema';
 import { useSessionStore } from '../../../stores/sessionStore';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
-
-
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
 
 async function fetchWithConfig(endpoint: string, options: RequestInit = {}) {
   const { accessToken, logout } = useSessionStore.getState();
@@ -29,19 +32,24 @@ async function fetchWithConfig(endpoint: string, options: RequestInit = {}) {
   if (!response.ok) {
     const errorData = await response.json().catch(() => null);
     let errorMessage = 'An error occurred during the API request';
-    
+
     if (errorData?.message) {
       errorMessage = errorData.message;
       if (errorData?.error?.details && Array.isArray(errorData.error.details)) {
-        const issues = errorData.error.details.map((d: any) => `${d.field}: ${d.issue}`).join(', ');
+        const issues = errorData.error.details
+          .map((d: any) => `${d.field}: ${d.issue}`)
+          .join(', ');
         if (issues) {
           errorMessage += ` (${issues})`;
         }
       }
     } else if (errorData?.detail) {
-      errorMessage = typeof errorData.detail === 'string' ? errorData.detail : JSON.stringify(errorData.detail);
+      errorMessage =
+        typeof errorData.detail === 'string'
+          ? errorData.detail
+          : JSON.stringify(errorData.detail);
     }
-    
+
     throw new Error(errorMessage);
   }
 
@@ -68,7 +76,13 @@ export const organizationApi = {
     });
   },
 
-  update: async ({ id, data }: { id: string; data: OrganizationUpdateInput }): Promise<Organization> => {
+  update: async ({
+    id,
+    data,
+  }: {
+    id: string;
+    data: OrganizationUpdateInput;
+  }): Promise<Organization> => {
     return fetchWithConfig(`/organizations/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),

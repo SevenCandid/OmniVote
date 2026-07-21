@@ -1,8 +1,13 @@
 import { Membership } from '../schemas/membershipSchema';
-import { Invitation, InvitationDetails, InviteMemberInput } from '../schemas/invitationSchema';
+import {
+  Invitation,
+  InvitationDetails,
+  InviteMemberInput,
+} from '../schemas/invitationSchema';
 import { useSessionStore } from '../../../stores/sessionStore';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
 
 async function fetchWithConfig(endpoint: string, options: RequestInit = {}) {
   const { accessToken, logout } = useSessionStore.getState();
@@ -28,19 +33,24 @@ async function fetchWithConfig(endpoint: string, options: RequestInit = {}) {
   if (!response.ok) {
     const errorData = await response.json().catch(() => null);
     let errorMessage = 'An error occurred during the API request';
-    
+
     if (errorData?.message) {
       errorMessage = errorData.message;
       if (errorData?.error?.details && Array.isArray(errorData.error.details)) {
-        const issues = errorData.error.details.map((d: any) => `${d.field}: ${d.issue}`).join(', ');
+        const issues = errorData.error.details
+          .map((d: any) => `${d.field}: ${d.issue}`)
+          .join(', ');
         if (issues) {
           errorMessage += ` (${issues})`;
         }
       }
     } else if (errorData?.detail) {
-      errorMessage = typeof errorData.detail === 'string' ? errorData.detail : JSON.stringify(errorData.detail);
+      errorMessage =
+        typeof errorData.detail === 'string'
+          ? errorData.detail
+          : JSON.stringify(errorData.detail);
     }
-    
+
     throw new Error(errorMessage);
   }
 
@@ -52,12 +62,18 @@ async function fetchWithConfig(endpoint: string, options: RequestInit = {}) {
 }
 
 export const membershipApi = {
-  getOrganizationMembers: async (organizationId: string): Promise<Membership[]> => {
+  getOrganizationMembers: async (
+    organizationId: string
+  ): Promise<Membership[]> => {
     return fetchWithConfig(`/organizations/${organizationId}/members`);
   },
 
-  getOrganizationInvitations: async (organizationId: string): Promise<Invitation[]> => {
-    return fetchWithConfig(`/organizations/${organizationId}/members/invitations`);
+  getOrganizationInvitations: async (
+    organizationId: string
+  ): Promise<Invitation[]> => {
+    return fetchWithConfig(
+      `/organizations/${organizationId}/members/invitations`
+    );
   },
 
   getUserOrganizations: async (): Promise<Membership[]> => {
@@ -68,7 +84,10 @@ export const membershipApi = {
     return fetchWithConfig(`/users/me/invitations`);
   },
 
-  inviteMember: async (organizationId: string, data: InviteMemberInput): Promise<Invitation> => {
+  inviteMember: async (
+    organizationId: string,
+    data: InviteMemberInput
+  ): Promise<Invitation> => {
     return fetchWithConfig(`/organizations/${organizationId}/members/invite`, {
       method: 'POST',
       body: JSON.stringify(data),
@@ -97,9 +116,15 @@ export const membershipApi = {
     });
   },
 
-  removeMembership: async (organizationId: string, membershipId: string): Promise<void> => {
-    return fetchWithConfig(`/memberships/${membershipId}?organization_id=${organizationId}`, {
-      method: 'DELETE',
-    });
+  removeMembership: async (
+    organizationId: string,
+    membershipId: string
+  ): Promise<void> => {
+    return fetchWithConfig(
+      `/memberships/${membershipId}?organization_id=${organizationId}`,
+      {
+        method: 'DELETE',
+      }
+    );
   },
 };

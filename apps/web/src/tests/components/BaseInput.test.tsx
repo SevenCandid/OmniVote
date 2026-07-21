@@ -20,7 +20,7 @@ describe('BaseInput Component', () => {
     render(<BaseInput error="Invalid characters entered" />);
     const errorMessage = screen.getByText('Invalid characters entered');
     const input = screen.getByRole('textbox');
-    
+
     expect(errorMessage).toBeInTheDocument();
     expect(input).toHaveClass('border-danger');
   });
@@ -28,10 +28,10 @@ describe('BaseInput Component', () => {
   it('triggers onChange and updates value when user types', async () => {
     const user = userEvent.setup();
     const handleChange = vi.fn();
-    
+
     render(<BaseInput placeholder="Type here" onChange={handleChange} />);
     const input = screen.getByPlaceholderText(/type here/i);
-    
+
     await user.type(input, 'h');
     expect(handleChange).toHaveBeenCalledTimes(1);
   });

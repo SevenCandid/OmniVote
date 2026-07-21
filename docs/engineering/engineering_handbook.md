@@ -153,6 +153,11 @@ Reviewers check code submissions against the following criteria:
   * Use `useCallback` and `useMemo` when passing values down dependency trees.
 * **Aesthetic Consistency:** Use standard Tailwind utility classes and ShadCN components; ad-hoc style values are prohibited.
 
+### RBAC UI Conventions
+* **`useMyPermissions`:** Always use this hook to fetch and cache effective permissions for the current user.
+* **`<RequirePermission>`:** Use this wrapper component to conditionally render UI elements (like Create/Edit buttons) based on effective permissions. This prevents unauthorized users from attempting actions that will fail on the backend.
+* **Bulk Assignments:** When assigning roles or permissions, always use the bulk `replace` API endpoints instead of making iterative granular requests.
+
 ---
 
 ## 11. FastAPI Development Standards

@@ -59,7 +59,8 @@ export function ProfilePage() {
         {/* Avatar Section - Placeholder for now as backend doesn't support uploads yet */}
         <div className="flex items-center gap-6 mb-8 pb-8 border-b border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)]">
           <div className="w-20 h-20 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-primary font-bold text-2xl flex items-center justify-center select-none border-2 border-white dark:border-zinc-800 shadow-sm">
-            {user?.first_name?.[0]}{user?.last_name?.[0]}
+            {user?.first_name?.[0]}
+            {user?.last_name?.[0]}
           </div>
           <div>
             <h3 className="font-semibold text-sm mb-1">Profile Avatar</h3>
@@ -106,7 +107,11 @@ export function ProfilePage() {
           />
 
           <div className="flex justify-end pt-4 border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)]">
-            <BaseButton type="submit" isLoading={isSubmitting} disabled={!isDirty}>
+            <BaseButton
+              type="submit"
+              isLoading={isSubmitting}
+              disabled={!isDirty}
+            >
               Save Changes
             </BaseButton>
           </div>

@@ -175,5 +175,11 @@ class SupportService:
     async def list_requests_by_org(self, organization_id: uuid.UUID) -> Sequence[SupportRequest]:
         return await self.repo.list_support_requests_by_org(organization_id)
 
+    async def list_sessions_by_org(self, organization_id: uuid.UUID) -> Sequence[SupportSession]:
+        return await self.repo.list_support_sessions_by_org(organization_id)
+
     async def list_all_requests(self) -> Sequence[SupportRequest]:
         return await self.repo.list_all_support_requests()
+
+    async def list_all_sessions(self) -> Sequence[SupportSession]:
+        return await self.repo.list_all_support_sessions()

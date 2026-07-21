@@ -19,6 +19,7 @@ class OrganizationVerificationStatus(str, enum.Enum):
     PENDING_VERIFICATION = "pending_verification"
     VERIFIED = "verified"
     REJECTED = "rejected"
+    MORE_INFO_REQUESTED = "more_info_requested"
 
 
 class Organization(BaseModel, TimestampMixin, SoftDeleteMixin, AuditMixin):

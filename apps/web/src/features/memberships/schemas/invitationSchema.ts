@@ -21,10 +21,13 @@ export const InvitationSchema = z.object({
   declined_at: z.string().nullable().optional(),
   created_at: z.string(),
   updated_at: z.string(),
-  organization: z.object({
-    id: z.string().uuid(),
-    name: z.string(),
-  }).nullable().optional(),
+  organization: z
+    .object({
+      id: z.string().uuid(),
+      name: z.string(),
+    })
+    .nullable()
+    .optional(),
 });
 
 export type Invitation = z.infer<typeof InvitationSchema>;
@@ -41,7 +44,10 @@ export const InvitationDetailsSchema = z.object({
 export type InvitationDetails = z.infer<typeof InvitationDetailsSchema>;
 
 export const InviteMemberSchema = z.object({
-  recipient_email: z.string().min(1, 'Email is required').email('Must be a valid email'),
+  recipient_email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Must be a valid email'),
   initial_roles: z.array(z.string()).optional(),
 });
 

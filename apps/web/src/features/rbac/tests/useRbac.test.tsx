@@ -12,7 +12,9 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 
 vi.mock('../services/rbacApi', () => ({
   rbacApi: {
-    listRoles: vi.fn().mockResolvedValue([{ id: '1', name: 'Admin', is_system: true }]),
+    listRoles: vi
+      .fn()
+      .mockResolvedValue([{ id: '1', name: 'Admin', is_system: true }]),
   },
 }));
 

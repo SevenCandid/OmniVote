@@ -10,8 +10,10 @@ This document outlines the fundamental, invariant business rules that govern the
 ## Organization & Access Rules
 4. **Event Ownership**: Every Event belongs to exactly one Organization.
 5. **Organization Ownership**: Users never belong to an organization's account; they establish relationships through Memberships. Ownership of an organization is represented by assigning the reserved "Owner" role to a Membership. Every organization must always have at least one Owner.
-5. **Role Assignment**: A Member can possess multiple Roles within an Organization. Their effective permissions are the union of all permissions granted by their Roles.
-6. **Platform Administration**: System Administrators cannot view identifying Voter data for strict democratic elections without an explicit, audited override (e.g., court order).
+6. **Role Assignment**: A Member can possess multiple Roles within an Organization. Their effective permissions are the union of all permissions granted by their Roles.
+7. **Platform Identity Bootstrap**: The initial Platform Owner must be created via an authorized backend bootstrap script. Once a Platform Owner exists, the bootstrap script must lock itself to prevent unauthorized privilege escalation, unless explicitly overridden for maintenance.
+8. **Platform Invitation Only**: Future Platform Administrators must be onboarded exclusively through the Platform Invitation workflow. Public self-service registration or hidden routes for Platform Identity are strictly forbidden.
+9. **Platform Administration**: System Administrators cannot view identifying Voter data for strict democratic elections without an explicit, audited override (e.g., court order).
 
 ## Event & Lifecycle Rules
 7. **Event Timeline**: An Event can only accept Votes if the current time falls within its strictly defined Start and End time windows.

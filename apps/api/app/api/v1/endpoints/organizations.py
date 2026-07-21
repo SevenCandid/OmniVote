@@ -64,7 +64,7 @@ async def get_organization(
 async def update_organization(
     organization_id: uuid.UUID,
     org_in: OrganizationUpdate,
-    membership=Depends(RequirePermission("organization.update")),
+    auth_context: dict = Depends(RequirePermission("organization.update")),
     db: AsyncSession = Depends(get_db_session),
 ) -> OrganizationResponse:
     """
@@ -77,7 +77,7 @@ async def update_organization(
 @router.delete("/{organization_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_organization(
     organization_id: uuid.UUID,
-    membership=Depends(RequirePermission("organization.delete")),
+    auth_context: dict = Depends(RequirePermission("organization.delete")),
     db: AsyncSession = Depends(get_db_session),
 ):
     """

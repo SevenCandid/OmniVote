@@ -1,6 +1,7 @@
 import { useSessionStore } from '../../../stores/sessionStore';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
 
 async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
   const { accessToken, logout } = useSessionStore.getState();
@@ -26,7 +27,9 @@ async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || errorData.detail || 'An error occurred');
+    throw new Error(
+      errorData.message || errorData.detail || 'An error occurred'
+    );
   }
 
   if (response.status === 204) {
@@ -38,7 +41,11 @@ async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
 
 export const identityApi = {
   // Auth
-  register: (data: any) => fetchWithAuth('/identity/auth/register', { method: 'POST', body: JSON.stringify(data) }),
+  register: (data: any) =>
+    fetchWithAuth('/identity/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
   login: async (data: any) => {
     // Login uses form-data instead of JSON
     const formData = new FormData();
@@ -57,13 +64,37 @@ export const identityApi = {
 
     return response.json();
   },
-  logout: () => fetchWithAuth('/identity/auth/logout', { method: 'POST', body: JSON.stringify({ refresh_token: '' }) }),
-  verifyEmail: (token: string) => fetchWithAuth('/identity/auth/verify-email', { method: 'POST', body: JSON.stringify({ token }) }),
-  forgotPassword: (email: string) => fetchWithAuth('/identity/auth/forgot-password', { method: 'POST', body: JSON.stringify({ email }) }),
-  resetPassword: (data: any) => fetchWithAuth('/identity/auth/reset-password', { method: 'POST', body: JSON.stringify(data) }),
+  logout: () =>
+    fetchWithAuth('/identity/auth/logout', {
+      method: 'POST',
+      body: JSON.stringify({ refresh_token: '' }),
+    }),
+  verifyEmail: (token: string) =>
+    fetchWithAuth('/identity/auth/verify-email', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+    }),
+  forgotPassword: (email: string) =>
+    fetchWithAuth('/identity/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    }),
+  resetPassword: (data: any) =>
+    fetchWithAuth('/identity/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
 
   // Profile (mock endpoints for now since Part 2 didn't implement these, but we'll add them soon or just simulate)
   getProfile: () => fetchWithAuth('/identity/users/me'),
-  updateProfile: (data: any) => fetchWithAuth('/identity/users/me', { method: 'PUT', body: JSON.stringify(data) }),
-  updatePassword: (data: any) => fetchWithAuth('/identity/users/me/password', { method: 'PUT', body: JSON.stringify(data) }),
+  updateProfile: (data: any) =>
+    fetchWithAuth('/identity/users/me', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  updatePassword: (data: any) =>
+    fetchWithAuth('/identity/users/me/password', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
 };

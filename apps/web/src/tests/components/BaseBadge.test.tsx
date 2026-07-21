@@ -9,7 +9,9 @@ describe('BaseBadge Component', () => {
   });
 
   it('applies variant classes correctly', () => {
-    const { rerender } = render(<BaseBadge variant="success">Active</BaseBadge>);
+    const { rerender } = render(
+      <BaseBadge variant="success">Active</BaseBadge>
+    );
     expect(screen.getByText('Active')).toHaveClass('text-emerald-600');
 
     rerender(<BaseBadge variant="danger">Inactive</BaseBadge>);

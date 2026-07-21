@@ -1,149 +1,180 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
+import {
   useRoles,
   useMembershipRoles,
-  useAssignMembershipRole,
-  useRemoveMembershipRole
+  useReplaceMembershipRoles,
+  useMyPermissions,
 } from '../hooks/useRbac';
 import { BaseCard } from '../../../components/ui/BaseCard';
 import { BaseButton } from '../../../components/ui/BaseButton';
 import { RequirePermission } from '../components/RequirePermission';
-import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
-import { BaseDialog } from '../../../components/ui/BaseDialog';
 import { toast } from 'react-hot-toast';
+import { EffectivePermissionsPanel } from '../components/EffectivePermissionsPanel';
 
 export default function MembershipRolesPage() {
-  const { id: organizationId, membershipId } = useParams<{ id: string, membershipId: string }>();
+  const { id: organizationId, membershipId } = useParams<{
+    id: string;
+    membershipId: string;
+  }>();
   const navigate = useNavigate();
 
   const { data: orgRoles } = useRoles(organizationId!);
-  const { data: memberRoles, isLoading } = useMembershipRoles(organizationId!, membershipId!);
-
-  const assignMutation = useAssignMembershipRole(organizationId!);
-  const removeMutation = useRemoveMembershipRole(organizationId!);
-
-  const [isAssignOpen, setIsAssignOpen] = useState(false);
-  const [selectedRoleId, setSelectedRoleId] = useState('');
-  const [removingRoleId, setRemovingRoleId] = useState<string | null>(null);
-
-  const availableRoles = orgRoles?.filter(
-    (r) => r.name.toLowerCase() !== 'owner' && !memberRoles?.some((mr) => mr.id === r.id)
+  const { data: memberRoles, isLoading } = useMembershipRoles(
+    organizationId!,
+    membershipId!
   );
+  const replaceRolesMutation = useReplaceMembershipRoles(organizationId!);
+  const { hasPermission } = useMyPermissions(organizationId);
 
-  const handleAssign = async () => {
-    if (!selectedRoleId) return;
+  const [activeTab, setActiveTab] = useState<'roles' | 'permissions'>('roles');
+  const [selectedRoleIds, setSelectedRoleIds] = useState<string[]>([]);
+
+  // Need to sync local state when API data loads
+  useEffect(() => {
+    if (memberRoles) {
+      setSelectedRoleIds(memberRoles.map((r) => r.id));
+    }
+  }, [memberRoles]);
+
+  const handleSaveRoles = async () => {
     try {
-      await assignMutation.mutateAsync({ membershipId: membershipId!, data: { role_id: selectedRoleId } });
-      toast.success('Role assigned successfully');
-      setIsAssignOpen(false);
-      setSelectedRoleId('');
+      await replaceRolesMutation.mutateAsync({
+        membershipId: membershipId!,
+        roleIds: selectedRoleIds,
+      });
+      toast.success('Roles updated successfully');
     } catch (e: any) {
-      toast.error(e.message || 'Failed to assign role');
+      toast.error(e.message || 'Failed to update roles');
     }
   };
 
-  const handleRemove = (roleId: string) => {
-    setRemovingRoleId(roleId);
+  const handleToggleRole = (roleId: string) => {
+    setSelectedRoleIds((prev) =>
+      prev.includes(roleId)
+        ? prev.filter((id) => id !== roleId)
+        : [...prev, roleId]
+    );
   };
 
-  const handleConfirmRemove = async () => {
-    if (!removingRoleId) return;
-    try {
-      await removeMutation.mutateAsync({ membershipId: membershipId!, roleId: removingRoleId });
-      toast.success('Role removed successfully');
-      setRemovingRoleId(null);
-    } catch (e: any) {
-      toast.error(e.message || 'Failed to remove role');
-    }
-  };
+  const canEdit = hasPermission('member.update');
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <button 
-            onClick={() => navigate(`/dashboard/organizations/${organizationId}/members`)}
+          <button
+            onClick={() =>
+              navigate(`/dashboard/organizations/${organizationId}/members`)
+            }
             className="text-sm font-medium text-blue-600 hover:underline"
           >
             &larr; Back to Members
           </button>
-          <h1 className="text-2xl font-bold mt-2">Manage Member Roles</h1>
+          <h1 className="text-2xl font-bold mt-2">Member Access</h1>
         </div>
-        <RequirePermission permissionKey="member.update" organizationId={organizationId}>
-          <BaseButton onClick={() => setIsAssignOpen(true)}>
-            + Assign Role
-          </BaseButton>
-        </RequirePermission>
       </div>
 
-      <BaseCard className="overflow-hidden mt-6">
-        {isLoading ? (
-          <div className="p-6 text-zinc-500">Loading roles...</div>
-        ) : !memberRoles || memberRoles.length === 0 ? (
-          <div className="p-6 text-zinc-500">No roles assigned to this member.</div>
-        ) : (
-          <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
-            {memberRoles.map((role) => (
-              <li key={role.id} className="p-4 flex justify-between items-center hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
-                <div>
-                  <p className="font-semibold">
-                    {role.name} {role.name.toLowerCase() === 'owner' ? '(Not Editable)' : ''}
-                  </p>
-                  <p className="text-sm text-zinc-500">{role.description}</p>
-                </div>
-                {role.name.toLowerCase() !== 'owner' && (
-                  <RequirePermission permissionKey="member.update" organizationId={organizationId}>
-                    <BaseButton variant="danger" size="sm" onClick={() => handleRemove(role.id)} isLoading={removeMutation.isPending && removingRoleId === role.id}>
-                      Remove
-                    </BaseButton>
-                  </RequirePermission>
-                )}
-              </li>
-            ))}
-          </ul>
+      <div className="flex border-b border-zinc-200 dark:border-zinc-800">
+        <button
+          className={`py-3 px-6 text-sm font-medium border-b-2 transition-colors ${
+            activeTab === 'roles'
+              ? 'border-blue-600 text-blue-600'
+              : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
+          }`}
+          onClick={() => setActiveTab('roles')}
+        >
+          Assigned Roles
+        </button>
+        <button
+          className={`py-3 px-6 text-sm font-medium border-b-2 transition-colors ${
+            activeTab === 'permissions'
+              ? 'border-blue-600 text-blue-600'
+              : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
+          }`}
+          onClick={() => setActiveTab('permissions')}
+        >
+          Effective Permissions
+        </button>
+      </div>
+
+      <BaseCard className="p-6">
+        {activeTab === 'roles' && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-bold">Assign Roles</h3>
+                <p className="text-sm text-zinc-500">
+                  Select the roles to assign to this member.
+                </p>
+              </div>
+              {canEdit && (
+                <BaseButton
+                  onClick={handleSaveRoles}
+                  isLoading={replaceRolesMutation.isPending}
+                  disabled={isLoading || replaceRolesMutation.isPending}
+                >
+                  Save Changes
+                </BaseButton>
+              )}
+            </div>
+
+            {isLoading ? (
+              <div className="animate-pulse bg-zinc-200 dark:bg-zinc-800 h-40 rounded-xl" />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {orgRoles?.map((role) => {
+                  const isSelected = selectedRoleIds.includes(role.id);
+                  const isOwnerRole = role.name.toLowerCase() === 'owner';
+
+                  return (
+                    <label
+                      key={role.id}
+                      className={`relative flex items-start gap-4 p-4 border rounded-xl cursor-pointer transition-colors ${
+                        isSelected
+                          ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-900/10'
+                          : 'border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900'
+                      } ${!canEdit || (isOwnerRole && isSelected) ? 'opacity-70 pointer-events-none' : ''}`}
+                    >
+                      <div className="flex items-center h-5 mt-1">
+                        <input
+                          type="checkbox"
+                          className="w-4 h-4 text-blue-600 border-zinc-300 rounded focus:ring-blue-500"
+                          checked={isSelected}
+                          onChange={() => handleToggleRole(role.id)}
+                          disabled={!canEdit || (isOwnerRole && isSelected)}
+                        />
+                      </div>
+                      <div>
+                        <div className="font-semibold">
+                          {role.name}{' '}
+                          {role.is_system && (
+                            <span className="text-xs text-zinc-500 ml-2">
+                              (System)
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-sm text-zinc-500 mt-1">
+                          {role.description}
+                        </div>
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'permissions' && (
+          <EffectivePermissionsPanel
+            organizationId={organizationId!}
+            assignedRoles={
+              orgRoles?.filter((r) => selectedRoleIds.includes(r.id)) || []
+            }
+          />
         )}
       </BaseCard>
-
-      <BaseDialog isOpen={isAssignOpen} onClose={() => setIsAssignOpen(false)} title="Assign Role">
-        <div className="space-y-4 pt-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Select Role</label>
-            <select
-              className="w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2"
-              value={selectedRoleId}
-              onChange={(e) => setSelectedRoleId(e.target.value)}
-            >
-              <option value="">-- Choose a role --</option>
-              {availableRoles?.map((r) => (
-                <option key={r.id} value={r.id}>
-                  {r.name} {r.is_system ? '(System)' : ''}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex justify-end gap-3 pt-4">
-            <BaseButton variant="secondary" onClick={() => setIsAssignOpen(false)}>Cancel</BaseButton>
-            <BaseButton 
-              onClick={handleAssign} 
-              disabled={!selectedRoleId || assignMutation.isPending}
-              isLoading={assignMutation.isPending}
-            >
-              Assign
-            </BaseButton>
-          </div>
-        </div>
-      </BaseDialog>
-      <ConfirmDialog
-        isOpen={!!removingRoleId}
-        onClose={() => setRemovingRoleId(null)}
-        onConfirm={handleConfirmRemove}
-        title="Remove Role"
-        description="Are you sure you want to remove this role from the member?"
-        confirmText="Remove"
-        variant="danger"
-        isConfirming={removeMutation.isPending}
-      />
     </div>
   );
 }

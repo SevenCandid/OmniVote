@@ -13,7 +13,7 @@ export function LoginPage() {
   const location = useLocation();
   const { login } = useSessionStore();
   const [serverError, setServerError] = useState<string | null>(null);
-  
+
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
   const {
@@ -29,7 +29,7 @@ export function LoginPage() {
       setServerError(null);
       const response = await identityApi.login(data);
       login(response.user, response.access_token, response.refresh_token);
-      
+
       const inviteReturnTo = localStorage.getItem('inviteReturnTo');
       if (inviteReturnTo) {
         localStorage.removeItem('inviteReturnTo');

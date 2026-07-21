@@ -4,10 +4,14 @@ import { InviteMemberInput } from '../schemas/invitationSchema';
 
 export const membershipKeys = {
   all: ['memberships'] as const,
-  orgMembers: (orgId: string) => [...membershipKeys.all, 'org', orgId, 'members'] as const,
-  orgInvitations: (orgId: string) => [...membershipKeys.all, 'org', orgId, 'invitations'] as const,
-  userOrganizations: () => [...membershipKeys.all, 'user', 'organizations'] as const,
-  userInvitations: () => [...membershipKeys.all, 'user', 'invitations'] as const,
+  orgMembers: (orgId: string) =>
+    [...membershipKeys.all, 'org', orgId, 'members'] as const,
+  orgInvitations: (orgId: string) =>
+    [...membershipKeys.all, 'org', orgId, 'invitations'] as const,
+  userOrganizations: () =>
+    [...membershipKeys.all, 'user', 'organizations'] as const,
+  userInvitations: () =>
+    [...membershipKeys.all, 'user', 'invitations'] as const,
 };
 
 export const useOrganizationMembers = (organizationId: string) => {
@@ -44,12 +48,23 @@ export const useInviteMember = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ organizationId, data }: { organizationId: string; data: InviteMemberInput }) =>
-      membershipApi.inviteMember(organizationId, data),
+    mutationFn: ({
+      organizationId,
+      data,
+    }: {
+      organizationId: string;
+      data: InviteMemberInput;
+    }) => membershipApi.inviteMember(organizationId, data),
     onSuccess: (_, { organizationId }) => {
-      queryClient.invalidateQueries({ queryKey: membershipKeys.orgMembers(organizationId) });
-      queryClient.invalidateQueries({ queryKey: membershipKeys.orgInvitations(organizationId) });
-      queryClient.invalidateQueries({ queryKey: membershipKeys.userInvitations() });
+      queryClient.invalidateQueries({
+        queryKey: membershipKeys.orgMembers(organizationId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: membershipKeys.orgInvitations(organizationId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: membershipKeys.userInvitations(),
+      });
     },
   });
 };
@@ -80,10 +95,17 @@ export const useRemoveMembership = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ organizationId, membershipId }: { organizationId: string; membershipId: string }) =>
-      membershipApi.removeMembership(organizationId, membershipId),
+    mutationFn: ({
+      organizationId,
+      membershipId,
+    }: {
+      organizationId: string;
+      membershipId: string;
+    }) => membershipApi.removeMembership(organizationId, membershipId),
     onSuccess: (_, { organizationId }) => {
-      queryClient.invalidateQueries({ queryKey: membershipKeys.orgMembers(organizationId) });
+      queryClient.invalidateQueries({
+        queryKey: membershipKeys.orgMembers(organizationId),
+      });
     },
   });
 };
@@ -92,7 +114,8 @@ export const useRevokeInvitation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (invitationId: string) => membershipApi.revokeInvitation(invitationId),
+    mutationFn: (invitationId: string) =>
+      membershipApi.revokeInvitation(invitationId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: membershipKeys.all });
     },

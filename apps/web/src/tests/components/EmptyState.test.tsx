@@ -29,7 +29,7 @@ describe('EmptyState Component', () => {
         onAction={handleAction}
       />
     );
-    
+
     const button = screen.getByRole('button', { name: /create item/i });
     expect(button).toBeInTheDocument();
     await user.click(button);

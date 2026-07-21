@@ -108,3 +108,39 @@ class UserPlatformRole(BaseModel, TimestampMixin):
         UniqueConstraint("user_id", "role_id", name="uq_user_platform_role"),
     )
 
+
+class PlatformIdentity(BaseModel, TimestampMixin):
+    """
+    Central record for a user's platform-level identity and access state.
+    """
+    __tablename__ = "rbac_platform_identities"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("identity_users.id", ondelete="CASCADE"), unique=True, nullable=False, index=True
+    )
+    # Statuses: ACTIVE, SUSPENDED, REVOKED
+    status: Mapped[str] = mapped_column(String(50), default="ACTIVE", nullable=False)
+
+
+class PlatformInvitation(BaseModel, TimestampMixin):
+    """
+    Tracks an invitation sent to an email address to join the platform administration team.
+    """
+    __tablename__ = "rbac_platform_invitations"
+
+    email: Mapped[str] = mapped_column(String(255), index=True, nullable=False)
+    token: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
+    
+    # Store the intended role IDs as a comma-separated list or JSON for simplicity before acceptance.
+    # Since sqlite doesn't have a native array type, we can use a JSON or simple string.
+    # For robust relational design, we could use a secondary table, but string is simpler for an invite.
+    role_ids: Mapped[str] = mapped_column(String(1000), nullable=False)
+
+    # Statuses: PENDING, ACCEPTED, EXPIRED, REVOKED
+    status: Mapped[str] = mapped_column(String(50), default="PENDING", nullable=False)
+    
+    inviter_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("identity_users.id", ondelete="CASCADE"), nullable=False
+    )
+    expires_at: Mapped[str] = mapped_column(String(50), nullable=False) # Storing as ISO string for simplicity across DBs
+

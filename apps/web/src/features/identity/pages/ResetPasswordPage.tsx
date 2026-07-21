@@ -32,10 +32,15 @@ export function ResetPasswordPage() {
     if (!token) return;
     try {
       setServerError(null);
-      await identityApi.resetPassword({ token, new_password: data.new_password });
+      await identityApi.resetPassword({
+        token,
+        new_password: data.new_password,
+      });
       setSuccess(true);
     } catch (err: any) {
-      setServerError(err.message || 'Failed to reset password. The token may be expired.');
+      setServerError(
+        err.message || 'Failed to reset password. The token may be expired.'
+      );
     }
   };
 
@@ -43,8 +48,18 @@ export function ResetPasswordPage() {
     return (
       <div className="w-full text-center space-y-4">
         <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          <svg
+            className="w-8 h-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
           </svg>
         </div>
         <h1 className="text-2xl font-bold">Password Reset Successful</h1>
@@ -52,7 +67,10 @@ export function ResetPasswordPage() {
           You can now log in with your new password.
         </p>
         <div className="pt-6">
-          <BaseButton onClick={() => navigate('/auth/login')} className="w-full">
+          <BaseButton
+            onClick={() => navigate('/auth/login')}
+            className="w-full"
+          >
             Go to Login
           </BaseButton>
         </div>
@@ -95,14 +113,22 @@ export function ResetPasswordPage() {
         />
 
         <div className="pt-2">
-          <BaseButton type="submit" className="w-full" isLoading={isSubmitting} disabled={!token}>
+          <BaseButton
+            type="submit"
+            className="w-full"
+            isLoading={isSubmitting}
+            disabled={!token}
+          >
             Reset Password
           </BaseButton>
         </div>
       </form>
 
       <div className="mt-6 text-center">
-        <Link to="/auth/login" className="text-sm font-semibold text-primary hover:text-indigo-700 transition-colors">
+        <Link
+          to="/auth/login"
+          className="text-sm font-semibold text-primary hover:text-indigo-700 transition-colors"
+        >
           &larr; Back to Login
         </Link>
       </div>

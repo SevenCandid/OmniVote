@@ -150,7 +150,7 @@ async def seed_permissions(db: AsyncSession):
     # --- Seed Platform Roles ---
     platform_roles_data = [
         {"name": "Platform Owner", "description": "Global Platform Owner with root capabilities", "permissions": [p["key"] for p in PLATFORM_PERMISSIONS]},
-        {"name": "Platform Administrator", "description": "Global Platform Admin with general management rights", "permissions": ["organization.manage", "user.manage", "organization.verify", "support.operate"]},
+        {"name": "Platform Administrator", "description": "Global Platform Admin with general management rights", "permissions": ["organization.manage", "organization.verify", "support.operate"]},
         {"name": "Support Administrator", "description": "Global Support Staff with rights to assist organizations", "permissions": ["support.operate"]},
         {"name": "Security Administrator", "description": "Global Security Auditor with security operations rights", "permissions": ["security.operate"]},
     ]

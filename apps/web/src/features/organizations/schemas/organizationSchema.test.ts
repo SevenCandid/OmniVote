@@ -8,7 +8,7 @@ describe('OrganizationCreateSchema', () => {
       slug: 'test-org',
       country: 'US',
     };
-    
+
     const result = OrganizationCreateSchema.safeParse(payload);
     expect(result.success).toBe(true);
   });
@@ -18,7 +18,7 @@ describe('OrganizationCreateSchema', () => {
       name: 'A',
       slug: 'test-org',
     };
-    
+
     const result = OrganizationCreateSchema.safeParse(payload);
     expect(result.success).toBe(false);
     if (!result.success) {
@@ -31,11 +31,13 @@ describe('OrganizationCreateSchema', () => {
       name: 'Test Org',
       slug: 'Test_Org_!@#',
     };
-    
+
     const result = OrganizationCreateSchema.safeParse(payload);
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.errors[0].message).toMatch(/lowercase letters, numbers, and hyphens/i);
+      expect(result.error.errors[0].message).toMatch(
+        /lowercase letters, numbers, and hyphens/i
+      );
     }
   });
 });

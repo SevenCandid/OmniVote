@@ -20,5 +20,6 @@ This directory hosts the Architecture Decision Records (ADRs) for the OmniVote p
 | 010 | [Separate Organization Verification Status](file:///c:/Users/DELL/omnivote/docs/decisions/0010-separate-organization-verification-status.md) | Approved | 2026-07-19 |
 | 011 | [Platform Administration and Support Access Model](file:///c:/Users/DELL/omnivote/docs/decisions/0011-platform-rbac-and-support-access.md) | Approved | 2026-07-21 |
 | 012 | [Role Management and Protection Rules](file:///c:/Users/DELL/omnivote/docs/decisions/0012-role-management-and-protection-rules.md) | Approved | 2026-07-21 |
+| 013 | [Platform Identity and Authorization Layer](file:///c:/Users/DELL/omnivote/docs/decisions/0013-platform-identity-and-authorization.md) | Approved | 2026-07-21 |
 
 

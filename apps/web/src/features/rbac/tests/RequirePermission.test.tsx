@@ -13,7 +13,11 @@ describe('RequirePermission', () => {
     });
 
     render(
-      <RequirePermission permissionKey="test.perm" organizationId="123" fallback={<div data-testid="fallback" />}>
+      <RequirePermission
+        permissionKey="test.perm"
+        organizationId="123"
+        fallback={<div data-testid="fallback" />}
+      >
         <div data-testid="content" />
       </RequirePermission>
     );
@@ -30,7 +34,11 @@ describe('RequirePermission', () => {
     });
 
     render(
-      <RequirePermission permissionKey="test.perm" organizationId="123" fallback={<div data-testid="fallback" />}>
+      <RequirePermission
+        permissionKey="test.perm"
+        organizationId="123"
+        fallback={<div data-testid="fallback" />}
+      >
         <div data-testid="content" />
       </RequirePermission>
     );

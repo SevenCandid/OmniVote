@@ -54,6 +54,19 @@ async def list_org_support_requests(
     return await service.list_requests_by_org(organization_id)
 
 
+@router.get(
+    "/organizations/{organization_id}/support/sessions",
+    response_model=Sequence[SupportSessionResponse]
+)
+async def list_org_support_sessions(
+    organization_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db_session),
+    _ = Depends(RequirePermission("organization.view"))
+):
+    service = SupportService(db)
+    return await service.list_sessions_by_org(organization_id)
+
+
 # --- Platform Admin Endpoints ---
 
 @router.get(
@@ -66,6 +79,18 @@ async def list_all_support_requests(
 ):
     service = SupportService(db)
     return await service.list_all_requests()
+
+
+@router.get(
+    "/support/sessions",
+    response_model=Sequence[SupportSessionResponse]
+)
+async def list_all_support_sessions(
+    db: AsyncSession = Depends(get_db_session),
+    _ = Depends(RequirePlatformPermission("support.operate"))
+):
+    service = SupportService(db)
+    return await service.list_all_sessions()
 
 
 @router.post(

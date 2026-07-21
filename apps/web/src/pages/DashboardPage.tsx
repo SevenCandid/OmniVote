@@ -85,9 +85,12 @@ export default function DashboardPage() {
       {/* Welcome banner */}
       <section className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-indigo-500/10 border border-primary/20 rounded-2xl p-6">
         <div>
-          <h2 className="text-xl font-bold font-sans">Welcome Back, {user?.first_name || 'User'}!</h2>
+          <h2 className="text-xl font-bold font-sans">
+            Welcome Back, {user?.first_name || 'User'}!
+          </h2>
           <p className="text-sm text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)] mt-1">
-            OmniVote platform metrics are online. You belong to {orgCount} organization{orgCount !== 1 ? 's' : ''}.
+            OmniVote platform metrics are online. You belong to {orgCount}{' '}
+            organization{orgCount !== 1 ? 's' : ''}.
           </p>
         </div>
         <div className="flex gap-3 shrink-0">

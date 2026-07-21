@@ -11,7 +11,9 @@ export default function OrganizationListPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold">Organizations</h1>
-          <p className="text-gray-500 dark:text-gray-400">Manage all tenant organizations across the platform.</p>
+          <p className="text-gray-500 dark:text-gray-400">
+            Manage all tenant organizations across the platform.
+          </p>
         </div>
         <button
           onClick={() => navigate('/dashboard/organizations/new')}
@@ -24,7 +26,10 @@ export default function OrganizationListPage() {
       {isLoading && (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="animate-pulse bg-gray-200 dark:bg-gray-800 h-24 rounded-2xl" />
+            <div
+              key={i}
+              className="animate-pulse bg-gray-200 dark:bg-gray-800 h-24 rounded-2xl"
+            />
           ))}
         </div>
       )}
@@ -38,7 +43,9 @@ export default function OrganizationListPage() {
       {!isLoading && !error && organizations?.length === 0 && (
         <div className="text-center py-20 bg-gray-50 dark:bg-[#18181B] rounded-2xl border border-gray-200 dark:border-gray-800">
           <h3 className="text-lg font-medium">No organizations found</h3>
-          <p className="text-gray-500 mt-2">Get started by creating a new organization.</p>
+          <p className="text-gray-500 mt-2">
+            Get started by creating a new organization.
+          </p>
         </div>
       )}
 
@@ -58,9 +65,7 @@ export default function OrganizationListPage() {
             <p className="text-sm text-gray-500 line-clamp-2 mb-4">
               {org.description || 'No description provided.'}
             </p>
-            <div className="text-xs text-gray-400">
-              Slug: {org.slug}
-            </div>
+            <div className="text-xs text-gray-400">Slug: {org.slug}</div>
           </div>
         ))}
       </div>

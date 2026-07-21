@@ -10,6 +10,8 @@ const PathDisplay = () => {
 describe('Routing Placeholder Test', () => {
   it('renders a simple route context check', () => {
     render(<PathDisplay />, { route: '/elections' });
-    expect(screen.getByTestId('route-test')).toHaveTextContent('Route path is: /elections');
+    expect(screen.getByTestId('route-test')).toHaveTextContent(
+      'Route path is: /elections'
+    );
   });
 });

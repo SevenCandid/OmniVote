@@ -12,8 +12,10 @@ export default function OrganizationSettingsPage() {
   const { data: memberships, isLoading, error } = useUserOrganizations();
 
   const activeMemberships = memberships?.filter(
-    m => (m.status === MembershipStatus.ACCEPTED || m.status === MembershipStatus.SUSPENDED) &&
-         !m.organization?.is_deleted
+    (m) =>
+      (m.status === MembershipStatus.ACCEPTED ||
+        m.status === MembershipStatus.SUSPENDED) &&
+      !m.organization?.is_deleted
   );
 
   if (isLoading) {
@@ -21,7 +23,10 @@ export default function OrganizationSettingsPage() {
       <div className="max-w-4xl mx-auto p-6 space-y-4">
         <h1 className="text-2xl font-bold mb-6">My Organizations</h1>
         {[1, 2].map((i) => (
-          <div key={i} className="animate-pulse bg-zinc-200 dark:bg-zinc-800 h-24 rounded-2xl" />
+          <div
+            key={i}
+            className="animate-pulse bg-zinc-200 dark:bg-zinc-800 h-24 rounded-2xl"
+          />
         ))}
       </div>
     );
@@ -59,19 +64,30 @@ export default function OrganizationSettingsPage() {
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                 <div>
                   <div className="flex items-center gap-3 mb-1">
-                    <h3 className="text-lg font-semibold">{membership.organization?.name || 'Unknown Organization'}</h3>
-                    <span className={`px-2 py-0.5 rounded text-xs font-medium ${membership.status === MembershipStatus.ACCEPTED ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                    <h3 className="text-lg font-semibold">
+                      {membership.organization?.name || 'Unknown Organization'}
+                    </h3>
+                    <span
+                      className={`px-2 py-0.5 rounded text-xs font-medium ${membership.status === MembershipStatus.ACCEPTED ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
+                    >
                       {membership.status}
                     </span>
                   </div>
                   <p className="text-sm text-zinc-500">
-                    Joined: {membership.accepted_at ? new Date(membership.accepted_at).toLocaleDateString() : 'N/A'}
+                    Joined:{' '}
+                    {membership.accepted_at
+                      ? new Date(membership.accepted_at).toLocaleDateString()
+                      : 'N/A'}
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
                   <BaseButton
                     variant="outline"
-                    onClick={() => navigate(`/dashboard/organizations/${membership.organization_id}`)}
+                    onClick={() =>
+                      navigate(
+                        `/dashboard/organizations/${membership.organization_id}`
+                      )
+                    }
                   >
                     View Organization
                   </BaseButton>

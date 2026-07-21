@@ -22,7 +22,7 @@ export function RegisterPage() {
   });
 
   const password = watch('password', '');
-  
+
   // Basic password strength logic
   const calculateStrength = (pass: string) => {
     let score = 0;
@@ -54,16 +54,31 @@ export function RegisterPage() {
     return (
       <div className="w-full text-center space-y-4">
         <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          <svg
+            className="w-8 h-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
           </svg>
         </div>
         <h1 className="text-2xl font-bold">Check your email</h1>
         <p className="text-sm text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)]">
-          We've sent a verification link to your email address. Please click the link to activate your account.
+          We've sent a verification link to your email address. Please click the
+          link to activate your account.
         </p>
         <div className="pt-6">
-          <BaseButton onClick={() => navigate('/auth/login')} variant="outline" className="w-full">
+          <BaseButton
+            onClick={() => navigate('/auth/login')}
+            variant="outline"
+            className="w-full"
+          >
             Return to Login
           </BaseButton>
         </div>
@@ -120,10 +135,18 @@ export function RegisterPage() {
           />
           {password.length > 0 && (
             <div className="flex items-center gap-1 mt-1 h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
-              <div className={`h-full ${strength >= 1 ? 'bg-red-500' : ''} flex-1`} />
-              <div className={`h-full ${strength >= 2 ? 'bg-orange-500' : ''} flex-1`} />
-              <div className={`h-full ${strength >= 3 ? 'bg-emerald-500' : ''} flex-1`} />
-              <div className={`h-full ${strength >= 4 ? 'bg-emerald-600' : ''} flex-1`} />
+              <div
+                className={`h-full ${strength >= 1 ? 'bg-red-500' : ''} flex-1`}
+              />
+              <div
+                className={`h-full ${strength >= 2 ? 'bg-orange-500' : ''} flex-1`}
+              />
+              <div
+                className={`h-full ${strength >= 3 ? 'bg-emerald-500' : ''} flex-1`}
+              />
+              <div
+                className={`h-full ${strength >= 4 ? 'bg-emerald-600' : ''} flex-1`}
+              />
             </div>
           )}
         </div>

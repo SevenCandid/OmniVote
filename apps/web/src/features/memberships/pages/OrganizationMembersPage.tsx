@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useOrganizationMembers, useRemoveMembership } from '../hooks/useMemberships';
+import {
+  useOrganizationMembers,
+  useRemoveMembership,
+} from '../hooks/useMemberships';
 import { MemberList } from '../components/MemberList';
 import { InviteMemberDialog } from '../components/InviteMemberDialog';
 import { BaseButton } from '../../../components/ui/BaseButton';
@@ -15,10 +18,17 @@ export default function OrganizationMembersPage() {
   const [isInviteOpen, setIsInviteOpen] = useState(false);
 
   const { data: organization } = useOrganization(organizationId!);
-  const { data: members, isLoading, error } = useOrganizationMembers(organizationId!);
-  const { mutateAsync: removeMembership, isPending: isRemoving } = useRemoveMembership();
+  const {
+    data: members,
+    isLoading,
+    error,
+  } = useOrganizationMembers(organizationId!);
+  const { mutateAsync: removeMembership, isPending: isRemoving } =
+    useRemoveMembership();
 
-  const [removingMembershipId, setRemovingMembershipId] = useState<string | null>(null);
+  const [removingMembershipId, setRemovingMembershipId] = useState<
+    string | null
+  >(null);
 
   const handleRemoveMember = (membershipId: string) => {
     setRemovingMembershipId(membershipId);
@@ -27,7 +37,10 @@ export default function OrganizationMembersPage() {
   const handleConfirmRemove = async () => {
     if (!removingMembershipId) return;
     try {
-      await removeMembership({ organizationId: organizationId!, membershipId: removingMembershipId });
+      await removeMembership({
+        organizationId: organizationId!,
+        membershipId: removingMembershipId,
+      });
       toast.success('Member removed successfully');
       setRemovingMembershipId(null);
     } catch (err: any) {
@@ -41,8 +54,10 @@ export default function OrganizationMembersPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <button 
-              onClick={() => navigate(`/dashboard/organizations/${organizationId}`)}
+            <button
+              onClick={() =>
+                navigate(`/dashboard/organizations/${organizationId}`)
+              }
               className="text-sm font-medium text-blue-600 hover:underline"
             >
               ← Back to Org
@@ -50,16 +65,31 @@ export default function OrganizationMembersPage() {
           </div>
           <h1 className="text-2xl font-bold mt-2">Organization Members</h1>
           <p className="text-gray-500 dark:text-gray-400">
-            {organization ? `Manage members for ${organization.name}` : 'Manage organization members'}
+            {organization
+              ? `Manage members for ${organization.name}`
+              : 'Manage organization members'}
           </p>
         </div>
         <div className="flex gap-3">
-          <RequirePermission permissionKey="member.invite" organizationId={organizationId}>
-            <BaseButton variant="secondary" onClick={() => navigate(`/dashboard/organizations/${organizationId}/members/invitations`)}>
+          <RequirePermission
+            permissionKey="member.invite"
+            organizationId={organizationId}
+          >
+            <BaseButton
+              variant="secondary"
+              onClick={() =>
+                navigate(
+                  `/dashboard/organizations/${organizationId}/members/invitations`
+                )
+              }
+            >
               View Invitations
             </BaseButton>
           </RequirePermission>
-          <RequirePermission permissionKey="member.invite" organizationId={organizationId}>
+          <RequirePermission
+            permissionKey="member.invite"
+            organizationId={organizationId}
+          >
             <BaseButton onClick={() => setIsInviteOpen(true)}>
               + Invite Member
             </BaseButton>

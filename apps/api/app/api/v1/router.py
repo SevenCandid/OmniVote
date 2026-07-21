@@ -15,6 +15,7 @@ from app.modules.rbac.routes import (
     permissions as rbac_permissions_routes,
     roles as rbac_roles_routes,
     memberships as rbac_memberships_routes,
+    platform as rbac_platform_routes,
 )
 from app.modules.support.routes import support as support_routes
 
@@ -28,6 +29,17 @@ api_router.include_router(organizations.router, prefix="/organizations", tags=["
 api_router.include_router(identity_auth.router, prefix="/identity/auth", tags=["Identity - Auth"])
 api_router.include_router(identity_users.router, prefix="/identity/users", tags=["Identity - Users"])
 api_router.include_router(identity_sessions.router, prefix="/identity/sessions", tags=["Identity - Sessions"])
+
+from app.api.v1.endpoints import platform_organizations
+from app.api.v1.endpoints import platform_identity
+
+from app.api.v1.endpoints import platform_dashboard
+
+# Platform Identity & Administration
+api_router.include_router(rbac_platform_routes.router, prefix="/platform", tags=["Platform"])
+api_router.include_router(platform_identity.router, prefix="/platform", tags=["Platform - Identity"])
+api_router.include_router(platform_organizations.router, prefix="/platform/organizations", tags=["Platform - Organizations"])
+api_router.include_router(platform_dashboard.router, prefix="/platform/dashboard", tags=["Platform - Dashboard"])
 
 # Membership API
 api_router.include_router(membership_routes.router, prefix="/memberships", tags=["Memberships"])

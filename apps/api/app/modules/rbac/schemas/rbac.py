@@ -68,3 +68,26 @@ class MembershipRoleResponse(BaseModel):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class EffectivePermissionsResponse(BaseModel):
+    organization_id: uuid.UUID
+    membership_id: uuid.UUID
+    roles: list[RoleResponse]
+    permissions: list[str]
+
+
+class RolePermissionsBulkSet(BaseModel):
+    """Payload for PUT /roles/{role_id}/permissions — replaces the full permission set atomically."""
+    permission_ids: list[uuid.UUID] = Field(
+        ...,
+        description="Complete set of permission IDs to assign to this role. Replaces existing assignments."
+    )
+
+
+class MembershipRolesBulkSet(BaseModel):
+    """Payload for PUT /memberships/{membership_id}/roles — replaces the full role set atomically."""
+    role_ids: list[uuid.UUID] = Field(
+        ...,
+        description="Complete set of role IDs to assign to this membership. Replaces existing assignments."
+    )

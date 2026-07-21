@@ -98,7 +98,11 @@ The React frontend is constructed as a modern, type-safe Progressive Web App (PW
 └──────────────────────────────────────────────────────────┘
 ```
 
-* **Client Routing:** `React Router` enforces path isolation (e.g., `/org/:slug/admin/*` for organization administrators, and `/event/:eventId/vote` for voter interfaces).
+* **Client Routing:** `React Router` enforces path isolation:
+  * `/auth/*`: Authentication flows (Login, Register, Password Reset)
+  * `/dashboard/*`: Tenant Organization Administration (Organization Admins)
+  * `/platform/*`: VeroSeven Platform Administration (Platform Staff)
+  * `/vote/*`: Public Voting Interfaces
 * **State Management:** Decoupled into:
   * **Server State:** Handled by `TanStack Query` (React Query) to query, cache, and synchronize backend database responses with configured TTLs.
   * **Local UI State:** React context/hooks for layout modes, modal toggles, and multi-step ballot state tracking.

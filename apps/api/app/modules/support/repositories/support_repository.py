@@ -28,6 +28,14 @@ class SupportRepository:
         )
         return result.scalars().all()
 
+    async def list_support_sessions_by_org(self, organization_id: uuid.UUID) -> Sequence[SupportSession]:
+        result = await self.db.execute(
+            select(SupportSession)
+            .where(SupportSession.organization_id == organization_id)
+            .order_by(SupportSession.created_at.desc())
+        )
+        return result.scalars().all()
+
     async def list_all_support_requests(self) -> Sequence[SupportRequest]:
         result = await self.db.execute(
             select(SupportRequest).order_by(SupportRequest.created_at.desc())
@@ -57,6 +65,12 @@ class SupportRepository:
             )
         )
         return result.scalar_one_or_none()
+
+    async def list_all_support_sessions(self) -> Sequence[SupportSession]:
+        result = await self.db.execute(
+            select(SupportSession).order_by(SupportSession.created_at.desc())
+        )
+        return result.scalars().all()
 
     async def update_support_request(self, request: SupportRequest) -> SupportRequest:
         await self.db.flush()

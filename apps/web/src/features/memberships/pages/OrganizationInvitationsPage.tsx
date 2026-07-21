@@ -1,6 +1,9 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useOrganizationInvitations, useRevokeInvitation } from '../hooks/useMemberships';
+import {
+  useOrganizationInvitations,
+  useRevokeInvitation,
+} from '../hooks/useMemberships';
 import { InvitationList } from '../components/InvitationList';
 import { toast } from 'react-hot-toast';
 import { useOrganization } from '../../organizations/hooks/useOrganizations';
@@ -14,8 +17,13 @@ export default function OrganizationInvitationsPage() {
   const [isInviteOpen, setIsInviteOpen] = useState(false);
 
   const { data: organization } = useOrganization(organizationId!);
-  const { data: invitations, isLoading, error } = useOrganizationInvitations(organizationId!);
-  const { mutateAsync: revokeInvitation, isPending: isRevoking } = useRevokeInvitation();
+  const {
+    data: invitations,
+    isLoading,
+    error,
+  } = useOrganizationInvitations(organizationId!);
+  const { mutateAsync: revokeInvitation, isPending: isRevoking } =
+    useRevokeInvitation();
 
   const handleRevoke = async (invitationId: string) => {
     try {
@@ -31,8 +39,10 @@ export default function OrganizationInvitationsPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <button 
-              onClick={() => navigate(`/dashboard/organizations/${organizationId}/members`)}
+            <button
+              onClick={() =>
+                navigate(`/dashboard/organizations/${organizationId}/members`)
+              }
               className="text-sm font-medium text-blue-600 hover:underline"
             >
               ← Back to Members

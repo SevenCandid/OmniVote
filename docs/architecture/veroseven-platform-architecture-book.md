@@ -134,7 +134,13 @@ graph TD
 * **Public APIs**: `GET /api/v1/organizations/{org_id}/roles`, `POST /api/v1/organizations/{org_id}/members/{membership_id}/roles`.
 * **Dependencies**: Memberships, Organizations.
 
-#### 6. Audit Module
+#### 6. Platform Identity Module
+* **Responsibilities**: Orchestrates all platform-level access management, fully decoupled from Organization Membership. Encompasses Platform Users, Roles, Permissions, Invitations, Sessions, Authentication, and Authorization.
+* **Boundaries**: Manages global platform administrators. Has no tenant context.
+* **Public APIs**: `GET /api/v1/platform/users`, `POST /api/v1/platform/invitations`.
+* **Dependencies**: Identity Module, RBAC Module.
+
+#### 7. Audit Module
 * **Responsibilities**: Captures structural event logging, records actor identity, action type, IP address, and payload parameters.
 * **Boundaries**: Write-only model. Events cannot be deleted or modified.
 * **Public APIs**: Internal service invocation only.
@@ -400,6 +406,10 @@ The system architecture decisions are captured below:
 * **Context**: Securing the creation, update, and assignment of custom organization roles against privilege escalation while keeping system roles immutable.
 * **Decision**: Enforced subset-permission checks at role creation/assignment time, protected system roles from mutation, and added a fast-flattening effective permissions query endpoint.
 * **Ref**: [0012-role-management-and-protection-rules.md](file:///c:/Users/DELL/omnivote/docs/decisions/0012-role-management-and-protection-rules.md)
+
+### [ADR-013] Platform Identity Bootstrap and Lifecycle Security
+* **Context**: The platform required a secure mechanism to bootstrap the initial Platform Owner while preventing unauthorized privilege escalation or self-service access to platform administration.
+* **Decision**: Implemented a secure backend bootstrap script (`scripts/bootstrap_platform.py`) that strictly limits itself to creating the initial Platform Owner. Once an owner exists, the script locks out. All future Platform Administrators must be onboarded exclusively through an explicit Platform Invitation workflow, ensuring full auditability and preventing shadow administration.
 
 ---
 

@@ -9,6 +9,7 @@ interface DialogProps {
   title?: string;
   children: React.ReactNode;
   className?: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 export function BaseDialog({
@@ -17,7 +18,15 @@ export function BaseDialog({
   title,
   children,
   className,
+  size = 'md',
 }: DialogProps) {
+  const sizeClasses = {
+    sm: 'max-w-sm',
+    md: 'max-w-lg',
+    lg: 'max-w-2xl',
+    xl: 'max-w-4xl',
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -38,7 +47,8 @@ export function BaseDialog({
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ type: 'spring', duration: 0.3 }}
             className={cn(
-              'relative w-full max-w-lg bg-white dark:bg-[#18181B] border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] rounded-2xl shadow-xl p-6 z-10',
+              'relative w-full bg-white dark:bg-[#18181B] border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] rounded-2xl shadow-xl p-6 z-10',
+              sizeClasses[size],
               className
             )}
           >

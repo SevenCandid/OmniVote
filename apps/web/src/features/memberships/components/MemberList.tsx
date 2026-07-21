@@ -32,7 +32,10 @@ export function MemberList({
     return (
       <div className="space-y-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="animate-pulse bg-zinc-200 dark:bg-zinc-800 h-20 rounded-2xl" />
+          <div
+            key={i}
+            className="animate-pulse bg-zinc-200 dark:bg-zinc-800 h-20 rounded-2xl"
+          />
         ))}
       </div>
     );
@@ -48,22 +51,23 @@ export function MemberList({
 
   if (!members || members.length === 0) {
     return (
-      <EmptyState
-        icon={Users}
-        title="No members"
-        description={emptyMessage}
-      />
+      <EmptyState icon={Users} title="No members" description={emptyMessage} />
     );
   }
 
   return (
     <div className="space-y-4">
       {members.map((member) => (
-        <BaseCard key={member.id} className="flex items-center justify-between p-4 sm:p-6">
+        <BaseCard
+          key={member.id}
+          className="flex items-center justify-between p-4 sm:p-6"
+        >
           <div>
             <div className="flex items-center gap-3 mb-1">
               <span className="font-medium">
-                {member.user ? `${member.user.first_name} ${member.user.last_name}` : 'Unknown User'}
+                {member.user
+                  ? `${member.user.first_name} ${member.user.last_name}`
+                  : 'Unknown User'}
               </span>
               <MembershipStatusBadge status={member.status} />
             </div>
@@ -74,23 +78,36 @@ export function MemberList({
                   <br />
                 </>
               )}
-              Joined: {member.created_at ? new Date(member.created_at).toLocaleDateString() : 'N/A'}
+              Joined:{' '}
+              {member.created_at
+                ? new Date(member.created_at).toLocaleDateString()
+                : 'N/A'}
             </div>
           </div>
           <div className="flex gap-2">
             {member.status !== MembershipStatus.REMOVED && organizationId && (
-              <RequirePermission permissionKey="member.update" organizationId={organizationId}>
+              <RequirePermission
+                permissionKey="member.update"
+                organizationId={organizationId}
+              >
                 <BaseButton
                   variant="secondary"
                   size="sm"
-                  onClick={() => navigate(`/dashboard/organizations/${organizationId}/members/${member.id}/roles`)}
+                  onClick={() =>
+                    navigate(
+                      `/dashboard/organizations/${organizationId}/members/${member.id}/roles`
+                    )
+                  }
                 >
                   Manage Roles
                 </BaseButton>
               </RequirePermission>
             )}
             {onRemoveMember && member.status !== MembershipStatus.REMOVED && (
-              <RequirePermission permissionKey="member.remove" organizationId={organizationId}>
+              <RequirePermission
+                permissionKey="member.remove"
+                organizationId={organizationId}
+              >
                 <BaseButton
                   variant="danger"
                   size="sm"

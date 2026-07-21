@@ -43,12 +43,18 @@ export default function DashboardLayout() {
   };
 
   // Helper to detect active paths
-  const isActive = (path: string) => location.pathname.startsWith(path) && (path !== '/dashboard' || location.pathname === '/dashboard');
+  const isActive = (path: string) =>
+    location.pathname.startsWith(path) &&
+    (path !== '/dashboard' || location.pathname === '/dashboard');
 
   // Sidebar Menu Items
   const menuItems = [
     { title: 'Home', path: '/dashboard', icon: Home },
-    { title: 'Organizations', path: '/dashboard/organizations', icon: Building2 },
+    {
+      title: 'Organizations',
+      path: '/dashboard/organizations',
+      icon: Building2,
+    },
     { title: 'Invitations', path: '/dashboard/invitations', icon: Mail },
     { title: 'Elections', path: '/dashboard/elections', icon: Calendar },
     { title: 'Billing', path: '/dashboard/billing', icon: CreditCard },
@@ -254,7 +260,8 @@ export default function DashboardLayout() {
                 className="flex items-center gap-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 px-3 py-1.5 rounded-full border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] transition-colors select-none"
               >
                 <div className="w-6 h-6 rounded-full bg-indigo-100 text-primary font-bold text-xs flex items-center justify-center uppercase">
-                  {user?.first_name?.[0]}{user?.last_name?.[0]}
+                  {user?.first_name?.[0]}
+                  {user?.last_name?.[0]}
                 </div>
                 <span className="hidden sm:inline text-xs font-semibold">
                   {user?.first_name} {user?.last_name}
@@ -270,7 +277,9 @@ export default function DashboardLayout() {
                   />
                   <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#18181B] border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] rounded-xl shadow-lg p-2 z-20 animate-fade-in">
                     <div className="px-3 py-2 text-xs border-b border-zinc-100 dark:border-zinc-800 mb-1">
-                      <p className="font-semibold">{user?.first_name} {user?.last_name}</p>
+                      <p className="font-semibold">
+                        {user?.first_name} {user?.last_name}
+                      </p>
                       <p className="text-[var(--color-neutral-muted-light)] truncate">
                         {user?.email}
                       </p>

@@ -5,8 +5,17 @@ import { membershipApi } from '../services/membershipApi';
 import { InvitationStatus } from '../schemas/invitationSchema';
 import { BaseCard } from '../../../components/ui/BaseCard';
 import { BaseButton } from '../../../components/ui/BaseButton';
-import { Building2, Mail, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
-import { useAcceptInvitation, useDeclineInvitation } from '../hooks/useMemberships';
+import {
+  Building2,
+  Mail,
+  Loader2,
+  AlertCircle,
+  CheckCircle,
+} from 'lucide-react';
+import {
+  useAcceptInvitation,
+  useDeclineInvitation,
+} from '../hooks/useMemberships';
 import { toast } from 'react-hot-toast';
 import { useSessionStore } from '../../../stores/sessionStore';
 
@@ -14,11 +23,17 @@ export default function InvitationDetailsPage() {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
   const isAuthenticated = useSessionStore((state) => !!state.accessToken);
-  
-  const { mutateAsync: acceptInvitation, isPending: isAccepting } = useAcceptInvitation();
-  const { mutateAsync: declineInvitation, isPending: isDeclining } = useDeclineInvitation();
 
-  const { data: invitation, isLoading, error } = useQuery({
+  const { mutateAsync: acceptInvitation, isPending: isAccepting } =
+    useAcceptInvitation();
+  const { mutateAsync: declineInvitation, isPending: isDeclining } =
+    useDeclineInvitation();
+
+  const {
+    data: invitation,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['invitationDetails', token],
     queryFn: () => membershipApi.getInvitationDetails(token!),
     enabled: !!token,
@@ -31,7 +46,7 @@ export default function InvitationDetailsPage() {
       navigate('/auth/register');
       return;
     }
-    
+
     try {
       await acceptInvitation(token!);
       toast.success('Invitation accepted!');
@@ -77,7 +92,9 @@ export default function InvitationDetailsPage() {
           </div>
           <h1 className="text-2xl font-bold">Invalid or Expired Invitation</h1>
           <p className="text-zinc-500 pb-4">
-            {error ? (error as any).message : 'This invitation link is invalid, has expired, or has already been used.'}
+            {error
+              ? (error as any).message
+              : 'This invitation link is invalid, has expired, or has already been used.'}
           </p>
           <BaseButton className="w-full" onClick={() => navigate('/dashboard')}>
             Go to Dashboard
@@ -95,9 +112,15 @@ export default function InvitationDetailsPage() {
           <div className="w-16 h-16 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="w-8 h-8" />
           </div>
-          <h1 className="text-2xl font-bold">Invitation {invitation.status.charAt(0).toUpperCase() + invitation.status.slice(1)}</h1>
+          <h1 className="text-2xl font-bold">
+            Invitation{' '}
+            {invitation.status.charAt(0).toUpperCase() +
+              invitation.status.slice(1)}
+          </h1>
           <p className="text-zinc-500 pb-4">
-            This invitation to join <strong>{invitation.organization_name}</strong> is no longer pending.
+            This invitation to join{' '}
+            <strong>{invitation.organization_name}</strong> is no longer
+            pending.
           </p>
           <BaseButton className="w-full" onClick={() => navigate('/dashboard')}>
             Go to Dashboard
@@ -109,15 +132,17 @@ export default function InvitationDetailsPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 dark:bg-zinc-900 p-4">
-      
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <div className="inline-flex p-4 bg-white dark:bg-zinc-800 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-700 mb-6">
             <Building2 className="w-8 h-8 text-blue-600" />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight">You've been invited!</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            You've been invited!
+          </h1>
           <p className="text-zinc-500 dark:text-zinc-400 mt-2">
-            {invitation.invited_by_name || 'An administrator'} has invited you to join <strong>{invitation.organization_name}</strong> on OmniVote.
+            {invitation.invited_by_name || 'An administrator'} has invited you
+            to join <strong>{invitation.organization_name}</strong> on OmniVote.
           </p>
         </div>
 
@@ -127,13 +152,16 @@ export default function InvitationDetailsPage() {
               <Mail className="w-5 h-5 text-zinc-400" />
               <div>
                 <p className="text-sm font-medium">Invited Email</p>
-                <p className="text-sm text-zinc-500">{invitation.recipient_email}</p>
+                <p className="text-sm text-zinc-500">
+                  {invitation.recipient_email}
+                </p>
               </div>
             </div>
 
             {!isAuthenticated && (
               <div className="p-4 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-xl text-sm">
-                You'll need to create an account or sign in with this email address to accept the invitation.
+                You'll need to create an account or sign in with this email
+                address to accept the invitation.
               </div>
             )}
 

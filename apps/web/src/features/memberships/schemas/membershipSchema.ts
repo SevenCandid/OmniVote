@@ -19,17 +19,22 @@ export const MembershipSchema = z.object({
   removed_at: z.string().nullable().optional(),
   created_at: z.string(),
   updated_at: z.string(),
-  organization: z.object({
-    id: z.string().uuid(),
-    name: z.string(),
-  }).nullable().optional(),
-  user: z.object({
-    id: z.string().uuid(),
-    email: z.string().email(),
-    first_name: z.string(),
-    last_name: z.string(),
-  }).nullable().optional(),
+  organization: z
+    .object({
+      id: z.string().uuid(),
+      name: z.string(),
+    })
+    .nullable()
+    .optional(),
+  user: z
+    .object({
+      id: z.string().uuid(),
+      email: z.string().email(),
+      first_name: z.string(),
+      last_name: z.string(),
+    })
+    .nullable()
+    .optional(),
 });
 
 export type Membership = z.infer<typeof MembershipSchema>;
-

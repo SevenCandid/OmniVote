@@ -25,7 +25,7 @@ describe('BaseButton Component', () => {
     const user = userEvent.setup();
     const handleClick = vi.fn();
     render(<BaseButton onClick={handleClick}>Click</BaseButton>);
-    
+
     const button = screen.getByRole('button', { name: /click/i });
     await user.click(button);
     expect(handleClick).toHaveBeenCalledTimes(1);
@@ -33,7 +33,7 @@ describe('BaseButton Component', () => {
 
   it('displays loading spinner and is disabled when isLoading is true', () => {
     render(<BaseButton isLoading>Submit</BaseButton>);
-    
+
     const button = screen.getByRole('button');
     expect(button).toBeDisabled();
     expect(button).toHaveClass('opacity-50');

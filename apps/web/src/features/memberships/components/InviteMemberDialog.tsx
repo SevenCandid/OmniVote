@@ -4,7 +4,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { BaseDialog } from '../../../components/ui/BaseDialog';
 import { BaseInput } from '../../../components/ui/BaseInput';
 import { BaseButton } from '../../../components/ui/BaseButton';
-import { InviteMemberInput, InviteMemberSchema } from '../schemas/invitationSchema';
+import {
+  InviteMemberInput,
+  InviteMemberSchema,
+} from '../schemas/invitationSchema';
 import { useInviteMember } from '../hooks/useMemberships';
 import { toast } from 'react-hot-toast';
 import { useOrganizations } from '../../organizations/hooks/useOrganizations';
@@ -15,7 +18,11 @@ interface InviteMemberDialogProps {
   organizationId?: string;
 }
 
-export function InviteMemberDialog({ isOpen, onClose, organizationId }: InviteMemberDialogProps) {
+export function InviteMemberDialog({
+  isOpen,
+  onClose,
+  organizationId,
+}: InviteMemberDialogProps) {
   const { mutateAsync: inviteMember, isPending } = useInviteMember();
   const { data: organizations } = useOrganizations();
   const [selectedOrgId, setSelectedOrgId] = useState(organizationId || '');
@@ -44,7 +51,10 @@ export function InviteMemberDialog({ isOpen, onClose, organizationId }: InviteMe
       return;
     }
     try {
-      const result = await inviteMember({ organizationId: selectedOrgId, data });
+      const result = await inviteMember({
+        organizationId: selectedOrgId,
+        data,
+      });
       setSuccessToken(result.invitation_token);
       toast.success('Invitation sent successfully');
       reset();
@@ -62,15 +72,20 @@ export function InviteMemberDialog({ isOpen, onClose, organizationId }: InviteMe
   if (successToken) {
     const url = `${window.location.origin}/invite/${successToken}`;
     return (
-      <BaseDialog isOpen={isOpen} onClose={handleClose} title="Invitation Created!">
+      <BaseDialog
+        isOpen={isOpen}
+        onClose={handleClose}
+        title="Invitation Created!"
+      >
         <div className="space-y-4 mt-4">
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            The invitation was created successfully. You can copy the link below and share it with the recipient.
+            The invitation was created successfully. You can copy the link below
+            and share it with the recipient.
           </p>
           <div className="flex items-center gap-2 p-3 bg-zinc-50 dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800">
-            <input 
-              readOnly 
-              value={url} 
+            <input
+              readOnly
+              value={url}
               className="flex-1 bg-transparent text-sm outline-none text-zinc-600 dark:text-zinc-300"
             />
           </div>
@@ -78,10 +93,12 @@ export function InviteMemberDialog({ isOpen, onClose, organizationId }: InviteMe
             <BaseButton variant="secondary" onClick={handleClose}>
               Done
             </BaseButton>
-            <BaseButton onClick={() => {
-              navigator.clipboard.writeText(url);
-              toast.success('Copied to clipboard!');
-            }}>
+            <BaseButton
+              onClick={() => {
+                navigator.clipboard.writeText(url);
+                toast.success('Copied to clipboard!');
+              }}
+            >
               Copy Link
             </BaseButton>
           </div>
@@ -104,7 +121,9 @@ export function InviteMemberDialog({ isOpen, onClose, organizationId }: InviteMe
               className="w-full px-4 py-2 bg-white dark:bg-[#18181B] border border-gray-200 dark:border-gray-800 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
             >
               {organizations?.map((org) => (
-                <option key={org.id} value={org.id}>{org.name}</option>
+                <option key={org.id} value={org.id}>
+                  {org.name}
+                </option>
               ))}
             </select>
           </div>
@@ -121,10 +140,16 @@ export function InviteMemberDialog({ isOpen, onClose, organizationId }: InviteMe
           placeholder="e.g. Member, Editor"
           error={errors.initial_roles?.message as string | undefined}
           {...register('initial_roles', {
-            setValueAs: (v) => (v ? v.split(',').map((s: string) => s.trim()).filter(Boolean) : undefined)
+            setValueAs: (v) =>
+              v
+                ? v
+                    .split(',')
+                    .map((s: string) => s.trim())
+                    .filter(Boolean)
+                : undefined,
           })}
         />
-        
+
         <div className="flex justify-end gap-3 pt-4 border-t border-zinc-100 dark:border-zinc-800">
           <BaseButton type="button" variant="secondary" onClick={handleClose}>
             Cancel

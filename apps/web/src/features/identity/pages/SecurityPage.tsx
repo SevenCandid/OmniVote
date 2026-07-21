@@ -42,7 +42,7 @@ export function SecurityPage() {
 
       <div className="bg-white dark:bg-[#18181B] border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] rounded-xl p-6">
         <h2 className="text-lg font-semibold mb-4">Change Password</h2>
-        
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {errorMsg && (
             <div className="p-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm rounded-lg">
@@ -62,7 +62,7 @@ export function SecurityPage() {
               error={errors.current_password?.message}
               {...register('current_password')}
             />
-            
+
             <div className="pt-2">
               <BaseInput
                 label="New Password"
@@ -71,7 +71,7 @@ export function SecurityPage() {
                 {...register('new_password')}
               />
             </div>
-            
+
             <BaseInput
               label="Confirm New Password"
               type="password"

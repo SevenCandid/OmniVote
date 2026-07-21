@@ -407,16 +407,44 @@ Every response returned by the OmniVote API must conform to a standardized JSON 
 
 #### `GET /api/v1/organizations/{organization_id}/roles`
 * **Purpose:** Get all available roles that can be assigned in this organization.
-* **Auth Required:** Bearer JWT. Requires `member.update` permission.
+* **Auth Required:** Bearer JWT. Requires `role.view` permission.
 * **Success Response:** Status `200 OK`.
 
-#### `GET /api/v1/memberships/{membership_id}/roles`
-* **Purpose:** Get assigned roles list for a membership.
-* **Auth Required:** Bearer JWT. Requires `member.update` permission (or checks if requesting own roles).
+#### `POST /api/v1/organizations/{organization_id}/roles`
+* **Purpose:** Create a new custom role.
+* **Auth Required:** Bearer JWT. Requires `role.create` permission.
+* **Request Body:**
+  ```json
+  {
+    "name": "Audit Viewer",
+    "description": "Can only view audit logs"
+  }
+  ```
+* **Success Response:** Status `201 Created`.
+
+#### `PATCH /api/v1/organizations/{organization_id}/roles/{role_id}`
+* **Purpose:** Update a custom role's metadata.
+* **Auth Required:** Bearer JWT. Requires `role.update` permission.
 * **Success Response:** Status `200 OK`.
 
-#### `POST /api/v1/memberships/{membership_id}/roles`
-* **Purpose:** Assign roles to a membership.
+#### `DELETE /api/v1/organizations/{organization_id}/roles/{role_id}`
+* **Purpose:** Delete a custom role.
+* **Auth Required:** Bearer JWT. Requires `role.delete` permission.
+* **Success Response:** Status `204 No Content`.
+
+#### `PUT /api/v1/organizations/{organization_id}/roles/{role_id}/permissions`
+* **Purpose:** Atomically replace all permissions for a custom role.
+* **Auth Required:** Bearer JWT. Requires `role.update` permission.
+* **Request Body:**
+  ```json
+  {
+    "permission_ids": ["019f7b17-7dbb-702b-93fd-87d4b6d6b6e7"]
+  }
+  ```
+* **Success Response:** Status `200 OK`.
+
+#### `PUT /api/v1/organizations/{organization_id}/memberships/{membership_id}/roles`
+* **Purpose:** Atomically replace all roles for a membership. Enforces Last Owner Protection and prevents privilege escalation.
 * **Auth Required:** Bearer JWT. Requires `member.update` permission.
 * **Request Body:**
   ```json
@@ -424,11 +452,6 @@ Every response returned by the OmniVote API must conform to a standardized JSON 
     "role_ids": ["019f7b17-7dbb-702b-93fd-87d4b6d6b6e7"]
   }
   ```
-* **Success Response:** Status `200 OK`.
-
-#### `DELETE /api/v1/memberships/{membership_id}/roles/{role_id}`
-* **Purpose:** Remove a role assignment from a membership.
-* **Auth Required:** Bearer JWT. Requires `member.update` permission.
 * **Success Response:** Status `200 OK`.
 
 ---
