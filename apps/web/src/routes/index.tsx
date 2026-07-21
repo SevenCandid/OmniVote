@@ -20,6 +20,7 @@ import { VerifyEmailPage } from '../features/identity/pages/VerifyEmailPage';
 import { ProfilePage } from '../features/identity/pages/ProfilePage';
 import { SecurityPage } from '../features/identity/pages/SecurityPage';
 import { SessionsPage } from '../features/identity/pages/SessionsPage';
+import { UserAuditPage } from '../features/identity/pages/UserAuditPage';
 
 // Other Pages
 import LandingPage from '../pages/LandingPage';
@@ -36,6 +37,7 @@ import RoleDetailsPage from '../features/rbac/pages/RoleDetailsPage';
 import MembershipRolesPage from '../features/rbac/pages/MembershipRolesPage';
 import SystemPermissionsPage from '../features/rbac/pages/SystemPermissionsPage';
 import OrganizationSupportPage from '../features/organizations/pages/OrganizationSupportPage';
+import { OrganizationAuditPage } from '../features/organizations/pages/OrganizationAuditPage';
 import { PlaceholderPage } from '../pages/PlaceholderPage';
 
 // Platform Pages
@@ -136,6 +138,7 @@ export const router = createBrowserRouter([
           { path: ':id/roles', element: <OrganizationRolesPage /> },
           { path: ':id/roles/:roleId', element: <RoleDetailsPage /> },
           { path: ':id/support', element: <OrganizationSupportPage /> },
+          { path: ':id/audit', element: <OrganizationAuditPage /> },
         ],
       },
       { path: 'invitations', element: <UserInvitationsPage /> },
@@ -147,7 +150,7 @@ export const router = createBrowserRouter([
         path: 'billing',
         element: <PlaceholderPage title="Billing Accounts" />,
       },
-      { path: 'audit', element: <PlaceholderPage title="System Audit Logs" /> },
+      { path: 'audit', element: <UserAuditPage /> },
       {
         path: 'settings',
         children: [

@@ -16,6 +16,9 @@ from app.identity.api.dependencies import get_current_user
 from app.identity.models.user import User
 
 from app.modules.rbac.dependencies import RequirePermission
+from app.schemas.audit import PaginatedAuditResponse
+from app.identity.models.security import SecurityEvent
+from sqlalchemy import select, func, desc
 
 router = APIRouter()
 
@@ -122,3 +125,38 @@ async def get_my_permissions(
 
     rbac_repo = RBACRepository(db)
     return await rbac_repo.get_all_permissions_for_membership(membership.id)
+
+@router.get("/{organization_id}/audit", response_model=PaginatedAuditResponse)
+async def get_organization_audit_logs(
+    organization_id: uuid.UUID,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=100),
+    event_type: str | None = Query(None),
+    auth_context: dict = Depends(RequirePermission("organization.read")),
+    db: AsyncSession = Depends(get_db_session),
+):
+    """
+    Retrieve audit logs for a specific organization.
+    Requires 'organization.read' permission.
+    """
+    # Filter by organization_id inside the JSONB payload
+    base_query = select(SecurityEvent).where(
+        SecurityEvent.metadata_payload["organization_id"].astext == str(organization_id)
+    )
+    
+    if event_type:
+        base_query = base_query.where(SecurityEvent.event_type == event_type)
+        
+    count_query = select(func.count()).select_from(base_query.subquery())
+    total = await db.scalar(count_query) or 0
+    
+    query = base_query.order_by(desc(SecurityEvent.created_at)).offset(skip).limit(limit)
+    result = await db.execute(query)
+    items = result.scalars().all()
+    
+    return PaginatedAuditResponse(
+        items=items,
+        total=total,
+        skip=skip,
+        limit=limit
+    )

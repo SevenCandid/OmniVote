@@ -26,6 +26,9 @@ export default function OrganizationDetailsPage() {
   const updateMutation = useUpdateOrganization();
   const deleteMutation = useDeleteOrganization();
 
+  const { data: supportSessions } = useOrgSupportSessions(isNew ? '' : id!);
+  const activeSession = supportSessions?.find((s) => s.status === 'ACTIVE');
+
   const [isEditing, setIsEditing] = useState(isNew);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
@@ -74,11 +77,8 @@ export default function OrganizationDetailsPage() {
     return <div className="p-6">Loading organization details...</div>;
   }
 
-  const canEdit = isNew || hasPermission('organization.update');
-  const canDelete = !isNew && hasPermission('organization.delete');
-
-    const { data: supportSessions } = useOrgSupportSessions(isNew ? '' : id!);
-    const activeSession = supportSessions?.find((s) => s.status === 'ACTIVE');
+    const canEdit = isNew || hasPermission('organization.update');
+    const canDelete = !isNew && hasPermission('organization.delete');
 
     return (
       <div className="max-w-4xl mx-auto p-6 space-y-6">

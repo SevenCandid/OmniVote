@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import health, organizations
+from app.api.v1.endpoints import health, organizations, audit
 from app.identity.api.v1 import auth as identity_auth
 from app.identity.api.v1 import users as identity_users
 from app.identity.api.v1 import sessions as identity_sessions
@@ -23,6 +23,7 @@ api_router = APIRouter()
 
 # Register endpoint routers
 api_router.include_router(health.router, tags=["Health"])
+api_router.include_router(audit.router, prefix="/audit", tags=["Audit"])
 api_router.include_router(organizations.router, prefix="/organizations", tags=["Organizations"])
 
 # Identity Platform
