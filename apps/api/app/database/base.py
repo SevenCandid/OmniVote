@@ -44,3 +44,4 @@ from app.identity.models.credential import Credential
 from app.identity.models.session import Session
 from app.identity.models.security import SecurityEvent
 from app.identity.models.tokens import VerificationToken, PasswordResetToken
+from app.models.platform_settings import PlatformSettings

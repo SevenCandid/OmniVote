@@ -34,3 +34,11 @@ This document establishes baseline security configurations, secrets management r
   # Node packages scan
   npm audit --audit-level=moderate
   ```
+
+## Secret Management
+
+- **Never** store third-party integration secrets in plaintext within the database.
+- Utilize the `SecretManager` service for symmetric encryption (Fernet) of secrets before storage.
+- Provide secrets via securely injected environment variables (e.g., `SECRET_MANAGER_KEY`) rather than hardcoded configuration files.
+- The Platform Settings UI must implement write-only inputs for secrets, obscuring existing values.
+

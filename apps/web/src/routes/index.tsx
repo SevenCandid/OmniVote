@@ -49,6 +49,10 @@ import { PlatformInvitationsPage } from '../features/platform/pages/PlatformInvi
 import { PlatformVerificationPage } from '../features/platform/pages/PlatformVerificationPage';
 import { PlatformLoginPage } from '../features/platform/pages/PlatformLoginPage';
 import PlatformSupportPage from '../features/platform/pages/PlatformSupportPage';
+import { PlatformAnalyticsPage } from '../features/platform/pages/PlatformAnalyticsPage';
+import { PlatformAuditPage } from '../features/platform/pages/PlatformAuditPage';
+import { PlatformNotificationsPage } from '../features/platform/pages/PlatformNotificationsPage';
+import { PlatformSettingsPage } from '../features/platform/pages/PlatformSettingsPage';
 
 export const router = createBrowserRouter([
   // Public Marketing Routes
@@ -183,19 +187,19 @@ export const router = createBrowserRouter([
       { path: 'invitations', element: <PlatformInvitationsPage /> },
       {
         path: 'analytics',
-        element: <PlaceholderPage title="Platform Analytics" />,
+        element: <PlatformAnalyticsPage />,
       },
       {
         path: 'audit',
-        element: <PlaceholderPage title="Platform Audit Center" />,
+        element: <PlatformAuditPage />,
       },
       {
         path: 'notifications',
-        element: <PlaceholderPage title="Platform Notifications" />,
+        element: <PlatformNotificationsPage />,
       },
       {
         path: 'settings',
-        element: <PlaceholderPage title="Platform Settings" />,
+        element: <PlatformSettingsPage />,
       },
     ],
   },

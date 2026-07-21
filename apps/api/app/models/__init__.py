@@ -48,6 +48,9 @@ from app.modules.support.models.support import (
     SessionStatus,
 )
 
+# Notifications
+from app.models.notification import PlatformNotification, NotificationType
+
 __all__ = [
     # Organization
     "Organization",
@@ -87,4 +90,8 @@ __all__ = [
     "SupportSession",
     "SupportRequestStatus",
     "SessionStatus",
+    
+    # Notifications
+    "PlatformNotification",
+    "NotificationType",
 ]

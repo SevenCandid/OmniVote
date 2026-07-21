@@ -25,6 +25,8 @@ import { useSidebarStore } from '../stores/sidebarStore';
 import { useTheme } from '../providers/theme-provider';
 import { useSessionStore } from '../stores/sessionStore';
 import { identityApi } from '../features/identity/services/identityApi';
+import { platformNotificationsApi } from '../features/platform/api/platformNotificationsApi';
+import { useEffect } from 'react';
 
 export default function PlatformLayout() {
   const { isOpen, toggle } = useSidebarStore();
@@ -33,6 +35,25 @@ export default function PlatformLayout() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const location = useLocation();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (user) {
+      fetchUnreadCount();
+      // Optional: Polling every 60s
+      const interval = setInterval(fetchUnreadCount, 60000);
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  const fetchUnreadCount = async () => {
+    try {
+      const data = await platformNotificationsApi.getNotifications(1, 0, true);
+      setUnreadCount(data.total); // Actually, we have unread_count but since we fetch unread_only, total is also the unread count
+    } catch (e) {
+      console.error('Failed to fetch unread notifications', e);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -68,8 +89,8 @@ export default function PlatformLayout() {
     {
       title: 'Platform Invitations',
       path: '/platform/invitations',
-      icon: Bell,
-    }, // Reusing Bell or add Mail
+      icon: Users,
+    },
     { title: 'Analytics', path: '/platform/analytics', icon: BarChart3 },
     { title: 'Audit Center', path: '/platform/audit', icon: FileText },
     { title: 'Notifications', path: '/platform/notifications', icon: Bell },
@@ -231,14 +252,17 @@ export default function PlatformLayout() {
             </div>
 
             {/* Notification Bell */}
-            <button
+            <Link
+              to="/platform/notifications"
               title="Notifications"
               aria-label="View notifications"
               className="relative p-2 rounded-full text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
             >
               <Bell size={18} />
-              {/* Optional unread badge */}
-            </button>
+              {unreadCount > 0 && (
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-zinc-900 animate-pulse"></span>
+              )}
+            </Link>
 
             {/* Theme Toggle inside Header */}
             <div className="flex items-center border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] rounded-full p-0.5 bg-[var(--color-surface-muted-light)] dark:bg-[var(--color-surface-muted-dark)] scale-90">

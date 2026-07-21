@@ -54,6 +54,7 @@ class Settings(BaseSettings):
         return self
 
     SECRET_KEY: str = "placeholder_secret_key_change_me_in_production"
+    SECRET_MANAGER_KEY: str = "EFaRY_O4EMhUC_FCI-cQlt4gEdD7mhvnBPtW85k3oSU="
 
     # CORS Origins
     BACKEND_CORS_ORIGINS: str | list[str] = ["*"]

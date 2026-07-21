@@ -4,6 +4,8 @@ import {
   PlatformActivityLog,
   platformStatisticsSchema,
   platformActivityLogSchema,
+  PaginatedAuditResponse,
+  paginatedAuditSchema,
 } from '../schemas/platformDashboardSchema';
 import { z } from 'zod';
 
@@ -55,5 +57,14 @@ export const platformDashboardApi = {
       `/platform/dashboard/activity?limit=${limit}`
     );
     return z.array(platformActivityLogSchema).parse(data);
+  },
+
+  getAuditLogs: async (limit: number = 50, skip: number = 0, eventType?: string): Promise<PaginatedAuditResponse> => {
+    let url = `/platform/dashboard/audit?limit=${limit}&skip=${skip}`;
+    if (eventType) {
+      url += `&event_type=${encodeURIComponent(eventType)}`;
+    }
+    const data = await fetchWithAuth(url);
+    return paginatedAuditSchema.parse(data);
   },
 };

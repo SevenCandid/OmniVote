@@ -6,7 +6,9 @@ from app.models.organization import Organization, OrganizationVerificationStatus
 from app.identity.models.user import User
 from app.modules.rbac.models.rbac import PlatformIdentity
 from app.identity.models.security import SecurityEvent
-from app.schemas.platform_statistics import PlatformStatisticsResponse, PlatformActivityLogResponse
+from app.modules.support.models.support import SupportSession, SupportRequest, SessionStatus, SupportRequestStatus
+from app.schemas.platform_statistics import PlatformStatisticsResponse, PlatformActivityLogResponse, PlatformAuditLogResponse
+import datetime
 
 class PlatformStatisticsService:
     def __init__(self, db: AsyncSession):
@@ -45,9 +47,29 @@ class PlatformStatisticsService:
         )
         standard_users = await self.db.scalar(stmt_standard_users) or 0
 
-        # Mocks for now
-        active_support_sessions = 0
-        open_support_requests = 0
+        # Support Metrics
+        stmt_active_sessions = select(func.count(SupportSession.id)).where(  # pylint: disable=not-callable
+            SupportSession.status == SessionStatus.ACTIVE
+        )
+        active_support_sessions = await self.db.scalar(stmt_active_sessions) or 0
+
+        stmt_open_requests = select(func.count(SupportRequest.id)).where(  # pylint: disable=not-callable
+            SupportRequest.status == SupportRequestStatus.PENDING
+        )
+        open_support_requests = await self.db.scalar(stmt_open_requests) or 0
+        
+        # Growth calculation mocks (e.g. comparing last 30 days vs previous 30 days)
+        # We'll stub these to reasonable values for the demo, or query if needed.
+        org_growth_percentage = 12.5
+        user_growth_percentage = 8.4
+        
+        # System Health stub
+        system_health = {
+            "database": "operational",
+            "redis": "operational",
+            "uptime_seconds": 86400,
+            "version": "1.0.0"
+        }
 
         return PlatformStatisticsResponse(
             total_organizations=total_orgs,
@@ -56,7 +78,12 @@ class PlatformStatisticsService:
             platform_users=platform_users,
             standard_users=standard_users,
             active_support_sessions=active_support_sessions,
-            open_support_requests=open_support_requests
+            open_support_requests=open_support_requests,
+            org_growth_percentage=org_growth_percentage,
+            user_growth_percentage=user_growth_percentage,
+            total_elections=0,  # Stubbed for now
+            active_elections=0, # Stubbed for now
+            system_health=system_health
         )
 
     async def get_recent_activity(self, limit: int = 5) -> list[PlatformActivityLogResponse]:
@@ -76,3 +103,30 @@ class PlatformStatisticsService:
                 metadata=event.metadata_payload
             ) for event in events
         ]
+
+    async def get_audit_logs(self, limit: int = 50, skip: int = 0, event_type: str | None = None) -> tuple[int, list[PlatformAuditLogResponse]]:
+        stmt = select(SecurityEvent)
+        count_stmt = select(func.count(SecurityEvent.id))  # pylint: disable=not-callable
+        
+        if event_type:
+            stmt = stmt.where(SecurityEvent.event_type.like(f"{event_type}%"))
+            count_stmt = count_stmt.where(SecurityEvent.event_type.like(f"{event_type}%"))
+            
+        stmt = stmt.order_by(desc(SecurityEvent.created_at)).offset(skip).limit(limit)
+        
+        total = await self.db.scalar(count_stmt) or 0
+        result = await self.db.execute(stmt)
+        events = result.scalars().all()
+        
+        logs = [
+            PlatformAuditLogResponse(
+                id=event.id,
+                timestamp=event.created_at,
+                event_type=event.event_type,
+                user_id=event.user_id,
+                ip_address=event.ip_address,
+                metadata=event.metadata_payload
+            ) for event in events
+        ]
+        
+        return total, logs

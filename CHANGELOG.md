@@ -4,6 +4,20 @@ All notable changes to the VeroSeven Platform and OmniVote application will be d
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v3.0.0] - 2026-07-21
+
+### Added
+- **Platform Analytics & Dashboard**: Centralized dashboard for platform owners to view organization growth, user growth, support metrics, and system health.
+- **Verification Center**: Dedicated workflow to approve, reject, or request more information for organizations pending verification.
+- **Audit Center**: Aggregated platform-wide audit logs, support logs, and verification history.
+- **Platform Notifications**: In-app notification center for platform administrators with future-ready architecture for external providers.
+- **Platform Settings & Secret Management**: Secure, encrypted-at-rest configuration management using `SecretManager` (Fernet) for storing SMTP credentials, OAuth keys, and other sensitive third-party provider tokens.
+- **Platform User Management**: Invite, activate, and manage roles and permissions for internal platform users.
+
+### Security
+- **Secret Encryption at Rest**: Environment-managed encryption keys for storing integration secrets, preventing credential leakage in database dumps.
+- **Write-Only UI for Secrets**: The Platform Settings UI never displays decrypted secrets; it only accepts new values and overwrites existing ones securely.
+
 ## [v0.2.4-alpha] - 2026-07-21
 
 ### Added

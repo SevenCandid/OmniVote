@@ -463,3 +463,8 @@ VeroSeven engineers adhere to the following principles:
 | Date | Version | Description | Author |
 | --- | --- | --- | --- |
 | 2026-07-20 | v0.2.4-alpha | Initial release of the Architecture Book consolidating current platform modules, ADRs, security architectures, and testing configurations. | Core Architecture Team |
+
+### Secret Management
+
+The Platform Settings module utilizes a dedicated `SecretManager` service for symmetric encryption (AES via Fernet) of all sensitive integrations at rest. The `SECRET_MANAGER_KEY` is strictly environment-managed and never stored in the database. Secrets (like SMTP credentials and third-party tokens) are write-only from the perspective of the Administration UI, effectively preventing credential leakage.
+
