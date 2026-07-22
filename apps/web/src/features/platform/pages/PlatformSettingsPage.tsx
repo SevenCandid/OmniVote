@@ -3,8 +3,20 @@ import { BaseCard as Card } from '../../../components/ui/BaseCard';
 import { BaseButton as Button } from '../../../components/ui/BaseButton';
 import { BaseInput as Input } from '../../../components/ui/BaseInput';
 import { toast } from 'react-hot-toast';
-import { platformSettingsApi, PlatformSettingsResponse, PlatformSettingsUpdate } from '../api/platformSettingsApi';
-import { Loader2, Shield, Settings, Mail, Lock, AlertTriangle, Database } from 'lucide-react';
+import {
+  platformSettingsApi,
+  PlatformSettingsResponse,
+  PlatformSettingsUpdate,
+} from '../api/platformSettingsApi';
+import {
+  Loader2,
+  Shield,
+  Settings,
+  Mail,
+  Lock,
+  AlertTriangle,
+  Database,
+} from 'lucide-react';
 
 const TABS = [
   { id: 'general', label: 'General', icon: Settings },
@@ -15,7 +27,9 @@ const TABS = [
 
 export function PlatformSettingsPage() {
   const [activeTab, setActiveTab] = useState('general');
-  const [settings, setSettings] = useState<PlatformSettingsResponse | null>(null);
+  const [settings, setSettings] = useState<PlatformSettingsResponse | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -71,21 +85,21 @@ export function PlatformSettingsPage() {
     setSaving(true);
     try {
       const updateData: PlatformSettingsUpdate = {};
-      
+
       // Only send if user typed something
       if (smtpHost || smtpPort || smtpUser || smtpPassword) {
         updateData.smtp_credentials = {
           host: smtpHost,
           port: smtpPort,
           user: smtpUser,
-          password: smtpPassword
+          password: smtpPassword,
         };
       }
-      
+
       const updated = await platformSettingsApi.updateSettings(updateData);
       setSettings(updated);
       toast.success('Provider settings securely updated');
-      
+
       // Clear write-only fields
       setSmtpHost('');
       setSmtpPort('');
@@ -111,7 +125,8 @@ export function PlatformSettingsPage() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Platform Settings</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Manage global configurations, secrets, and operational modes for the OmniVote platform.
+          Manage global configurations, secrets, and operational modes for the
+          OmniVote platform.
         </p>
       </div>
 
@@ -131,7 +146,9 @@ export function PlatformSettingsPage() {
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
-                  <Icon className={`h-5 w-5 ${activeTab === tab.id ? 'text-primary-700' : 'text-gray-400'}`} />
+                  <Icon
+                    className={`h-5 w-5 ${activeTab === tab.id ? 'text-primary-700' : 'text-gray-400'}`}
+                  />
                   {tab.label}
                 </button>
               );
@@ -143,33 +160,47 @@ export function PlatformSettingsPage() {
         <div className="flex-1 space-y-6">
           {activeTab === 'general' && (
             <Card className="p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">General Configuration</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">
+                General Configuration
+              </h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Platform Name</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Platform Name
+                  </label>
                   <Input
                     className="mt-1 max-w-md"
                     value={platformName}
                     onChange={(e) => setPlatformName(e.target.value)}
                   />
-                  <p className="mt-1 text-xs text-gray-500">Displayed in system-wide communications.</p>
+                  <p className="mt-1 text-xs text-gray-500">
+                    Displayed in system-wide communications.
+                  </p>
                 </div>
-                
+
                 <div className="flex items-center justify-between py-3 border-t border-gray-200">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-900">Allow Public Registration</h3>
-                    <p className="text-sm text-gray-500">Allow new users to sign up without an invitation.</p>
+                    <h3 className="text-sm font-medium text-gray-900">
+                      Allow Public Registration
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Allow new users to sign up without an invitation.
+                    </p>
                   </div>
                   <button
                     type="button"
-                    onClick={() => setAllowPublicRegistration(!allowPublicRegistration)}
+                    onClick={() =>
+                      setAllowPublicRegistration(!allowPublicRegistration)
+                    }
                     className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
                       allowPublicRegistration ? 'bg-primary-600' : 'bg-gray-200'
                     }`}
                   >
                     <span
                       className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                        allowPublicRegistration ? 'translate-x-5' : 'translate-x-0'
+                        allowPublicRegistration
+                          ? 'translate-x-5'
+                          : 'translate-x-0'
                       }`}
                     />
                   </button>
@@ -177,8 +208,12 @@ export function PlatformSettingsPage() {
 
                 <div className="flex items-center justify-between py-3 border-t border-gray-200">
                   <div>
-                    <h3 className="text-sm font-medium text-red-600">Maintenance Mode</h3>
-                    <p className="text-sm text-gray-500">Prevent non-admin access while updating the system.</p>
+                    <h3 className="text-sm font-medium text-red-600">
+                      Maintenance Mode
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Prevent non-admin access while updating the system.
+                    </p>
                   </div>
                   <button
                     type="button"
@@ -206,10 +241,14 @@ export function PlatformSettingsPage() {
 
           {activeTab === 'providers' && (
             <Card className="p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Email & SMS Providers</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">
+                Email & SMS Providers
+              </h2>
               <p className="text-sm text-gray-500 mb-6">
-                Sensitive configuration values are encrypted at rest via the Platform Secret Management service.
-                Existing values are never displayed. Entering new values will securely overwrite the old ones.
+                Sensitive configuration values are encrypted at rest via the
+                Platform Secret Management service. Existing values are never
+                displayed. Entering new values will securely overwrite the old
+                ones.
               </p>
 
               <div className="space-y-6">
@@ -229,10 +268,12 @@ export function PlatformSettingsPage() {
                       </span>
                     )}
                   </div>
-                  
+
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="block text-xs font-medium text-gray-700">Host</label>
+                      <label className="block text-xs font-medium text-gray-700">
+                        Host
+                      </label>
                       <Input
                         className="mt-1"
                         placeholder="e.g. smtp.mailgun.org"
@@ -241,7 +282,9 @@ export function PlatformSettingsPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-700">Port</label>
+                      <label className="block text-xs font-medium text-gray-700">
+                        Port
+                      </label>
                       <Input
                         className="mt-1"
                         placeholder="e.g. 587"
@@ -250,7 +293,9 @@ export function PlatformSettingsPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-700">Username</label>
+                      <label className="block text-xs font-medium text-gray-700">
+                        Username
+                      </label>
                       <Input
                         className="mt-1"
                         placeholder="SMTP User"
@@ -259,7 +304,9 @@ export function PlatformSettingsPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-700">Password / API Key</label>
+                      <label className="block text-xs font-medium text-gray-700">
+                        Password / API Key
+                      </label>
                       <Input
                         type="password"
                         className="mt-1"
@@ -282,9 +329,13 @@ export function PlatformSettingsPage() {
 
           {activeTab === 'security' && (
             <Card className="p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Security Configuration</h2>
+              <h2 className="text-lg font-medium text-gray-900 mb-4">
+                Security Configuration
+              </h2>
               <div className="flex items-center justify-center h-32 border-2 border-dashed border-gray-200 rounded-lg">
-                <p className="text-sm text-gray-500">Security configurations coming soon.</p>
+                <p className="text-sm text-gray-500">
+                  Security configurations coming soon.
+                </p>
               </div>
             </Card>
           )}
@@ -296,16 +347,24 @@ export function PlatformSettingsPage() {
                 Danger Zone
               </h2>
               <p className="text-sm text-gray-500 mb-6">
-                These actions are destructive or impact all organizations on the platform.
+                These actions are destructive or impact all organizations on the
+                platform.
               </p>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center justify-between py-3 border-t border-gray-200">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-900">Clear Platform Cache</h3>
-                    <p className="text-sm text-gray-500">Purge Redis cache for all organizations.</p>
+                    <h3 className="text-sm font-medium text-gray-900">
+                      Clear Platform Cache
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Purge Redis cache for all organizations.
+                    </p>
                   </div>
-                  <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50">
+                  <Button
+                    variant="outline"
+                    className="text-red-600 border-red-200 hover:bg-red-50"
+                  >
                     Clear Cache
                   </Button>
                 </div>

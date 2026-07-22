@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useOrganization, useUpdateOrganization, useUpdateOrganizationSettings } from '../hooks/useOrganizations';
+import {
+  useOrganization,
+  useUpdateOrganization,
+  useUpdateOrganizationSettings,
+} from '../hooks/useOrganizations';
 import { useMyPermissions } from '../../rbac/hooks/useRbac';
 import { BaseLoader } from '../../../components/ui/BaseLoader';
 
 export const OrganizationSettingsGeneralPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  
+
   const { data: org, isLoading } = useOrganization(id!);
-  const { hasPermission, isLoading: isLoadingPermissions } = useMyPermissions(id);
-  
+  const { hasPermission, isLoading: isLoadingPermissions } =
+    useMyPermissions(id);
+
   const updateOrgMutation = useUpdateOrganization();
   const updateSettingsMutation = useUpdateOrganizationSettings();
 
@@ -23,7 +28,8 @@ export const OrganizationSettingsGeneralPage: React.FC = () => {
   useEffect(() => {
     if (org) {
       setFormData({
-        timezone: org.settings?.default_timezone || org.timezone || 'Africa/Accra',
+        timezone:
+          org.settings?.default_timezone || org.timezone || 'Africa/Accra',
         date_format: org.settings?.date_format || 'YYYY-MM-DD',
         time_format: org.settings?.time_format || '24h',
         currency: org.currency || 'GHS',
@@ -45,24 +51,26 @@ export const OrganizationSettingsGeneralPage: React.FC = () => {
     );
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    setFormData(prev => ({
+  const handleChange = (
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!id) return;
-    
+
     // Currency is on the Organization core model
     updateOrgMutation.mutate({
       id,
       data: {
         currency: formData.currency,
         timezone: formData.timezone, // update both places to be safe
-      }
+      },
     });
 
     // Timezone, Date, Time format are on OrganizationSettings
@@ -72,16 +80,19 @@ export const OrganizationSettingsGeneralPage: React.FC = () => {
         default_timezone: formData.timezone,
         date_format: formData.date_format,
         time_format: formData.time_format,
-      }
+      },
     });
   };
 
-  const isPending = updateOrgMutation.isPending || updateSettingsMutation.isPending;
+  const isPending =
+    updateOrgMutation.isPending || updateSettingsMutation.isPending;
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white">General Settings</h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+          General Settings
+        </h2>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
           Manage localization and default preferences for your organization.
         </p>
@@ -90,7 +101,9 @@ export const OrganizationSettingsGeneralPage: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
         {updateOrgMutation.isError && (
           <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm">
-            <p className="font-semibold">Failed to update organization profile</p>
+            <p className="font-semibold">
+              Failed to update organization profile
+            </p>
             <p>
               {updateOrgMutation.error instanceof Error
                 ? updateOrgMutation.error.message
@@ -101,7 +114,9 @@ export const OrganizationSettingsGeneralPage: React.FC = () => {
 
         {updateSettingsMutation.isError && (
           <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm">
-            <p className="font-semibold">Failed to update organization settings</p>
+            <p className="font-semibold">
+              Failed to update organization settings
+            </p>
             <p>
               {updateSettingsMutation.error instanceof Error
                 ? updateSettingsMutation.error.message
@@ -112,7 +127,6 @@ export const OrganizationSettingsGeneralPage: React.FC = () => {
 
         <div className="bg-white dark:bg-[#18181B] shadow-sm border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
           <div className="p-6 space-y-6">
-            
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -126,7 +140,9 @@ export const OrganizationSettingsGeneralPage: React.FC = () => {
                 >
                   <option value="UTC">UTC</option>
                   <option value="America/New_York">America/New York</option>
-                  <option value="America/Los_Angeles">America/Los Angeles</option>
+                  <option value="America/Los_Angeles">
+                    America/Los Angeles
+                  </option>
                   <option value="Europe/London">Europe/London</option>
                   <option value="Europe/Paris">Europe/Paris</option>
                   <option value="Africa/Accra">Africa/Accra</option>
@@ -186,30 +202,45 @@ export const OrganizationSettingsGeneralPage: React.FC = () => {
             </div>
 
             <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
-              <h3 className="text-sm font-medium text-gray-900 dark:text-white">Future Configuration Hooks</h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 mb-4">These sections will be enabled as features are launched.</p>
-              
+              <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+                Future Configuration Hooks
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 mb-4">
+                These sections will be enabled as features are launched.
+              </p>
+
               <div className="space-y-3 opacity-50 pointer-events-none">
                 <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Election Defaults</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Configure default voting rules and privacy modes.</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      Election Defaults
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Configure default voting rules and privacy modes.
+                    </p>
                   </div>
-                  <span className="text-xs font-semibold px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">Coming Soon</span>
+                  <span className="text-xs font-semibold px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">
+                    Coming Soon
+                  </span>
                 </div>
-                
+
                 <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Notification Preferences</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Organization-wide email and digest settings.</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      Notification Preferences
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Organization-wide email and digest settings.
+                    </p>
                   </div>
-                  <span className="text-xs font-semibold px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">Coming Soon</span>
+                  <span className="text-xs font-semibold px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded-md">
+                    Coming Soon
+                  </span>
                 </div>
               </div>
             </div>
-
           </div>
-          
+
           <div className="bg-gray-50 dark:bg-[#1f1f23] px-6 py-4 flex items-center justify-between border-t border-gray-200 dark:border-gray-800">
             <div className="text-sm text-gray-500 dark:text-gray-400">
               Changes apply to all members.

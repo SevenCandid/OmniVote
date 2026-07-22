@@ -12,11 +12,13 @@ export const organizationAuditApi = {
       skip: skip.toString(),
       limit: limit.toString(),
     });
-    
+
     if (eventType) {
       params.append('event_type', eventType);
     }
-    
-    return fetchWithAuth(`/organizations/${organizationId}/audit?${params.toString()}`);
+
+    return fetchWithAuth(
+      `/organizations/${organizationId}/audit?${params.toString()}`
+    );
   },
 };

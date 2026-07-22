@@ -37,7 +37,9 @@ export function PlatformSessionsTable({
   };
 
   if (isLoading) {
-    return <div className="p-8 text-center text-gray-500">Loading sessions...</div>;
+    return (
+      <div className="p-8 text-center text-gray-500">Loading sessions...</div>
+    );
   }
 
   if (error) {
@@ -108,7 +110,11 @@ export function PlatformSessionsTable({
                 {session.status === 'ACTIVE' && (
                   <>
                     <button
-                      onClick={() => navigate(`/dashboard/organizations/${session.organization_id}`)}
+                      onClick={() =>
+                        navigate(
+                          `/dashboard/organizations/${session.organization_id}`
+                        )
+                      }
                       className="text-sm font-medium text-blue-600 hover:underline"
                     >
                       Access Org

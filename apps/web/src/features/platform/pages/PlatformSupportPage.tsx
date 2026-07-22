@@ -9,7 +9,9 @@ import { PlatformSessionsTable } from '../../support/components/PlatformSessions
 import { EmergencySessionDialog } from '../../support/components/EmergencySessionDialog';
 
 export default function PlatformSupportPage() {
-  const [activeTab, setActiveTab] = useState<'requests' | 'sessions'>('requests');
+  const [activeTab, setActiveTab] = useState<'requests' | 'sessions'>(
+    'requests'
+  );
   const [isEmergencyOpen, setIsEmergencyOpen] = useState(false);
 
   const {
@@ -24,12 +26,10 @@ export default function PlatformSupportPage() {
     error: sessionsError,
   } = useAllSupportSessions();
 
-  const activeSessionsCount = sessions?.filter(
-    (s) => s.status === 'ACTIVE'
-  ).length || 0;
-  const pendingRequestsCount = requests?.filter(
-    (r) => r.status === 'PENDING'
-  ).length || 0;
+  const activeSessionsCount =
+    sessions?.filter((s) => s.status === 'ACTIVE').length || 0;
+  const pendingRequestsCount =
+    requests?.filter((r) => r.status === 'PENDING').length || 0;
 
   return (
     <div className="space-y-6">

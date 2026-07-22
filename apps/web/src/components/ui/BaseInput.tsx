@@ -10,7 +10,10 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 }
 
 export const BaseInput = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type = 'text', label, error, leftIcon, rightIcon, ...props }, ref) => {
+  (
+    { className, type = 'text', label, error, leftIcon, rightIcon, ...props },
+    ref
+  ) => {
     const [showPassword, setShowPassword] = useState(false);
     const isPassword = type === 'password';
     const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;

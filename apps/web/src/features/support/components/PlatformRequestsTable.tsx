@@ -22,7 +22,9 @@ export function PlatformRequestsTable({
   const [selectedRequest, setSelectedRequest] = useState<SupportRequest | null>(
     null
   );
-  const [actionType, setActionType] = useState<'accept' | 'reject' | null>(null);
+  const [actionType, setActionType] = useState<'accept' | 'reject' | null>(
+    null
+  );
 
   const { mutateAsync: acceptRequest, isPending: isAccepting } =
     useAcceptSupportRequest();
@@ -34,7 +36,10 @@ export function PlatformRequestsTable({
 
     try {
       if (actionType === 'accept') {
-        await acceptRequest({ requestId: selectedRequest.id, durationMinutes: 60 });
+        await acceptRequest({
+          requestId: selectedRequest.id,
+          durationMinutes: 60,
+        });
         toast.success('Support request accepted. Session created.');
       } else {
         await rejectRequest(selectedRequest.id);
@@ -48,7 +53,9 @@ export function PlatformRequestsTable({
   };
 
   if (isLoading) {
-    return <div className="p-8 text-center text-gray-500">Loading requests...</div>;
+    return (
+      <div className="p-8 text-center text-gray-500">Loading requests...</div>
+    );
   }
 
   if (error) {
@@ -106,7 +113,8 @@ export function PlatformRequestsTable({
                     ${
                       req.status === 'ACCEPTED' || req.status === 'COMPLETED'
                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                        : req.status === 'REJECTED' || req.status === 'CANCELLED'
+                        : req.status === 'REJECTED' ||
+                            req.status === 'CANCELLED'
                           ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
                           : req.status === 'PENDING'
                             ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'

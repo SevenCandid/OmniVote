@@ -60,7 +60,8 @@ export function EmergencySessionDialog({
       <div className="bg-white dark:bg-[#18181B] rounded-2xl p-6 w-full max-w-md shadow-xl border border-gray-200 dark:border-gray-800">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
-            <span className="text-red-500 mr-2">⚠️</span> Start Emergency Session
+            <span className="text-red-500 mr-2">⚠️</span> Start Emergency
+            Session
           </h2>
           <button
             onClick={onClose}

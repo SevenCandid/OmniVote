@@ -43,6 +43,13 @@ import OrganizationSupportPage from '../features/organizations/pages/Organizatio
 import { OrganizationAuditPage } from '../features/organizations/pages/OrganizationAuditPage';
 import { PlaceholderPage } from '../pages/PlaceholderPage';
 
+// Election Pages
+import ElectionListPage from '../features/elections/pages/ElectionListPage';
+import ElectionCreatePage from '../features/elections/pages/ElectionCreatePage';
+import ElectionOverviewPage from '../features/elections/pages/ElectionOverviewPage';
+import ElectionEditPage from '../features/elections/pages/ElectionEditPage';
+import ElectionLayout from '../features/elections/layouts/ElectionLayout';
+
 // Platform Pages
 import PlatformDashboardPage from '../features/platform/pages/PlatformDashboardPage';
 import { PlatformOrganizationsPage } from '../features/platform/pages/PlatformOrganizationsPage';
@@ -142,13 +149,88 @@ export const router = createBrowserRouter([
                 path: 'members/:membershipId/roles',
                 element: <MembershipRolesPage />,
               },
-              { path: 'settings/general', element: <OrganizationSettingsGeneralPage /> },
-              { path: 'settings/branding', element: <OrganizationSettingsBrandingPage /> },
+              {
+                path: 'settings/general',
+                element: <OrganizationSettingsGeneralPage />,
+              },
+              {
+                path: 'settings/branding',
+                element: <OrganizationSettingsBrandingPage />,
+              },
               { path: 'roles', element: <OrganizationRolesPage /> },
               { path: 'roles/:roleId', element: <RoleDetailsPage /> },
               { path: 'support', element: <OrganizationSupportPage /> },
               { path: 'audit', element: <OrganizationAuditPage /> },
-            ]
+              {
+                path: 'elections',
+                children: [
+                  { index: true, element: <ElectionListPage /> },
+                  { path: 'new', element: <ElectionCreatePage /> },
+                  {
+                    path: ':electionId',
+                    element: <ElectionLayout />,
+                    children: [
+                      { index: true, element: <ElectionOverviewPage /> },
+                      { path: 'edit', element: <ElectionEditPage /> },
+                      {
+                        path: 'positions',
+                        element: (
+                          <PlaceholderPage title="Positions - Coming Soon" />
+                        ),
+                      },
+                      {
+                        path: 'candidates',
+                        element: (
+                          <PlaceholderPage title="Candidates - Coming Soon" />
+                        ),
+                      },
+                      {
+                        path: 'voters',
+                        element: (
+                          <PlaceholderPage title="Voters - Coming Soon" />
+                        ),
+                      },
+                      {
+                        path: 'ballot',
+                        element: (
+                          <PlaceholderPage title="Ballot - Coming Soon" />
+                        ),
+                      },
+                      {
+                        path: 'voting',
+                        element: (
+                          <PlaceholderPage title="Voting - Coming Soon" />
+                        ),
+                      },
+                      {
+                        path: 'results',
+                        element: (
+                          <PlaceholderPage title="Results - Coming Soon" />
+                        ),
+                      },
+                      {
+                        path: 'analytics',
+                        element: (
+                          <PlaceholderPage title="Analytics - Coming Soon" />
+                        ),
+                      },
+                      {
+                        path: 'audit',
+                        element: (
+                          <PlaceholderPage title="Election Audit - Coming Soon" />
+                        ),
+                      },
+                      {
+                        path: 'settings',
+                        element: (
+                          <PlaceholderPage title="Election Settings - Coming Soon" />
+                        ),
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
           },
         ],
       },

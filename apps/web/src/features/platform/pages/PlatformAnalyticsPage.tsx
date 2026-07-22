@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { BaseCard } from '../../../components/ui/BaseCard';
 import { BaseLoader } from '../../../components/ui/BaseLoader';
-import {
-  platformDashboardApi,
-} from '../api/platformDashboardApi';
+import { platformDashboardApi } from '../api/platformDashboardApi';
 import { PlatformStatistics } from '../schemas/platformDashboardSchema';
 import {
   TrendingUp,
@@ -110,7 +108,8 @@ export function PlatformAnalyticsPage() {
           Platform Analytics
         </h1>
         <p className="text-sm text-[var(--color-neutral-muted-light)] dark:text-[var(--color-neutral-muted-dark)] mt-1">
-          Comprehensive overview of platform growth, support, and engagement metrics.
+          Comprehensive overview of platform growth, support, and engagement
+          metrics.
         </p>
       </div>
 
@@ -156,7 +155,10 @@ export function PlatformAnalyticsPage() {
           {Object.entries(stats.system_health || {}).map(([key, value]) => (
             <BaseCard key={key} className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center shrink-0">
-                <Server size={18} className="text-blue-600 dark:text-blue-400" />
+                <Server
+                  size={18}
+                  className="text-blue-600 dark:text-blue-400"
+                />
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-xs text-[var(--color-neutral-muted-light)] dark:text-[var(--color-neutral-muted-dark)] uppercase tracking-wider font-semibold truncate">

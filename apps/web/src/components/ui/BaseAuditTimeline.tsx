@@ -31,7 +31,10 @@ export const BaseAuditTimeline: React.FC<BaseAuditTimelineProps> = ({
     return (
       <div className="space-y-4 animate-pulse">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-24 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+          <div
+            key={i}
+            className="h-24 bg-gray-200 dark:bg-gray-800 rounded-lg"
+          ></div>
         ))}
       </div>
     );
@@ -71,7 +74,7 @@ export const BaseAuditTimeline: React.FC<BaseAuditTimelineProps> = ({
           {events.map((event, eventIdx) => {
             const isExpanded = expandedEventId === event.id;
             const date = new Date(event.created_at);
-            
+
             return (
               <li key={event.id}>
                 <div className="relative pb-8">
@@ -85,8 +88,18 @@ export const BaseAuditTimeline: React.FC<BaseAuditTimelineProps> = ({
                     <div>
                       <div className="relative px-1">
                         <div className="h-8 w-8 bg-[var(--color-primary)]/10 rounded-full flex items-center justify-center ring-8 ring-white dark:ring-[var(--color-canvas-dark)]">
-                          <svg className="w-4 h-4 text-[var(--color-primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          <svg
+                            className="w-4 h-4 text-[var(--color-primary)]"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
                           </svg>
                         </div>
                       </div>
@@ -100,53 +113,89 @@ export const BaseAuditTimeline: React.FC<BaseAuditTimelineProps> = ({
                             </span>
                           </div>
                           <div className="text-xs whitespace-nowrap">
-                            {date.toLocaleDateString()} {date.toLocaleTimeString()}
+                            {date.toLocaleDateString()}{' '}
+                            {date.toLocaleTimeString()}
                           </div>
                         </div>
                         <div className="mt-1 flex items-center gap-4 text-xs">
                           {event.ip_address && (
                             <span className="flex items-center gap-1">
-                              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                              <svg
+                                className="w-3.5 h-3.5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+                                />
                               </svg>
                               {event.ip_address}
                             </span>
                           )}
                           {event.metadata_payload && (
                             <button
-                              onClick={() => setExpandedEventId(isExpanded ? null : event.id)}
+                              onClick={() =>
+                                setExpandedEventId(isExpanded ? null : event.id)
+                              }
                               className="text-[var(--color-primary)] hover:underline focus:outline-none flex items-center gap-1"
                             >
                               {isExpanded ? 'Hide Details' : 'Show Details'}
-                              <svg className={`w-3.5 h-3.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                              <svg
+                                className={`w-3.5 h-3.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 9l-7 7-7-7"
+                                />
                               </svg>
                             </button>
                           )}
                         </div>
-                        
+
                         {isExpanded && event.metadata_payload && (
                           <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-800 text-xs">
                             <ul className="space-y-1.5">
-                              {Object.entries(event.metadata_payload).map(([key, value]) => {
-                                const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                                let formattedValue = String(value);
-                                if (Array.isArray(value)) {
-                                  formattedValue = value.join(', ');
-                                } else if (typeof value === 'object' && value !== null) {
-                                  formattedValue = JSON.stringify(value);
+                              {Object.entries(event.metadata_payload).map(
+                                ([key, value]) => {
+                                  const formattedKey = key
+                                    .replace(/_/g, ' ')
+                                    .replace(/\b\w/g, (l) => l.toUpperCase());
+                                  let formattedValue = String(value);
+                                  if (Array.isArray(value)) {
+                                    formattedValue = value.join(', ');
+                                  } else if (
+                                    typeof value === 'object' &&
+                                    value !== null
+                                  ) {
+                                    formattedValue = JSON.stringify(value);
+                                  }
+                                  return (
+                                    <li
+                                      key={key}
+                                      className="flex flex-col sm:flex-row sm:gap-2"
+                                    >
+                                      <span className="font-semibold text-gray-900 dark:text-gray-100 min-w-[120px]">
+                                        {formattedKey}:
+                                      </span>
+                                      <span className="text-gray-600 dark:text-gray-400 break-all sm:break-normal">
+                                        {formattedValue}
+                                      </span>
+                                    </li>
+                                  );
                                 }
-                                return (
-                                  <li key={key} className="flex flex-col sm:flex-row sm:gap-2">
-                                    <span className="font-semibold text-gray-900 dark:text-gray-100 min-w-[120px]">{formattedKey}:</span>
-                                    <span className="text-gray-600 dark:text-gray-400 break-all sm:break-normal">{formattedValue}</span>
-                                  </li>
-                                );
-                              })}
+                              )}
                             </ul>
                           </div>
                         )}
-                        
                       </div>
                     </div>
                   </div>
@@ -156,7 +205,7 @@ export const BaseAuditTimeline: React.FC<BaseAuditTimelineProps> = ({
           })}
         </ul>
       </div>
-      
+
       {hasMore && (
         <div className="mt-6 text-center">
           <button

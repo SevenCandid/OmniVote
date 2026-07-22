@@ -12,7 +12,9 @@ import { EmptyState } from '../../../components/ui/EmptyState';
 import { ShieldCheck, Check, X, FileQuestion, ArrowRight } from 'lucide-react';
 
 export function PlatformVerificationPage() {
-  const [organizations, setOrganizations] = useState<PlatformOrganization[]>([]);
+  const [organizations, setOrganizations] = useState<PlatformOrganization[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -125,7 +127,9 @@ export function PlatformVerificationPage() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-[var(--color-neutral-primary-light)] dark:text-[var(--color-neutral-primary-dark)]">
-                        {org.contact_email || org.owner_email || 'No email provided'}
+                        {org.contact_email ||
+                          org.owner_email ||
+                          'No email provided'}
                       </div>
                       <div className="text-[var(--color-neutral-muted-light)] dark:text-[var(--color-neutral-muted-dark)] text-xs">
                         {org.country || 'Unknown location'}
@@ -160,7 +164,11 @@ export function PlatformVerificationPage() {
                           icon={<FileQuestion size={14} />}
                           disabled={actionLoading === org.id}
                           onClick={() =>
-                            handleVerifyAction(org.id, 'more_info_requested', 'Additional documents required.')
+                            handleVerifyAction(
+                              org.id,
+                              'more_info_requested',
+                              'Additional documents required.'
+                            )
                           }
                         >
                           Request Info

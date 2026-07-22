@@ -6,7 +6,11 @@ export const UserAuditPage: React.FC = () => {
   const [limit, setLimit] = useState(50);
   const [eventType, setEventType] = useState<string>('');
 
-  const { data, isLoading, isFetching } = usePersonalAuditLogs(0, limit, eventType || undefined);
+  const { data, isLoading, isFetching } = usePersonalAuditLogs(
+    0,
+    limit,
+    eventType || undefined
+  );
 
   const handleLoadMore = () => {
     setLimit((prev) => prev + 50);
@@ -17,15 +21,21 @@ export const UserAuditPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Security & Audit Logs</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Security & Audit Logs
+        </h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Review your personal account activity and security events across the platform.
+          Review your personal account activity and security events across the
+          platform.
         </p>
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between gap-4 bg-white dark:bg-[var(--color-surface-dark)] p-4 rounded-xl border border-gray-200 dark:border-gray-800">
         <div className="flex-1 max-w-sm">
-          <label htmlFor="eventType" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label
+            htmlFor="eventType"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
             Filter by Event Type
           </label>
           <select
@@ -39,7 +49,9 @@ export const UserAuditPage: React.FC = () => {
             <option value="user_logout">Logout</option>
             <option value="user_password_changed">Password Changed</option>
             <option value="user_profile_updated">Profile Updated</option>
-            <option value="membership_invitation_accepted">Invitation Accepted</option>
+            <option value="membership_invitation_accepted">
+              Invitation Accepted
+            </option>
             <option value="support_access_action">Support Access</option>
           </select>
         </div>

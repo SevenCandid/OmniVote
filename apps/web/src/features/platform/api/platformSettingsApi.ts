@@ -1,6 +1,7 @@
 import { useSessionStore } from '../../../stores/sessionStore';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
 
 async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
   const { accessToken, logout } = useSessionStore.getState();
@@ -46,14 +47,14 @@ export interface PlatformSettingsResponse {
   theme_configuration: Record<string, any>;
   feature_toggles: Record<string, any>;
   public_urls: Record<string, any>;
-  
+
   smtp_credentials_configured: boolean;
   email_provider_api_keys_configured: boolean;
   sms_provider_api_keys_configured: boolean;
   storage_credentials_configured: boolean;
   oauth_client_secrets_configured: boolean;
   third_party_service_tokens_configured: boolean;
-  
+
   created_at: string;
   updated_at: string;
 }
@@ -66,7 +67,7 @@ export interface PlatformSettingsUpdate {
   theme_configuration?: Record<string, any>;
   feature_toggles?: Record<string, any>;
   public_urls?: Record<string, any>;
-  
+
   // Sensitive configuration (Write-only)
   smtp_credentials?: Record<string, any>;
   email_provider_api_keys?: Record<string, any>;
@@ -80,11 +81,13 @@ export const platformSettingsApi = {
   getSettings: async (): Promise<PlatformSettingsResponse> => {
     return fetchWithAuth('/platform/settings');
   },
-  
-  updateSettings: async (data: PlatformSettingsUpdate): Promise<PlatformSettingsResponse> => {
+
+  updateSettings: async (
+    data: PlatformSettingsUpdate
+  ): Promise<PlatformSettingsResponse> => {
     return fetchWithAuth('/platform/settings', {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
-  }
+  },
 };

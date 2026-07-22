@@ -23,7 +23,9 @@ export default function OrganizationSupportPage() {
         <div>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate(`/dashboard/organizations/${organizationId}`)}
+              onClick={() =>
+                navigate(`/dashboard/organizations/${organizationId}`)
+              }
               className="text-sm font-medium text-blue-600 hover:underline"
             >
               ← Back to Org
@@ -45,7 +47,9 @@ export default function OrganizationSupportPage() {
 
       <div className="bg-white dark:bg-[#18181B] rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
         {isLoading ? (
-          <div className="p-8 text-center text-gray-500">Loading requests...</div>
+          <div className="p-8 text-center text-gray-500">
+            Loading requests...
+          </div>
         ) : error ? (
           <div className="p-8 text-center text-red-500">
             Failed to load support requests.
@@ -87,9 +91,11 @@ export default function OrganizationSupportPage() {
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
                           ${
-                            req.status === 'ACCEPTED' || req.status === 'COMPLETED'
+                            req.status === 'ACCEPTED' ||
+                            req.status === 'COMPLETED'
                               ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                              : req.status === 'REJECTED' || req.status === 'CANCELLED'
+                              : req.status === 'REJECTED' ||
+                                  req.status === 'CANCELLED'
                                 ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
                                 : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
                           }`}

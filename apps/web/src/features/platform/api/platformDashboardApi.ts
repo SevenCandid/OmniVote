@@ -59,7 +59,11 @@ export const platformDashboardApi = {
     return z.array(platformActivityLogSchema).parse(data);
   },
 
-  getAuditLogs: async (limit: number = 50, skip: number = 0, eventType?: string): Promise<PaginatedAuditResponse> => {
+  getAuditLogs: async (
+    limit: number = 50,
+    skip: number = 0,
+    eventType?: string
+  ): Promise<PaginatedAuditResponse> => {
     let url = `/platform/dashboard/audit?limit=${limit}&skip=${skip}`;
     if (eventType) {
       url += `&event_type=${encodeURIComponent(eventType)}`;

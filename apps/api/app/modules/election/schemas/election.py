@@ -22,7 +22,8 @@ class ElectionBase(BaseModel):
     # Configuration
     timezone: str = Field(default="UTC", description="The timezone for the election schedule.")
     allow_anonymous_voting: bool = Field(default=False, description="Whether anonymous voting is allowed.")
-    allow_result_preview: bool = Field(default=False, description="Whether preliminary results can be viewed before the election ends.")
+    automatically_publish_results: bool = Field(default=False, description="Whether results are automatically published when voting closes.")
+    require_voter_verification: bool = Field(default=False, description="Whether voters require explicit verification before casting a ballot.")
 
     @model_validator(mode='after')
     def validate_schedule(self) -> 'ElectionBase':
@@ -66,7 +67,8 @@ class ElectionUpdate(BaseModel):
     
     timezone: Optional[str] = None
     allow_anonymous_voting: Optional[bool] = None
-    allow_result_preview: Optional[bool] = None
+    automatically_publish_results: Optional[bool] = None
+    require_voter_verification: Optional[bool] = None
 
     @model_validator(mode='after')
     def validate_schedule(self) -> 'ElectionUpdate':

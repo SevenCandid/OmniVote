@@ -64,7 +64,8 @@ class Election(BaseModel, TimestampMixin):
     # Configuration
     timezone: Mapped[str] = mapped_column(String(50), nullable=False, default="UTC")
     allow_anonymous_voting: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    allow_result_preview: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    automatically_publish_results: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    require_voter_verification: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     # Metadata & Tracking
     created_by: Mapped[uuid.UUID | None] = mapped_column(

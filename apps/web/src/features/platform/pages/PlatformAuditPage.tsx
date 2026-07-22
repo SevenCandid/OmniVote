@@ -28,7 +28,11 @@ export function PlatformAuditPage() {
   const fetchLogs = async (eventType?: string) => {
     try {
       setLoading(true);
-      const data = await platformDashboardApi.getAuditLogs(50, 0, eventType || undefined);
+      const data = await platformDashboardApi.getAuditLogs(
+        50,
+        0,
+        eventType || undefined
+      );
       setLogs(data.items);
     } catch (error) {
       console.error('Failed to fetch audit logs', error);
@@ -66,7 +70,7 @@ export function PlatformAuditPage() {
 
       <BaseCard>
         <BaseAuditTimeline
-          events={logs.map(log => ({
+          events={logs.map((log) => ({
             id: log.id,
             event_type: log.event_type,
             user_id: log.user_id,

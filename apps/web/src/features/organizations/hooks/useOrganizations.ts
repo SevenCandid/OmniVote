@@ -61,8 +61,13 @@ export const useUpdateOrganizationSettings = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: OrganizationSettingsUpdateInput }) =>
-      organizationApi.updateSettings({ id, data }),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: OrganizationSettingsUpdateInput;
+    }) => organizationApi.updateSettings({ id, data }),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({
         queryKey: organizationKeys.detail(id),
@@ -75,8 +80,13 @@ export const useUpdateOrganizationBranding = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: OrganizationBrandingUpdateInput }) =>
-      organizationApi.updateBranding({ id, data }),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: OrganizationBrandingUpdateInput;
+    }) => organizationApi.updateBranding({ id, data }),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({
         queryKey: organizationKeys.detail(id),

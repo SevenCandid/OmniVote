@@ -1,41 +1,95 @@
 import React from 'react';
 import { NavLink, Outlet, useParams, useNavigate } from 'react-router-dom';
-import { 
+import {
   User,
-  Settings, 
-  Palette, 
-  ShieldAlert, 
-  Users, 
-  Key, 
-  Bell, 
-  Plug, 
+  Settings,
+  Palette,
+  ShieldAlert,
+  Users,
+  Key,
+  Bell,
+  Plug,
   Activity,
   ArrowLeft,
-  LifeBuoy
+  LifeBuoy,
+  CheckSquare,
 } from 'lucide-react';
-import { useOrganization, useDeleteOrganization } from '../hooks/useOrganizations';
+import {
+  useOrganization,
+  useDeleteOrganization,
+} from '../hooks/useOrganizations';
 import { useMyPermissions } from '../../rbac/hooks/useRbac';
 import { BaseLoader } from '../../../components/ui/BaseLoader';
 
 export const OrganizationLayout: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
+
   const { data: organization, isLoading } = useOrganization(id!);
-  const { hasPermission, isLoading: isLoadingPermissions } = useMyPermissions(id);
+  const { hasPermission, isLoading: isLoadingPermissions } =
+    useMyPermissions(id);
   const deleteMutation = useDeleteOrganization();
 
   const navigation = [
-    { name: 'Profile', to: `/dashboard/organizations/${id}`, icon: User, end: true },
-    { name: 'Settings', to: `/dashboard/organizations/${id}/settings/general`, icon: Settings },
-    { name: 'Branding', to: `/dashboard/organizations/${id}/settings/branding`, icon: Palette },
-    { name: 'Security', to: `/dashboard/organizations/${id}/settings/security`, icon: ShieldAlert, disabled: true },
-    { name: 'Members', to: `/dashboard/organizations/${id}/members`, icon: Users },
-    { name: 'Roles & Permissions', to: `/dashboard/organizations/${id}/roles`, icon: Key },
-    { name: 'Support', to: `/dashboard/organizations/${id}/support`, icon: LifeBuoy },
-    { name: 'Notifications', to: `/dashboard/organizations/${id}/settings/notifications`, icon: Bell, disabled: true },
-    { name: 'Integrations', to: `/dashboard/organizations/${id}/settings/integrations`, icon: Plug, disabled: true },
-    { name: 'Audit Logs', to: `/dashboard/organizations/${id}/audit`, icon: Activity },
+    {
+      name: 'Profile',
+      to: `/dashboard/organizations/${id}`,
+      icon: User,
+      end: true,
+    },
+    {
+      name: 'Elections',
+      to: `/dashboard/organizations/${id}/elections`,
+      icon: CheckSquare,
+    },
+    {
+      name: 'Settings',
+      to: `/dashboard/organizations/${id}/settings/general`,
+      icon: Settings,
+    },
+    {
+      name: 'Branding',
+      to: `/dashboard/organizations/${id}/settings/branding`,
+      icon: Palette,
+    },
+    {
+      name: 'Security',
+      to: `/dashboard/organizations/${id}/settings/security`,
+      icon: ShieldAlert,
+      disabled: true,
+    },
+    {
+      name: 'Members',
+      to: `/dashboard/organizations/${id}/members`,
+      icon: Users,
+    },
+    {
+      name: 'Roles & Permissions',
+      to: `/dashboard/organizations/${id}/roles`,
+      icon: Key,
+    },
+    {
+      name: 'Support',
+      to: `/dashboard/organizations/${id}/support`,
+      icon: LifeBuoy,
+    },
+    {
+      name: 'Notifications',
+      to: `/dashboard/organizations/${id}/settings/notifications`,
+      icon: Bell,
+      disabled: true,
+    },
+    {
+      name: 'Integrations',
+      to: `/dashboard/organizations/${id}/settings/integrations`,
+      icon: Plug,
+      disabled: true,
+    },
+    {
+      name: 'Audit Logs',
+      to: `/dashboard/organizations/${id}/audit`,
+      icon: Activity,
+    },
   ];
 
   if (isLoading || isLoadingPermissions) {
@@ -58,7 +112,7 @@ export const OrganizationLayout: React.FC = () => {
           <ArrowLeft size={16} />
           Back to Organizations
         </button>
-        
+
         <div className="flex items-center space-x-3">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             {organization.name}
@@ -98,8 +152,8 @@ export const OrganizationLayout: React.FC = () => {
                       item.disabled
                         ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
                         : isActive
-                        ? 'bg-[var(--color-primary)]/10 text-[var(--color-primary)]'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                          ? 'bg-[var(--color-primary)]/10 text-[var(--color-primary)]'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                     }`
                   }
                   onClick={(e) => {

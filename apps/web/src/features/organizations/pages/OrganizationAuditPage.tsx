@@ -7,17 +7,26 @@ import { useOrganization } from '../hooks/useOrganizations';
 export const OrganizationAuditPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
+
   const [limit, setLimit] = useState(50);
   const [eventType, setEventType] = useState<string>('');
 
-  const { data, isLoading, isFetching } = useOrganizationAuditLogs(id || '', 0, limit, eventType || undefined);
+  const { data, isLoading, isFetching } = useOrganizationAuditLogs(
+    id || '',
+    0,
+    limit,
+    eventType || undefined
+  );
   const { data: organization } = useOrganization(id || '');
 
   const mappedEvents = React.useMemo(() => {
     if (!data?.items) return [];
     return data.items.map((event) => {
-      if (event.metadata_payload && event.metadata_payload.organization_id && organization) {
+      if (
+        event.metadata_payload &&
+        event.metadata_payload.organization_id &&
+        organization
+      ) {
         const { organization_id, ...restPayload } = event.metadata_payload;
         return {
           ...event,
@@ -47,16 +56,22 @@ export const OrganizationAuditPage: React.FC = () => {
           &larr; Back
         </button>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Organization Audit Logs</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Organization Audit Logs
+          </h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Review security events and administrative actions within this organization.
+            Review security events and administrative actions within this
+            organization.
           </p>
         </div>
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between gap-4 bg-white dark:bg-[var(--color-surface-dark)] p-4 rounded-xl border border-gray-200 dark:border-gray-800">
         <div className="flex-1 max-w-sm">
-          <label htmlFor="eventType" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label
+            htmlFor="eventType"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
             Filter by Event Type
           </label>
           <select
@@ -68,7 +83,9 @@ export const OrganizationAuditPage: React.FC = () => {
             <option value="">All Events</option>
             <option value="organization_created">Organization Created</option>
             <option value="organization_updated">Organization Updated</option>
-            <option value="membership_invitation_created">Invitation Created</option>
+            <option value="membership_invitation_created">
+              Invitation Created
+            </option>
             <option value="membership_role_assigned">Role Assigned</option>
             <option value="membership_removed">Member Removed</option>
             <option value="support_access_action">Support Access</option>

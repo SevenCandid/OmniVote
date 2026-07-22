@@ -48,7 +48,9 @@ async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
 export const supportKeys = {
   all: ['support'] as const,
   requests: (orgId?: string) =>
-    orgId ? [...supportKeys.all, 'requests', orgId] : [...supportKeys.all, 'requests'],
+    orgId
+      ? [...supportKeys.all, 'requests', orgId]
+      : [...supportKeys.all, 'requests'],
   sessions: () => [...supportKeys.all, 'sessions'],
 };
 
@@ -78,10 +80,13 @@ export function useCreateSupportRequest(organizationId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: SupportRequestCreate): Promise<SupportRequest> => {
-      return fetchWithAuth(`/organizations/${organizationId}/support/requests`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+      return fetchWithAuth(
+        `/organizations/${organizationId}/support/requests`,
+        {
+          method: 'POST',
+          body: JSON.stringify(data),
+        }
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -150,7 +155,9 @@ export function useRejectSupportRequest() {
 export function useStartEmergencySession() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data: EmergencySessionCreate): Promise<SupportSession> => {
+    mutationFn: async (
+      data: EmergencySessionCreate
+    ): Promise<SupportSession> => {
       return fetchWithAuth('/support/emergency-sessions', {
         method: 'POST',
         body: JSON.stringify(data),

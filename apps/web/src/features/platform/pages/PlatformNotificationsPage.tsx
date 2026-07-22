@@ -2,11 +2,23 @@ import { useEffect, useState } from 'react';
 import { BaseCard } from '../../../components/ui/BaseCard';
 import { BaseLoader } from '../../../components/ui/BaseLoader';
 import { EmptyState } from '../../../components/ui/EmptyState';
-import { platformNotificationsApi, PlatformNotification } from '../api/platformNotificationsApi';
-import { Bell, Info, AlertTriangle, CheckCircle, ShieldAlert, Check } from 'lucide-react';
+import {
+  platformNotificationsApi,
+  PlatformNotification,
+} from '../api/platformNotificationsApi';
+import {
+  Bell,
+  Info,
+  AlertTriangle,
+  CheckCircle,
+  ShieldAlert,
+  Check,
+} from 'lucide-react';
 
 export function PlatformNotificationsPage() {
-  const [notifications, setNotifications] = useState<PlatformNotification[]>([]);
+  const [notifications, setNotifications] = useState<PlatformNotification[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
   const [unreadOnly, setUnreadOnly] = useState(false);
 
@@ -17,7 +29,11 @@ export function PlatformNotificationsPage() {
   const fetchNotifications = async () => {
     try {
       setLoading(true);
-      const data = await platformNotificationsApi.getNotifications(50, 0, unreadOnly);
+      const data = await platformNotificationsApi.getNotifications(
+        50,
+        0,
+        unreadOnly
+      );
       setNotifications(data.items);
     } catch (error) {
       console.error('Failed to fetch notifications', error);
