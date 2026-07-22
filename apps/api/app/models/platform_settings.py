@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, String
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.types import JSON
 
 from app.database.base import BaseModel
 from app.database.mixins import TimestampMixin
@@ -17,10 +17,10 @@ class PlatformSettings(BaseModel, TimestampMixin):
     maintenance_mode: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false", nullable=False)
     allow_public_registration: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true", nullable=False)
     
-    branding: Mapped[dict] = mapped_column(JSONB, nullable=False, server_default="{}")
-    theme_configuration: Mapped[dict] = mapped_column(JSONB, nullable=False, server_default="{}")
-    feature_toggles: Mapped[dict] = mapped_column(JSONB, nullable=False, server_default="{}")
-    public_urls: Mapped[dict] = mapped_column(JSONB, nullable=False, server_default="{}")
+    branding: Mapped[dict] = mapped_column(JSON, nullable=False, server_default="{}")
+    theme_configuration: Mapped[dict] = mapped_column(JSON, nullable=False, server_default="{}")
+    feature_toggles: Mapped[dict] = mapped_column(JSON, nullable=False, server_default="{}")
+    public_urls: Mapped[dict] = mapped_column(JSON, nullable=False, server_default="{}")
 
     # --- Sensitive Secrets (Encrypted at Rest via SecretManager) ---
     # These fields store the AES-encrypted Base64 ciphertexts of the JSON configurations.

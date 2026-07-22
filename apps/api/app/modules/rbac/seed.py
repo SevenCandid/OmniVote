@@ -21,9 +21,13 @@ SYSTEM_PERMISSIONS = [
     # Election
     {"key": "election.view", "display_name": "View Elections", "category": "Election", "description": "View elections"},
     {"key": "election.create", "display_name": "Create Election", "category": "Election", "description": "Create a new election"},
-    {"key": "election.update", "display_name": "Update Election", "category": "Election", "description": "Update election details"},
+    {"key": "election.edit", "display_name": "Edit Election", "category": "Election", "description": "Edit election details"},
     {"key": "election.delete", "display_name": "Delete Election", "category": "Election", "description": "Delete an election"},
-    {"key": "election.launch", "display_name": "Launch Election", "category": "Election", "description": "Launch an election to live status"},
+    {"key": "election.publish", "display_name": "Publish Election", "category": "Election", "description": "Publish an election"},
+    {"key": "election.open_voting", "display_name": "Open Voting", "category": "Election", "description": "Open voting for an election"},
+    {"key": "election.close_voting", "display_name": "Close Voting", "category": "Election", "description": "Close voting for an election"},
+    {"key": "election.archive", "display_name": "Archive Election", "category": "Election", "description": "Archive an election"},
+    {"key": "election.cancel", "display_name": "Cancel Election", "category": "Election", "description": "Cancel an election"},
     
     # Results
     {"key": "results.view", "display_name": "View Results", "category": "Results", "description": "View election results"},

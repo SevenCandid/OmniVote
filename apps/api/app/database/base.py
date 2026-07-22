@@ -45,3 +45,4 @@ from app.identity.models.session import Session
 from app.identity.models.security import SecurityEvent
 from app.identity.models.tokens import VerificationToken, PasswordResetToken
 from app.models.platform_settings import PlatformSettings
+from app.modules.election.models.election import Election

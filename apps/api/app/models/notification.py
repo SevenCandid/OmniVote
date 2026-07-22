@@ -3,7 +3,7 @@ import uuid
 import datetime
 from sqlalchemy import ForeignKey, String, Enum, Boolean
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.types import JSON
 
 from app.database.base import BaseModel
 from app.database.mixins import TimestampMixin
@@ -30,4 +30,4 @@ class PlatformNotification(BaseModel, TimestampMixin):
         nullable=False
     )
     is_read: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false", nullable=False)
-    metadata_payload: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    metadata_payload: Mapped[dict | None] = mapped_column(JSON, nullable=True)
