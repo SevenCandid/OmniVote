@@ -81,59 +81,48 @@ export default function OrganizationDetailsPage() {
     const canDelete = !isNew && hasPermission('organization.delete');
 
     return (
-      <div className="max-w-4xl mx-auto p-6 space-y-6">
-        <div className="flex items-center space-x-4 mb-6">
-          <button
-            onClick={() => navigate(-1)}
-            className="text-gray-500 hover:text-gray-900 dark:hover:text-white"
-          >
-            &larr; Back
-          </button>
-          <div className="flex items-center space-x-3">
-            <h1 className="text-2xl font-bold">
-              {isNew ? 'Create New Organization' : organization?.name}
-            </h1>
-            {!isNew && organization && (
-              <div className="flex space-x-2">
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 capitalize">
-                  {organization.status}
-                </span>
-                <span
-                  className={`px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
-                    organization.verification_status === 'verified'
-                      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                      : organization.verification_status === 'rejected'
-                        ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                        : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
-                  }`}
-                >
-                  {organization.verification_status.replace('_', ' ')}
-                </span>
-              </div>
-            )}
+      <div className={isNew ? "max-w-4xl mx-auto p-6 space-y-6" : "space-y-6 max-w-4xl"}>
+        {isNew ? (
+          <div className="flex items-center space-x-4 mb-6">
+            <button
+              onClick={() => navigate(-1)}
+              className="text-gray-500 hover:text-gray-900 dark:hover:text-white"
+            >
+              &larr; Back
+            </button>
+            <div className="flex items-center space-x-3">
+              <h1 className="text-2xl font-bold">Create New Organization</h1>
+            </div>
+            <div className="flex-1"></div>
           </div>
-          <div className="flex-1"></div>
-          {!isNew && (
-            <div className="flex space-x-3">
+        ) : (
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-gray-200 dark:border-gray-800 pb-4">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Organization Profile</h2>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                View and manage your organization's core details.
+              </p>
+            </div>
+            <div className="flex items-center space-x-3">
               {!isEditing && canEdit && (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 text-sm font-medium focus:outline-none"
+                  className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium focus:outline-none"
                 >
-                  Edit
+                  Edit Profile
                 </button>
               )}
               {canDelete && (
                 <button
                   onClick={() => setShowDeleteModal(true)}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50"
+                  className="px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/30 rounded-md hover:bg-red-100 dark:hover:bg-red-900/40 text-sm font-medium focus:outline-none"
                 >
-                  Delete
+                  Delete Organization
                 </button>
               )}
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {activeSession && (
           <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400 p-4 rounded-xl text-sm border border-blue-200 dark:border-blue-800/50 flex justify-between items-center">
@@ -152,37 +141,7 @@ export default function OrganizationDetailsPage() {
           </div>
         )}
 
-      {!isNew && (
-        <div className="flex space-x-4 border-b border-gray-200 dark:border-gray-800 mb-6">
-          <button className="pb-2 border-b-2 border-blue-600 font-medium text-blue-600">
-            Profile
-          </button>
-          <button className="pb-2 font-medium text-gray-500 hover:text-gray-900">
-            Settings
-          </button>
-          <button className="pb-2 font-medium text-gray-500 hover:text-gray-900">
-            Branding
-          </button>
-          <button
-            className="pb-2 font-medium text-gray-500 hover:text-gray-900"
-            onClick={() => navigate(`/dashboard/organizations/${id}/members`)}
-          >
-            Members
-          </button>
-          <button
-            className="pb-2 font-medium text-gray-500 hover:text-gray-900"
-            onClick={() => navigate(`/dashboard/organizations/${id}/roles`)}
-          >
-            Roles & Permissions
-          </button>
-          <button
-            className="pb-2 font-medium text-gray-500 hover:text-gray-900"
-            onClick={() => navigate(`/dashboard/organizations/${id}/support`)}
-          >
-            Support
-          </button>
-        </div>
-      )}
+
 
       {createMutation.isError && (
         <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm mb-6">

@@ -4,6 +4,18 @@ All notable changes to the VeroSeven Platform and OmniVote application will be d
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v3.1.0] - 2026-07-22
+
+### Added
+- **Organization Details Layout**: Completed a responsive, persistent sidebar layout for navigating organization-level settings and management screens.
+- **Profile & General Settings**: Implemented end-to-end functionality for updating organization profiles (industry, size, description) and general settings (currency, timezone configuration).
+- **Organization Branding**: Added a dedicated branding page to customize organization primary colors with an interactive live preview component.
+- **Tenant Audit Logging**: Instrumented the `OrganizationService` to emit detailed security and audit events for all organization mutations (updates, branding changes, settings modifications).
+- **Audit Logs UI Improvements**: Transformed raw JSON metadata in the audit logs timeline into human-readable, formatted natural language lists.
+
+### Fixed
+- **Audit Logs CORS / 500 Error**: Resolved a SQLAlchemy database driver type mismatch (`astext` vs `as_string()`) that was causing a 500 Internal Server Error when querying audit logs.
+
 ## [v3.0.0] - 2026-07-21
 
 ### Added

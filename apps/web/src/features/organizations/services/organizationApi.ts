@@ -2,6 +2,8 @@ import {
   Organization,
   OrganizationCreateInput,
   OrganizationUpdateInput,
+  OrganizationSettingsUpdateInput,
+  OrganizationBrandingUpdateInput,
 } from '../schemas/organizationSchema';
 import { useSessionStore } from '../../../stores/sessionStore';
 
@@ -84,6 +86,32 @@ export const organizationApi = {
     data: OrganizationUpdateInput;
   }): Promise<Organization> => {
     return fetchWithConfig(`/organizations/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  },
+
+  updateSettings: async ({
+    id,
+    data,
+  }: {
+    id: string;
+    data: OrganizationSettingsUpdateInput;
+  }) => {
+    return fetchWithConfig(`/organizations/${id}/settings`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  },
+
+  updateBranding: async ({
+    id,
+    data,
+  }: {
+    id: string;
+    data: OrganizationBrandingUpdateInput;
+  }) => {
+    return fetchWithConfig(`/organizations/${id}/branding`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });

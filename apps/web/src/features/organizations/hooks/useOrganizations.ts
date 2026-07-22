@@ -3,6 +3,8 @@ import { organizationApi } from '../services/organizationApi';
 import {
   OrganizationCreateInput,
   OrganizationUpdateInput,
+  OrganizationSettingsUpdateInput,
+  OrganizationBrandingUpdateInput,
 } from '../schemas/organizationSchema';
 
 export const organizationKeys = {
@@ -51,6 +53,34 @@ export const useUpdateOrganization = () => {
         queryKey: organizationKeys.detail(data.id),
       });
       queryClient.invalidateQueries({ queryKey: organizationKeys.lists() });
+    },
+  });
+};
+
+export const useUpdateOrganizationSettings = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: OrganizationSettingsUpdateInput }) =>
+      organizationApi.updateSettings({ id, data }),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({
+        queryKey: organizationKeys.detail(id),
+      });
+    },
+  });
+};
+
+export const useUpdateOrganizationBranding = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: OrganizationBrandingUpdateInput }) =>
+      organizationApi.updateBranding({ id, data }),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({
+        queryKey: organizationKeys.detail(id),
+      });
     },
   });
 };

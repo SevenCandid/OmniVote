@@ -13,7 +13,13 @@ from app.models.organization import (
     OrganizationSubscription,
 )
 from app.repositories.organization_repository import OrganizationRepository
-from app.schemas.organization import OrganizationCreate, OrganizationUpdate, TransferOwnershipRequest
+from app.schemas.organization import (
+    OrganizationCreate, 
+    OrganizationUpdate, 
+    OrganizationSettingsUpdate,
+    OrganizationBrandingUpdate,
+    TransferOwnershipRequest
+)
 from app.utils.time import utc_now
 from app.modules.membership.models.membership import Membership, MembershipStatus
 from app.modules.membership.repositories.membership_repository import MembershipRepository
@@ -77,6 +83,17 @@ class OrganizationService:
         # Wait for commit outside this layer typically, but we flush here
         await self.session.commit()
         
+        audit_service = AuditService()
+        await audit_service.log_event(
+            db=self.session,
+            event_type="organization_created",
+            user_id=current_user_id,
+            metadata_payload={
+                "organization_id": str(created_org.id),
+                "name": created_org.name,
+            }
+        )
+        
         return created_org
 
     async def get_organization(self, org_id: uuid.UUID) -> Organization:
@@ -90,7 +107,7 @@ class OrganizationService:
         """List active organizations the user is a member of."""
         return await self.repository.list_user_organizations(user_id, skip=skip, limit=limit)
 
-    async def update_organization(self, org_id: uuid.UUID, org_data: OrganizationUpdate) -> Organization:
+    async def update_organization(self, org_id: uuid.UUID, org_data: OrganizationUpdate, current_user_id: uuid.UUID) -> Organization:
         """Partially update an organization."""
         org = await self.get_organization(org_id)
         
@@ -110,9 +127,20 @@ class OrganizationService:
         updated_org = await self.repository.update(org)
         await self.session.commit()
         
+        audit_service = AuditService()
+        await audit_service.log_event(
+            db=self.session,
+            event_type="organization_updated",
+            user_id=current_user_id,
+            metadata_payload={
+                "organization_id": str(org_id),
+                "fields_updated": list(update_data.keys())
+            }
+        )
+        
         return updated_org
 
-    async def delete_organization(self, org_id: uuid.UUID) -> None:
+    async def delete_organization(self, org_id: uuid.UUID, current_user_id: uuid.UUID) -> None:
         """Soft delete the organization."""
         org = await self.get_organization(org_id)
         
@@ -121,6 +149,66 @@ class OrganizationService:
         
         await self.repository.update(org)
         await self.session.commit()
+        
+        audit_service = AuditService()
+        await audit_service.log_event(
+            db=self.session,
+            event_type="organization_deleted",
+            user_id=current_user_id,
+            metadata_payload={
+                "organization_id": str(org_id)
+            }
+        )
+
+    async def update_organization_settings(self, org_id: uuid.UUID, settings_data: OrganizationSettingsUpdate, current_user_id: uuid.UUID) -> OrganizationSettings:
+        """Update an organization's settings."""
+        org = await self.get_organization(org_id)
+        
+        update_data = settings_data.model_dump(exclude_unset=True)
+        for field, value in update_data.items():
+            setattr(org.settings, field, value)
+            
+        await self.session.commit()
+        await self.session.refresh(org.settings)
+        
+        audit_service = AuditService()
+        await audit_service.log_event(
+            db=self.session,
+            event_type="organization_settings_updated",
+            user_id=current_user_id,
+            metadata_payload={
+                "organization_id": str(org_id),
+                "fields_updated": list(update_data.keys())
+            }
+        )
+        
+        return org.settings
+
+    async def update_organization_branding(self, org_id: uuid.UUID, branding_data: OrganizationBrandingUpdate, current_user_id: uuid.UUID) -> OrganizationBranding:
+        """Update an organization's branding."""
+        org = await self.get_organization(org_id)
+        
+        update_data = branding_data.model_dump(exclude_unset=True)
+        for field, value in update_data.items():
+            if value is not None and "url" in field:
+                value = str(value)
+            setattr(org.branding, field, value)
+            
+        await self.session.commit()
+        await self.session.refresh(org.branding)
+        
+        audit_service = AuditService()
+        await audit_service.log_event(
+            db=self.session,
+            event_type="organization_branding_updated",
+            user_id=current_user_id,
+            metadata_payload={
+                "organization_id": str(org_id),
+                "fields_updated": list(update_data.keys())
+            }
+        )
+        
+        return org.branding
 
     async def transfer_ownership(self, org_id: uuid.UUID, current_user_id: uuid.UUID, transfer_data: TransferOwnershipRequest) -> None:
         """Transfers ownership from the current user to the target membership."""

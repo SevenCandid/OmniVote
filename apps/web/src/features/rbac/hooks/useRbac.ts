@@ -241,27 +241,22 @@ export const useMyPermissions = (organizationId: string | undefined) => {
         if (res.status === 403) return null; // Not a member or restricted
         throw new Error('Failed to fetch permissions');
       }
-      // Return type matches EffectivePermissionsResponse
-      return res.json() as Promise<{
-        organization_id: string;
-        membership_id: string;
-        roles: any[];
-        permissions: string[];
-      }>;
+      // The endpoint returns a plain list of strings representing the permissions
+      return res.json() as Promise<string[]>;
     },
     enabled: !!accessToken && !!organizationId,
     staleTime: 5 * 60 * 1000, // Cache permissions for 5 mins
   });
 
   const hasPermission = (permissionKey: string) => {
-    if (!effectiveData || !effectiveData.permissions) return false;
-    return effectiveData.permissions.includes(permissionKey);
+    if (!effectiveData || !Array.isArray(effectiveData)) return false;
+    return effectiveData.includes(permissionKey);
   };
 
   return {
-    permissions: effectiveData?.permissions || [],
-    roles: effectiveData?.roles || [],
-    membershipId: effectiveData?.membership_id,
+    permissions: Array.isArray(effectiveData) ? effectiveData : [],
+    roles: [],
+    membershipId: undefined,
     hasPermission,
     isLoading,
   };

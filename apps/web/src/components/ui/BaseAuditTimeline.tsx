@@ -95,8 +95,8 @@ export const BaseAuditTimeline: React.FC<BaseAuditTimelineProps> = ({
                       <div className="text-sm text-gray-500 dark:text-gray-400">
                         <div className="flex justify-between items-start">
                           <div>
-                            <span className="font-medium text-gray-900 dark:text-white">
-                              {event.event_type}
+                            <span className="font-medium text-gray-900 dark:text-white capitalize">
+                              {event.event_type.replace(/_/g, ' ')}
                             </span>
                           </div>
                           <div className="text-xs whitespace-nowrap">
@@ -126,10 +126,24 @@ export const BaseAuditTimeline: React.FC<BaseAuditTimelineProps> = ({
                         </div>
                         
                         {isExpanded && event.metadata_payload && (
-                          <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-800">
-                            <pre className="text-[10px] text-gray-700 dark:text-gray-300 overflow-x-auto whitespace-pre-wrap font-mono">
-                              {JSON.stringify(event.metadata_payload, null, 2)}
-                            </pre>
+                          <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-800 text-xs">
+                            <ul className="space-y-1.5">
+                              {Object.entries(event.metadata_payload).map(([key, value]) => {
+                                const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                                let formattedValue = String(value);
+                                if (Array.isArray(value)) {
+                                  formattedValue = value.join(', ');
+                                } else if (typeof value === 'object' && value !== null) {
+                                  formattedValue = JSON.stringify(value);
+                                }
+                                return (
+                                  <li key={key} className="flex flex-col sm:flex-row sm:gap-2">
+                                    <span className="font-semibold text-gray-900 dark:text-gray-100 min-w-[120px]">{formattedKey}:</span>
+                                    <span className="text-gray-600 dark:text-gray-400 break-all sm:break-normal">{formattedValue}</span>
+                                  </li>
+                                );
+                              })}
+                            </ul>
                           </div>
                         )}
                         

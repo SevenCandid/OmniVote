@@ -24,13 +24,13 @@ class OrganizationBase(BaseModel):
     contact_email: Optional[EmailStr] = None
     contact_phone: Optional[str] = Field(None, max_length=50)
     country: Optional[str] = Field(None, min_length=2, max_length=2)
-    timezone: Optional[str] = Field("UTC", max_length=100)
+    timezone: Optional[str] = Field("Africa/Accra", max_length=100)
     preferred_language: Optional[str] = Field("en", max_length=10)
-    currency: Optional[str] = Field("USD", min_length=3, max_length=3)
+    currency: Optional[str] = Field("GHS", min_length=3, max_length=3)
 
 class OrganizationSettingsBase(BaseModel):
     """Base schema for organization settings."""
-    default_timezone: str = Field("UTC", max_length=100)
+    default_timezone: str = Field("Africa/Accra", max_length=100)
     date_format: str = Field("YYYY-MM-DD", max_length=50)
     time_format: str = Field("24h", max_length=50)
     default_event_visibility: str = Field("private", max_length=50)

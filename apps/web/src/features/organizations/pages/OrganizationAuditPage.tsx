@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BaseAuditTimeline } from '../../../components/ui/BaseAuditTimeline';
 import { useOrganizationAuditLogs } from '../hooks/useOrganizationAudit';
+import { useOrganization } from '../hooks/useOrganizations';
 
 export const OrganizationAuditPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -11,6 +12,24 @@ export const OrganizationAuditPage: React.FC = () => {
   const [eventType, setEventType] = useState<string>('');
 
   const { data, isLoading, isFetching } = useOrganizationAuditLogs(id || '', 0, limit, eventType || undefined);
+  const { data: organization } = useOrganization(id || '');
+
+  const mappedEvents = React.useMemo(() => {
+    if (!data?.items) return [];
+    return data.items.map((event) => {
+      if (event.metadata_payload && event.metadata_payload.organization_id && organization) {
+        const { organization_id, ...restPayload } = event.metadata_payload;
+        return {
+          ...event,
+          metadata_payload: {
+            ...restPayload,
+            organization: `${organization.name} (${organization_id})`,
+          },
+        };
+      }
+      return event;
+    });
+  }, [data?.items, organization]);
 
   const handleLoadMore = () => {
     setLimit((prev) => prev + 50);
@@ -59,7 +78,7 @@ export const OrganizationAuditPage: React.FC = () => {
 
       <div className="bg-white dark:bg-[var(--color-surface-dark)] p-6 rounded-xl border border-gray-200 dark:border-gray-800">
         <BaseAuditTimeline
-          events={data?.items || []}
+          events={mappedEvents}
           isLoading={isLoading || isFetching}
           onLoadMore={handleLoadMore}
           hasMore={hasMore}

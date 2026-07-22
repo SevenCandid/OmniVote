@@ -43,9 +43,9 @@ class Organization(BaseModel, TimestampMixin, SoftDeleteMixin, AuditMixin):
     contact_phone: Mapped[str | None] = mapped_column(String(50), nullable=True)
     
     country: Mapped[str | None] = mapped_column(String(2), nullable=True)  # ISO 3166-1 alpha-2
-    timezone: Mapped[str | None] = mapped_column(String(100), nullable=True, default="UTC")
+    timezone: Mapped[str | None] = mapped_column(String(100), nullable=True, default="Africa/Accra")
     preferred_language: Mapped[str | None] = mapped_column(String(10), nullable=True, default="en")
-    currency: Mapped[str | None] = mapped_column(String(3), nullable=True, default="USD")
+    currency: Mapped[str | None] = mapped_column(String(3), nullable=True, default="GHS")
     
     status: Mapped[OrganizationStatus] = mapped_column(
         Enum(OrganizationStatus, name="organization_status_enum"),
@@ -78,7 +78,7 @@ class OrganizationSettings(BaseModel, TimestampMixin, AuditMixin):
         ForeignKey("organizations.id", ondelete="CASCADE"), unique=True, nullable=False
     )
     
-    default_timezone: Mapped[str] = mapped_column(String(100), default="UTC", nullable=False)
+    default_timezone: Mapped[str] = mapped_column(String(100), default="Africa/Accra", nullable=False)
     date_format: Mapped[str] = mapped_column(String(50), default="YYYY-MM-DD", nullable=False)
     time_format: Mapped[str] = mapped_column(String(50), default="24h", nullable=False)
     

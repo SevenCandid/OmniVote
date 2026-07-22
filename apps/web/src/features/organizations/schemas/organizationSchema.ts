@@ -66,6 +66,28 @@ export const OrganizationUpdateSchema =
 
 export type OrganizationUpdateInput = z.infer<typeof OrganizationUpdateSchema>;
 
+export const OrganizationSettingsUpdateSchema = z.object({
+  default_timezone: z.string().optional(),
+  date_format: z.string().optional(),
+  time_format: z.string().optional(),
+  default_event_visibility: z.string().optional(),
+  default_result_visibility: z.string().optional(),
+});
+
+export type OrganizationSettingsUpdateInput = z.infer<typeof OrganizationSettingsUpdateSchema>;
+
+export const OrganizationBrandingUpdateSchema = z.object({
+  logo_url: z.union([z.string().url('Must be a valid URL'), z.literal('')]).optional().nullable(),
+  banner_url: z.union([z.string().url('Must be a valid URL'), z.literal('')]).optional().nullable(),
+  favicon_url: z.union([z.string().url('Must be a valid URL'), z.literal('')]).optional().nullable(),
+  primary_color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/).optional().nullable(),
+  secondary_color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/).optional().nullable(),
+  accent_color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/).optional().nullable(),
+  theme_preference: z.string().optional(),
+});
+
+export type OrganizationBrandingUpdateInput = z.infer<typeof OrganizationBrandingUpdateSchema>;
+
 // Response Schemas
 export const OrganizationSettingsSchema = z.object({
   id: z.string().uuid(),

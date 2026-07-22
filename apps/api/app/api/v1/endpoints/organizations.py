@@ -9,6 +9,10 @@ from app.schemas.organization import (
     OrganizationCreate,
     OrganizationResponse,
     OrganizationUpdate,
+    OrganizationSettingsUpdate,
+    OrganizationSettingsResponse,
+    OrganizationBrandingUpdate,
+    OrganizationBrandingResponse,
     TransferOwnershipRequest,
 )
 from app.services.organization_service import OrganizationService
@@ -68,26 +72,57 @@ async def update_organization(
     organization_id: uuid.UUID,
     org_in: OrganizationUpdate,
     auth_context: dict = Depends(RequirePermission("organization.update")),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db_session),
 ) -> OrganizationResponse:
     """
     Update an organization's core profile fields.
     """
     service = OrganizationService(db)
-    return await service.update_organization(organization_id, org_in)
+    return await service.update_organization(organization_id, org_in, current_user.id)
+
+@router.patch("/{organization_id}/settings", response_model=OrganizationSettingsResponse)
+async def update_organization_settings(
+    organization_id: uuid.UUID,
+    settings_in: OrganizationSettingsUpdate,
+    auth_context: dict = Depends(RequirePermission("organization.update")),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db_session),
+) -> OrganizationSettingsResponse:
+    """
+    Update an organization's settings.
+    """
+    service = OrganizationService(db)
+    return await service.update_organization_settings(organization_id, settings_in, current_user.id)
+
+
+@router.patch("/{organization_id}/branding", response_model=OrganizationBrandingResponse)
+async def update_organization_branding(
+    organization_id: uuid.UUID,
+    branding_in: OrganizationBrandingUpdate,
+    auth_context: dict = Depends(RequirePermission("organization.update")),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db_session),
+) -> OrganizationBrandingResponse:
+    """
+    Update an organization's branding.
+    """
+    service = OrganizationService(db)
+    return await service.update_organization_branding(organization_id, branding_in, current_user.id)
 
 
 @router.delete("/{organization_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_organization(
     organization_id: uuid.UUID,
     auth_context: dict = Depends(RequirePermission("organization.delete")),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db_session),
 ):
     """
     Soft delete an organization.
     """
     service = OrganizationService(db)
-    await service.delete_organization(organization_id)
+    await service.delete_organization(organization_id, current_user.id)
 
 
 @router.post("/{org_id}/transfer-ownership", status_code=status.HTTP_200_OK)
@@ -132,16 +167,16 @@ async def get_organization_audit_logs(
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
     event_type: str | None = Query(None),
-    auth_context: dict = Depends(RequirePermission("organization.read")),
+    auth_context: dict = Depends(RequirePermission("audit.view")),
     db: AsyncSession = Depends(get_db_session),
 ):
     """
     Retrieve audit logs for a specific organization.
-    Requires 'organization.read' permission.
+    Requires 'audit.view' permission.
     """
-    # Filter by organization_id inside the JSONB payload
+    # Filter by organization_id inside the JSON payload
     base_query = select(SecurityEvent).where(
-        SecurityEvent.metadata_payload["organization_id"].astext == str(organization_id)
+        SecurityEvent.metadata_payload["organization_id"].as_string() == str(organization_id)
     )
     
     if event_type:

@@ -69,7 +69,7 @@ export function OrganizationForm({
       )}
 
       <fieldset disabled={isReadOnly} className="space-y-6">
-        <div className="bg-white dark:bg-[#18181B] p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
+        <div className="bg-white dark:bg-[#18181B] p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
           <h3 className="text-lg font-semibold mb-4">Core Profile</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -78,7 +78,7 @@ export function OrganizationForm({
               </label>
               <input
                 {...register('name')}
-                className="w-full px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 bg-transparent"
+                className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]"
                 placeholder="e.g. Acme Corp"
               />
               {errors.name && (
@@ -94,7 +94,7 @@ export function OrganizationForm({
               </label>
               <input
                 {...register('slug')}
-                className="w-full px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 bg-transparent"
+                className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]"
                 placeholder="e.g. acme-corp"
               />
               {errors.slug && (
@@ -111,14 +111,14 @@ export function OrganizationForm({
               <textarea
                 {...register('description')}
                 rows={3}
-                className="w-full px-4 py-2 rounded-2xl border border-gray-300 dark:border-gray-700 bg-transparent"
+                className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]"
                 placeholder="Brief description of the organization"
               />
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#18181B] p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
+        <div className="bg-white dark:bg-[#18181B] p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
           <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -127,7 +127,7 @@ export function OrganizationForm({
               </label>
               <input
                 {...register('contact_email')}
-                className="w-full px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 bg-transparent"
+                className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]"
                 placeholder="admin@acme.com"
               />
               {errors.contact_email && (
@@ -141,7 +141,7 @@ export function OrganizationForm({
               <label className="block text-sm font-medium mb-1">Website</label>
               <input
                 {...register('website')}
-                className="w-full px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 bg-transparent"
+                className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)]"
                 placeholder="https://acme.com"
               />
               {errors.website && (
@@ -165,7 +165,7 @@ export function OrganizationForm({
           <button
             type="submit"
             disabled={isLoading}
-            className="px-6 py-2 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
+            className="px-6 py-2 rounded-md bg-[var(--color-primary)] text-white font-medium hover:opacity-90 disabled:opacity-50 transition-opacity focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-primary)]"
           >
             {isLoading ? 'Saving...' : 'Save Organization'}
           </button>

@@ -27,6 +27,9 @@ import LandingPage from '../pages/LandingPage';
 import DashboardPage from '../pages/DashboardPage';
 import OrganizationListPage from '../features/organizations/pages/OrganizationListPage';
 import OrganizationDetailsPage from '../features/organizations/pages/OrganizationDetailsPage';
+import { OrganizationLayout } from '../features/organizations/layouts/OrganizationLayout';
+import { OrganizationSettingsGeneralPage } from '../features/organizations/pages/OrganizationSettingsGeneralPage';
+import { OrganizationSettingsBrandingPage } from '../features/organizations/pages/OrganizationSettingsBrandingPage';
 import OrganizationMembersPage from '../features/memberships/pages/OrganizationMembersPage';
 import OrganizationInvitationsPage from '../features/memberships/pages/OrganizationInvitationsPage';
 import UserInvitationsPage from '../features/memberships/pages/UserInvitationsPage';
@@ -125,20 +128,28 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <OrganizationListPage /> },
           { path: 'new', element: <OrganizationDetailsPage /> },
-          { path: ':id', element: <OrganizationDetailsPage /> },
-          { path: ':id/members', element: <OrganizationMembersPage /> },
           {
-            path: ':id/members/invitations',
-            element: <OrganizationInvitationsPage />,
+            path: ':id',
+            element: <OrganizationLayout />,
+            children: [
+              { index: true, element: <OrganizationDetailsPage /> },
+              { path: 'members', element: <OrganizationMembersPage /> },
+              {
+                path: 'members/invitations',
+                element: <OrganizationInvitationsPage />,
+              },
+              {
+                path: 'members/:membershipId/roles',
+                element: <MembershipRolesPage />,
+              },
+              { path: 'settings/general', element: <OrganizationSettingsGeneralPage /> },
+              { path: 'settings/branding', element: <OrganizationSettingsBrandingPage /> },
+              { path: 'roles', element: <OrganizationRolesPage /> },
+              { path: 'roles/:roleId', element: <RoleDetailsPage /> },
+              { path: 'support', element: <OrganizationSupportPage /> },
+              { path: 'audit', element: <OrganizationAuditPage /> },
+            ]
           },
-          {
-            path: ':id/members/:membershipId/roles',
-            element: <MembershipRolesPage />,
-          },
-          { path: ':id/roles', element: <OrganizationRolesPage /> },
-          { path: ':id/roles/:roleId', element: <RoleDetailsPage /> },
-          { path: ':id/support', element: <OrganizationSupportPage /> },
-          { path: ':id/audit', element: <OrganizationAuditPage /> },
         ],
       },
       { path: 'invitations', element: <UserInvitationsPage /> },
