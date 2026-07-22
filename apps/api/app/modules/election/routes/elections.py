@@ -9,6 +9,7 @@ from app.modules.rbac.services.authorization_service import AuthorizationService
 from app.modules.election.schemas.election import ElectionCreate, ElectionUpdate, ElectionResponse, PaginatedElectionResponse
 from app.modules.election.repositories.election_repository import ElectionRepository
 from app.modules.election.services.election_service import ElectionService
+from app.modules.rbac.dependencies import RequirePermission
 
 router = APIRouter()
 
@@ -23,9 +24,9 @@ async def list_elections(
     limit: int = Query(50, ge=1, le=100),
     db: AsyncSession = Depends(get_db_session),
     current_user: User = Depends(get_current_user),
-    election_service: ElectionService = Depends(get_election_service)
+    election_service: ElectionService = Depends(get_election_service),
+    auth_context: dict = Depends(RequirePermission("election.view"))
 ):
-    AuthorizationService.require_permission(db, current_user.id, organization_id, "election.view")
     items, total = await election_service.list_by_organization(organization_id, skip, limit)
     return {
         "items": items,
@@ -40,9 +41,9 @@ async def create_election(
     data: ElectionCreate,
     db: AsyncSession = Depends(get_db_session),
     current_user: User = Depends(get_current_user),
-    election_service: ElectionService = Depends(get_election_service)
+    election_service: ElectionService = Depends(get_election_service),
+    auth_context: dict = Depends(RequirePermission("election.create"))
 ):
-    AuthorizationService.require_permission(db, current_user.id, organization_id, "election.create")
     election = await election_service.create(organization_id, data, current_user.id)
     await db.commit()
     return election
@@ -53,9 +54,9 @@ async def get_election(
     election_id: uuid.UUID,
     db: AsyncSession = Depends(get_db_session),
     current_user: User = Depends(get_current_user),
-    election_service: ElectionService = Depends(get_election_service)
+    election_service: ElectionService = Depends(get_election_service),
+    auth_context: dict = Depends(RequirePermission("election.view"))
 ):
-    AuthorizationService.require_permission(db, current_user.id, organization_id, "election.view")
     return await election_service.get_by_id(election_id, organization_id)
 
 @router.patch("/{election_id}", response_model=ElectionResponse)
@@ -65,9 +66,9 @@ async def update_election(
     data: ElectionUpdate,
     db: AsyncSession = Depends(get_db_session),
     current_user: User = Depends(get_current_user),
-    election_service: ElectionService = Depends(get_election_service)
+    election_service: ElectionService = Depends(get_election_service),
+    auth_context: dict = Depends(RequirePermission("election.edit"))
 ):
-    AuthorizationService.require_permission(db, current_user.id, organization_id, "election.edit")
     election = await election_service.update(election_id, organization_id, data, current_user.id)
     await db.commit()
     return election
@@ -78,9 +79,9 @@ async def delete_election(
     election_id: uuid.UUID,
     db: AsyncSession = Depends(get_db_session),
     current_user: User = Depends(get_current_user),
-    election_service: ElectionService = Depends(get_election_service)
+    election_service: ElectionService = Depends(get_election_service),
+    auth_context: dict = Depends(RequirePermission("election.delete"))
 ):
-    AuthorizationService.require_permission(db, current_user.id, organization_id, "election.delete")
     await election_service.delete(election_id, organization_id, current_user.id)
     await db.commit()
 
@@ -91,9 +92,9 @@ async def publish_election(
     election_id: uuid.UUID,
     db: AsyncSession = Depends(get_db_session),
     current_user: User = Depends(get_current_user),
-    election_service: ElectionService = Depends(get_election_service)
+    election_service: ElectionService = Depends(get_election_service),
+    auth_context: dict = Depends(RequirePermission("election.publish"))
 ):
-    AuthorizationService.require_permission(db, current_user.id, organization_id, "election.publish")
     election = await election_service.publish(election_id, organization_id, current_user.id)
     await db.commit()
     return election
@@ -104,9 +105,9 @@ async def open_voting(
     election_id: uuid.UUID,
     db: AsyncSession = Depends(get_db_session),
     current_user: User = Depends(get_current_user),
-    election_service: ElectionService = Depends(get_election_service)
+    election_service: ElectionService = Depends(get_election_service),
+    auth_context: dict = Depends(RequirePermission("election.open_voting"))
 ):
-    AuthorizationService.require_permission(db, current_user.id, organization_id, "election.open_voting")
     election = await election_service.open_voting(election_id, organization_id, current_user.id)
     await db.commit()
     return election
@@ -117,9 +118,9 @@ async def close_voting(
     election_id: uuid.UUID,
     db: AsyncSession = Depends(get_db_session),
     current_user: User = Depends(get_current_user),
-    election_service: ElectionService = Depends(get_election_service)
+    election_service: ElectionService = Depends(get_election_service),
+    auth_context: dict = Depends(RequirePermission("election.close_voting"))
 ):
-    AuthorizationService.require_permission(db, current_user.id, organization_id, "election.close_voting")
     election = await election_service.close_voting(election_id, organization_id, current_user.id)
     await db.commit()
     return election
@@ -130,9 +131,9 @@ async def archive_election(
     election_id: uuid.UUID,
     db: AsyncSession = Depends(get_db_session),
     current_user: User = Depends(get_current_user),
-    election_service: ElectionService = Depends(get_election_service)
+    election_service: ElectionService = Depends(get_election_service),
+    auth_context: dict = Depends(RequirePermission("election.archive"))
 ):
-    AuthorizationService.require_permission(db, current_user.id, organization_id, "election.archive")
     election = await election_service.archive(election_id, organization_id, current_user.id)
     await db.commit()
     return election
@@ -143,9 +144,9 @@ async def cancel_election(
     election_id: uuid.UUID,
     db: AsyncSession = Depends(get_db_session),
     current_user: User = Depends(get_current_user),
-    election_service: ElectionService = Depends(get_election_service)
+    election_service: ElectionService = Depends(get_election_service),
+    auth_context: dict = Depends(RequirePermission("election.cancel"))
 ):
-    AuthorizationService.require_permission(db, current_user.id, organization_id, "election.cancel")
     election = await election_service.cancel(election_id, organization_id, current_user.id)
     await db.commit()
     return election
