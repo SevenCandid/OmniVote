@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useElectionLifecycle } from '../hooks/useElections';
 import { useMyPermissions } from '../../rbac/hooks/useRbac';
 import { Election } from '../types';
@@ -9,7 +9,9 @@ import {
   XCircle,
   CheckCircle,
   AlertTriangle,
+  Pause,
 } from 'lucide-react';
+import { ConfirmDialog } from '../../../components/ui/ConfirmDialog';
 
 interface ElectionLifecycleActionsProps {
   election: Election;
@@ -21,26 +23,107 @@ export const ElectionLifecycleActions: React.FC<
   const { hasPermission } = useMyPermissions(election.organization_id);
   const lifecycle = useElectionLifecycle();
 
-  const canManage = hasPermission('election.manage_lifecycle');
+  const canPublish = hasPermission('election.publish');
+  const canOpenVoting = hasPermission('election.open_voting');
+  const canPauseVoting = hasPermission('election.pause_voting');
+  const canResumeVoting = hasPermission('election.resume_voting');
+  const canCloseVoting = hasPermission('election.close_voting');
+  const canArchive = hasPermission('election.archive');
+  const canCancel = hasPermission('election.cancel');
 
-  if (!canManage) return null;
+  const hasAnyActionPermission =
+    canPublish ||
+    canOpenVoting ||
+    canPauseVoting ||
+    canResumeVoting ||
+    canCloseVoting ||
+    canArchive ||
+    canCancel;
 
-  const handleAction = async (
-    action: 'publish' | 'openVoting' | 'closeVoting' | 'archive' | 'cancel'
+  if (!hasAnyActionPermission) return null;
+
+  const [pendingAction, setPendingAction] = useState<{
+    action:
+      | 'publish'
+      | 'openVoting'
+      | 'pauseVoting'
+      | 'resumeVoting'
+      | 'closeVoting'
+      | 'archive'
+      | 'cancel';
+    title: string;
+    description: string;
+    variant: 'primary' | 'danger';
+  } | null>(null);
+
+  const handleActionClick = (
+    action:
+      | 'publish'
+      | 'openVoting'
+      | 'pauseVoting'
+      | 'resumeVoting'
+      | 'closeVoting'
+      | 'archive'
+      | 'cancel'
   ) => {
-    if (
-      !window.confirm(
-        `Are you sure you want to ${action.replace(/([A-Z])/g, ' $1').toLowerCase()} this election?`
-      )
-    ) {
-      return;
+    let title = '';
+    let description = '';
+    let variant: 'primary' | 'danger' = 'primary';
+
+    switch (action) {
+      case 'publish':
+        title = 'Publish Election';
+        description =
+          'Are you sure you want to publish this election? Voters will be able to see it, and some configurations will be locked.';
+        break;
+      case 'openVoting':
+        title = 'Open Voting';
+        description =
+          'Are you sure you want to open voting? Voters will be able to cast their ballots.';
+        break;
+      case 'pauseVoting':
+        title = 'Pause Voting';
+        description =
+          'Are you sure you want to pause voting? Voters will temporarily not be able to cast ballots.';
+        variant = 'danger';
+        break;
+      case 'resumeVoting':
+        title = 'Resume Voting';
+        description =
+          'Are you sure you want to resume voting? Voters will be able to cast their ballots again.';
+        break;
+      case 'closeVoting':
+        title = 'Close Voting';
+        description =
+          'Are you sure you want to close voting? This action cannot be easily undone, and no further ballots can be cast.';
+        variant = 'danger';
+        break;
+      case 'archive':
+        title = 'Archive Election';
+        description =
+          'Are you sure you want to archive this election? It will be moved to the archive.';
+        break;
+      case 'cancel':
+        title = 'Cancel Election';
+        description =
+          'Are you sure you want to cancel this election? This is permanent and cannot be undone.';
+        variant = 'danger';
+        break;
     }
 
+    setPendingAction({ action, title, description, variant });
+  };
+
+  const handleConfirmAction = async () => {
+    if (!pendingAction) return;
+
+    const action = pendingAction.action;
     try {
       await lifecycle[action].mutateAsync({
         organizationId: election.organization_id,
         electionId: election.id,
       });
+      setPendingAction(null);
     } catch (error) {
       console.error(`Failed to ${action} election:`, error);
       alert(
@@ -62,21 +145,21 @@ export const ElectionLifecycleActions: React.FC<
         </p>
 
         <div className="flex flex-wrap gap-4">
-          {(election.status === 'draft' ||
-            election.status === 'configured') && (
-            <button
-              onClick={() => handleAction('publish')}
-              disabled={lifecycle.publish.isPending}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 disabled:opacity-50 transition-colors"
-            >
-              <CheckCircle size={16} />
-              Publish Election
-            </button>
-          )}
+          {(election.status === 'draft' || election.status === 'configured') &&
+            canPublish && (
+              <button
+                onClick={() => handleActionClick('publish')}
+                disabled={lifecycle.publish.isPending}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 disabled:opacity-50 transition-colors"
+              >
+                <CheckCircle size={16} />
+                Publish Election
+              </button>
+            )}
 
-          {election.status === 'published' && (
+          {election.status === 'published' && canOpenVoting && (
             <button
-              onClick={() => handleAction('openVoting')}
+              onClick={() => handleActionClick('openVoting')}
               disabled={lifecycle.openVoting.isPending}
               className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400 font-medium rounded-lg hover:bg-green-100 dark:hover:bg-green-900/50 disabled:opacity-50 transition-colors"
             >
@@ -85,40 +168,86 @@ export const ElectionLifecycleActions: React.FC<
             </button>
           )}
 
-          {election.status === 'voting_open' && (
+          {election.status === 'voting_open' && canPauseVoting && (
             <button
-              onClick={() => handleAction('closeVoting')}
-              disabled={lifecycle.closeVoting.isPending}
-              className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 font-medium rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/50 disabled:opacity-50 transition-colors"
+              onClick={() => handleActionClick('pauseVoting')}
+              disabled={lifecycle.pauseVoting.isPending}
+              className="flex items-center gap-2 px-4 py-2 bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 font-medium rounded-lg hover:bg-yellow-100 dark:hover:bg-yellow-900/50 disabled:opacity-50 transition-colors"
             >
-              <StopCircle size={16} />
-              Close Voting
+              <Pause size={16} />
+              Pause Voting
             </button>
           )}
 
-          {['draft', 'configured', 'published'].includes(election.status) && (
+          {election.status === 'voting_paused' && canResumeVoting && (
             <button
-              onClick={() => handleAction('cancel')}
-              disabled={lifecycle.cancel.isPending}
-              className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400 font-medium rounded-lg hover:bg-red-100 dark:hover:bg-red-900/50 disabled:opacity-50 transition-colors ml-auto"
+              onClick={() => handleActionClick('resumeVoting')}
+              disabled={lifecycle.resumeVoting.isPending}
+              className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400 font-medium rounded-lg hover:bg-green-100 dark:hover:bg-green-900/50 disabled:opacity-50 transition-colors"
             >
-              <XCircle size={16} />
-              Cancel Election
+              <Play size={16} />
+              Resume Voting
             </button>
           )}
 
-          {['results_published', 'cancelled'].includes(election.status) && (
-            <button
-              onClick={() => handleAction('archive')}
-              disabled={lifecycle.archive.isPending}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 transition-colors ml-auto"
-            >
-              <Archive size={16} />
-              Archive Election
-            </button>
-          )}
+          {(election.status === 'voting_open' ||
+            election.status === 'voting_paused') &&
+            canCloseVoting && (
+              <button
+                onClick={() => handleActionClick('closeVoting')}
+                disabled={lifecycle.closeVoting.isPending}
+                className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 font-medium rounded-lg hover:bg-orange-100 dark:hover:bg-orange-900/50 disabled:opacity-50 transition-colors"
+              >
+                <StopCircle size={16} />
+                Close Voting
+              </button>
+            )}
+
+          {[
+            'draft',
+            'configured',
+            'published',
+            'voting_open',
+            'voting_paused',
+          ].includes(election.status) &&
+            canCancel && (
+              <button
+                onClick={() => handleActionClick('cancel')}
+                disabled={lifecycle.cancel.isPending}
+                className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400 font-medium rounded-lg hover:bg-red-100 dark:hover:bg-red-900/50 disabled:opacity-50 transition-colors ml-auto"
+              >
+                <XCircle size={16} />
+                Cancel Election
+              </button>
+            )}
+
+          {['results_published', 'cancelled', 'voting_closed'].includes(
+            election.status
+          ) &&
+            canArchive && (
+              <button
+                onClick={() => handleActionClick('archive')}
+                disabled={lifecycle.archive.isPending}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 transition-colors ml-auto"
+              >
+                <Archive size={16} />
+                Archive Election
+              </button>
+            )}
         </div>
       </div>
+
+      <ConfirmDialog
+        isOpen={!!pendingAction}
+        onClose={() => setPendingAction(null)}
+        onConfirm={handleConfirmAction}
+        title={pendingAction?.title || ''}
+        description={pendingAction?.description || ''}
+        variant={pendingAction?.variant || 'primary'}
+        isConfirming={
+          pendingAction ? lifecycle[pendingAction.action].isPending : false
+        }
+      />
     </div>
   );
 };

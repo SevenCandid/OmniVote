@@ -9,6 +9,9 @@ from app.modules.election.models.election import Election, ElectionStatus
 from app.modules.election.schemas.election import ElectionCreate, ElectionUpdate
 from app.modules.election.repositories.election_repository import ElectionRepository
 from app.identity.services.audit_service import AuditService
+from app.modules.election.services.election_edit_policy import ElectionEditPolicy
+from app.modules.election.services.election_notification_service import ElectionNotificationService
+from app.models.notification import NotificationType
 
 def generate_slug(text: str) -> str:
     text = text.lower()
@@ -20,6 +23,26 @@ class ElectionService:
         self.db = db
         self.repository = repository
         self.audit_service = AuditService()
+        self.notification_service = ElectionNotificationService(db)
+
+    def _validate_schedule(self, data: dict, existing_election: Optional[Election] = None):
+        reg_open = data.get("registration_opens_at") or (existing_election.registration_opens_at if existing_election else None)
+        reg_close = data.get("registration_closes_at") or (existing_election.registration_closes_at if existing_election else None)
+        vote_open = data.get("voting_opens_at") or (existing_election.voting_opens_at if existing_election else None)
+        vote_close = data.get("voting_closes_at") or (existing_election.voting_closes_at if existing_election else None)
+        results_pub = data.get("results_publish_at") or (existing_election.results_publish_at if existing_election else None)
+
+        if reg_open and reg_close and reg_close <= reg_open:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Registration close must be after registration open.")
+        
+        if vote_open and vote_close and vote_close <= vote_open:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Voting close must be after voting open.")
+            
+        if reg_close and vote_open and reg_close > vote_open:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Registration cannot close after voting opens.")
+            
+        if results_pub and vote_close and results_pub < vote_close:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Results cannot be published before voting closes.")
 
     async def _ensure_unique_slug(self, organization_id: uuid.UUID, base_slug: str, exclude_id: Optional[uuid.UUID] = None) -> str:
         slug = base_slug
@@ -32,6 +55,8 @@ class ElectionService:
             counter += 1
 
     async def create(self, organization_id: uuid.UUID, data: ElectionCreate, current_user_id: uuid.UUID) -> Election:
+        self._validate_schedule(data.model_dump(exclude_unset=True))
+        
         base_slug = generate_slug(data.title)
         unique_slug = await self._ensure_unique_slug(organization_id, base_slug)
 
@@ -60,6 +85,13 @@ class ElectionService:
         election = await self._get_or_404(election_id, organization_id)
         
         update_data = data.model_dump(exclude_unset=True)
+        
+        try:
+            ElectionEditPolicy.validate_update(election, update_data)
+        except ValueError as e:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+            
+        self._validate_schedule(update_data, existing_election=election)
         
         if "title" in update_data and update_data["title"] != election.title:
             base_slug = generate_slug(update_data["title"])
@@ -128,6 +160,43 @@ class ElectionService:
                 "election_id": str(election.id)
             }
         )
+        
+        # Dispatch notification
+        notification_type_map = {
+            ElectionStatus.PUBLISHED: NotificationType.INFO,
+            ElectionStatus.VOTING_OPEN: NotificationType.SUCCESS,
+            ElectionStatus.VOTING_PAUSED: NotificationType.WARNING,
+            ElectionStatus.VOTING_CLOSED: NotificationType.INFO,
+            ElectionStatus.ARCHIVED: NotificationType.INFO,
+            ElectionStatus.CANCELLED: NotificationType.WARNING,
+        }
+        
+        if new_status in notification_type_map:
+            title_map = {
+                ElectionStatus.PUBLISHED: f"Election '{election.title}' published",
+                ElectionStatus.VOTING_OPEN: f"Voting opened for '{election.title}'",
+                ElectionStatus.VOTING_PAUSED: f"Voting paused for '{election.title}'",
+                ElectionStatus.VOTING_CLOSED: f"Voting closed for '{election.title}'",
+                ElectionStatus.ARCHIVED: f"Election '{election.title}' archived",
+                ElectionStatus.CANCELLED: f"Election '{election.title}' cancelled",
+            }
+            message_map = {
+                ElectionStatus.PUBLISHED: f"The election '{election.title}' is now published and visible to voters.",
+                ElectionStatus.VOTING_OPEN: f"Voting is now open for the election '{election.title}'.",
+                ElectionStatus.VOTING_PAUSED: f"Voting has been temporarily paused for the election '{election.title}'.",
+                ElectionStatus.VOTING_CLOSED: f"Voting has concluded for the election '{election.title}'.",
+                ElectionStatus.ARCHIVED: f"The election '{election.title}' has been archived.",
+                ElectionStatus.CANCELLED: f"The election '{election.title}' has been cancelled.",
+            }
+            
+            await self.notification_service.notify_election_managers(
+                organization_id=election.organization_id,
+                title=title_map[new_status],
+                message=message_map[new_status],
+                type=notification_type_map[new_status],
+                metadata={"election_id": str(election.id)}
+            )
+            
         return election
 
     async def publish(self, election_id: uuid.UUID, organization_id: uuid.UUID, current_user_id: uuid.UUID) -> Election:
@@ -140,9 +209,17 @@ class ElectionService:
         election = await self._get_or_404(election_id, organization_id)
         return await self._transition_status(election, ElectionStatus.VOTING_OPEN, current_user_id, [ElectionStatus.PUBLISHED])
 
+    async def pause_voting(self, election_id: uuid.UUID, organization_id: uuid.UUID, current_user_id: uuid.UUID) -> Election:
+        election = await self._get_or_404(election_id, organization_id)
+        return await self._transition_status(election, ElectionStatus.VOTING_PAUSED, current_user_id, [ElectionStatus.VOTING_OPEN])
+
+    async def resume_voting(self, election_id: uuid.UUID, organization_id: uuid.UUID, current_user_id: uuid.UUID) -> Election:
+        election = await self._get_or_404(election_id, organization_id)
+        return await self._transition_status(election, ElectionStatus.VOTING_OPEN, current_user_id, [ElectionStatus.VOTING_PAUSED])
+
     async def close_voting(self, election_id: uuid.UUID, organization_id: uuid.UUID, current_user_id: uuid.UUID) -> Election:
         election = await self._get_or_404(election_id, organization_id)
-        return await self._transition_status(election, ElectionStatus.VOTING_CLOSED, current_user_id, [ElectionStatus.VOTING_OPEN])
+        return await self._transition_status(election, ElectionStatus.VOTING_CLOSED, current_user_id, [ElectionStatus.VOTING_OPEN, ElectionStatus.VOTING_PAUSED])
 
     async def archive(self, election_id: uuid.UUID, organization_id: uuid.UUID, current_user_id: uuid.UUID) -> Election:
         election = await self._get_or_404(election_id, organization_id)
@@ -154,7 +231,7 @@ class ElectionService:
     async def cancel(self, election_id: uuid.UUID, organization_id: uuid.UUID, current_user_id: uuid.UUID) -> Election:
         election = await self._get_or_404(election_id, organization_id)
         return await self._transition_status(election, ElectionStatus.CANCELLED, current_user_id, [
-            ElectionStatus.DRAFT, ElectionStatus.CONFIGURED, ElectionStatus.PUBLISHED, ElectionStatus.VOTING_OPEN
+            ElectionStatus.DRAFT, ElectionStatus.CONFIGURED, ElectionStatus.PUBLISHED, ElectionStatus.VOTING_OPEN, ElectionStatus.VOTING_PAUSED
         ])
 
     async def _get_or_404(self, election_id: uuid.UUID, organization_id: uuid.UUID) -> Election:

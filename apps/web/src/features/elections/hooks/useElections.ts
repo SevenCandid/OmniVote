@@ -128,6 +128,28 @@ export function useElectionLifecycle() {
     onSuccess: handleSuccess,
   });
 
+  const pauseVoting = useMutation({
+    mutationFn: ({
+      organizationId,
+      electionId,
+    }: {
+      organizationId: string;
+      electionId: string;
+    }) => electionApi.pauseVoting(organizationId, electionId),
+    onSuccess: handleSuccess,
+  });
+
+  const resumeVoting = useMutation({
+    mutationFn: ({
+      organizationId,
+      electionId,
+    }: {
+      organizationId: string;
+      electionId: string;
+    }) => electionApi.resumeVoting(organizationId, electionId),
+    onSuccess: handleSuccess,
+  });
+
   const closeVoting = useMutation({
     mutationFn: ({
       organizationId,
@@ -164,6 +186,8 @@ export function useElectionLifecycle() {
   return {
     publish,
     openVoting,
+    pauseVoting,
+    resumeVoting,
     closeVoting,
     archive,
     cancel,

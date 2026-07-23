@@ -157,6 +157,7 @@ erDiagram
     USER ||--o{ MEMBERSHIP : "holds"
     ORGANIZATION ||--o{ MEMBERSHIP : "hosts"
     ORGANIZATION ||--o{ INVITATION : "issues"
+    ORGANIZATION ||--o{ ELECTION : "owns"
     MEMBERSHIP ||--o{ MEMBERSHIP_ROLE : "assigned"
     MEMBERSHIP_ROLE }o--|| ROLE : "grants"
     ROLE ||--o{ ROLE_PERMISSION : "maps"
@@ -186,6 +187,10 @@ erDiagram
 6. **Permission**
    * **Purpose**: A granular capability statement (e.g. `organization.update`).
    * **Constraints**: Name must be unique.
+7. **Election** (Voting Event)
+   * **Purpose**: Universal foundation for elections, polls, awards, and contests.
+   * **Relationships**: Belongs to one Organization.
+   * **Constraints**: Dates must be strictly sequential. Status transitions are strictly enforced via the lifecycle machine.
 
 ---
 

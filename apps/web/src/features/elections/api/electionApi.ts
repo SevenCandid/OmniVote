@@ -143,6 +143,30 @@ export const electionApi = {
     );
   },
 
+  pauseVoting: async (
+    organizationId: string,
+    electionId: string
+  ): Promise<Election> => {
+    return fetchWithConfig(
+      `/organizations/${organizationId}/elections/${electionId}/pause-voting`,
+      {
+        method: 'POST',
+      }
+    );
+  },
+
+  resumeVoting: async (
+    organizationId: string,
+    electionId: string
+  ): Promise<Election> => {
+    return fetchWithConfig(
+      `/organizations/${organizationId}/elections/${electionId}/resume-voting`,
+      {
+        method: 'POST',
+      }
+    );
+  },
+
   closeVoting: async (
     organizationId: string,
     electionId: string

@@ -51,6 +51,9 @@ from app.modules.support.models.support import (
 # Notifications
 from app.models.notification import PlatformNotification, NotificationType
 
+# Election
+from app.modules.election.models.election import Election
+
 __all__ = [
     # Organization
     "Organization",
@@ -94,4 +97,7 @@ __all__ = [
     # Notifications
     "PlatformNotification",
     "NotificationType",
+    
+    # Election
+    "Election",
 ]

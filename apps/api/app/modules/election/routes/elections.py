@@ -111,6 +111,32 @@ async def open_voting(
     await db.commit()
     return election
 
+@router.post("/{election_id}/pause-voting", response_model=ElectionResponse)
+async def pause_voting(
+    organization_id: uuid.UUID,
+    election_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db_session),
+    current_user: User = Depends(get_current_user),
+    election_service: ElectionService = Depends(get_election_service),
+    auth_context: dict = Depends(RequirePermission("election.pause_voting"))
+):
+    election = await election_service.pause_voting(election_id, organization_id, current_user.id)
+    await db.commit()
+    return election
+
+@router.post("/{election_id}/resume-voting", response_model=ElectionResponse)
+async def resume_voting(
+    organization_id: uuid.UUID,
+    election_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db_session),
+    current_user: User = Depends(get_current_user),
+    election_service: ElectionService = Depends(get_election_service),
+    auth_context: dict = Depends(RequirePermission("election.resume_voting"))
+):
+    election = await election_service.resume_voting(election_id, organization_id, current_user.id)
+    await db.commit()
+    return election
+
 @router.post("/{election_id}/close-voting", response_model=ElectionResponse)
 async def close_voting(
     organization_id: uuid.UUID,

@@ -38,7 +38,9 @@ export default function ElectionOverviewPage() {
   const statusColor =
     election.status === 'published' || election.status === 'voting_open'
       ? 'text-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400'
-      : election.status === 'draft' || election.status === 'configured'
+      : election.status === 'draft' ||
+          election.status === 'configured' ||
+          election.status === 'voting_paused'
         ? 'text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20 dark:text-yellow-400'
         : 'text-gray-600 bg-gray-100 dark:bg-gray-800 dark:text-gray-400';
 

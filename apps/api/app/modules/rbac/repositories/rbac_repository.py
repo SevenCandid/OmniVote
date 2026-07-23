@@ -161,6 +161,24 @@ class RBACRepository:
         )
         return result.scalars().all()
 
+    async def get_users_with_any_permission(self, organization_id: uuid.UUID, permission_keys: list[str]):
+        from app.identity.models.user import User
+        from app.modules.membership.models.membership import Membership, MembershipStatus
+        result = await self.db.execute(
+            select(User)
+            .join(Membership, Membership.user_id == User.id)
+            .join(MembershipRole, MembershipRole.membership_id == Membership.id)
+            .join(RolePermission, RolePermission.role_id == MembershipRole.role_id)
+            .join(Permission, Permission.id == RolePermission.permission_id)
+            .where(
+                Membership.organization_id == organization_id,
+                Membership.status == MembershipStatus.ACCEPTED,
+                Permission.key.in_(permission_keys)
+            )
+            .distinct()
+        )
+        return result.scalars().all()
+
     async def count_owners_in_organization(self, organization_id: uuid.UUID) -> int:
         from app.modules.membership.models.membership import Membership, MembershipStatus
         from sqlalchemy import func

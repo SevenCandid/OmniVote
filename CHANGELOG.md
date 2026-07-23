@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [v3.1.0] - 2026-07-22
 
 ### Added
+- **Election Engine Foundation**: Established the core domain models and lifecycle APIs for universal voting events (Elections, Polls, Awards, Contests).
+- **Election Lifecycle Management**: Implemented strict state transitions (Draft -> Configured -> Published -> Voting Open -> Voting Paused -> Closed -> Archived) controlled by centralized edit policies.
+- **Election Management UI**: Created React pages for Election Creation, Overview, Editing, and List views with full RBAC integration.
+- **Pause/Resume Voting**: Added manual capabilities to temporarily pause active elections and resume them safely.
+- **Election Audit & Validation**: Integrated election operations with the platform audit system and schedule validators.
 - **Organization Details Layout**: Completed a responsive, persistent sidebar layout for navigating organization-level settings and management screens.
 - **Profile & General Settings**: Implemented end-to-end functionality for updating organization profiles (industry, size, description) and general settings (currency, timezone configuration).
 - **Organization Branding**: Added a dedicated branding page to customize organization primary colors with an interactive live preview component.

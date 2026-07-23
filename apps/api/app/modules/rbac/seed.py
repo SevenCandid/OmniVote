@@ -25,6 +25,8 @@ SYSTEM_PERMISSIONS = [
     {"key": "election.delete", "display_name": "Delete Election", "category": "Election", "description": "Delete an election"},
     {"key": "election.publish", "display_name": "Publish Election", "category": "Election", "description": "Publish an election"},
     {"key": "election.open_voting", "display_name": "Open Voting", "category": "Election", "description": "Open voting for an election"},
+    {"key": "election.pause_voting", "display_name": "Pause Voting", "category": "Election", "description": "Pause voting for an election"},
+    {"key": "election.resume_voting", "display_name": "Resume Voting", "category": "Election", "description": "Resume voting for an election"},
     {"key": "election.close_voting", "display_name": "Close Voting", "category": "Election", "description": "Close voting for an election"},
     {"key": "election.archive", "display_name": "Archive Election", "category": "Election", "description": "Archive an election"},
     {"key": "election.cancel", "display_name": "Cancel Election", "category": "Election", "description": "Cancel an election"},

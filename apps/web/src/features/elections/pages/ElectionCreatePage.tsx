@@ -12,12 +12,16 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { useCreateElection } from '../hooks/useElections';
+import { useOrganization } from '../../organizations/hooks/useOrganizations';
 import { ElectionType, Visibility } from '../types';
 
 export default function ElectionCreatePage() {
   const { id: organizationId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const createMutation = useCreateElection();
+  const { data: organization, isLoading: isOrgLoading } = useOrganization(
+    organizationId || ''
+  );
 
   const {
     register,
@@ -101,6 +105,17 @@ export default function ElectionCreatePage() {
         </p>
       </div>
 
+      {createMutation.isError && (
+        <div className="bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-4 rounded-md border border-red-200 dark:border-red-900 flex gap-2 items-center mb-6">
+          <ShieldCheck size={18} />
+          <span>
+            {(createMutation.error as any)?.response?.data?.detail ||
+              createMutation.error.message ||
+              'Failed to create election'}
+          </span>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         {/* General Information */}
         <div className="bg-white dark:bg-[#18181B] border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-sm">
@@ -117,7 +132,11 @@ export default function ElectionCreatePage() {
               </label>
               <input
                 type="text"
-                value={organizationId}
+                value={
+                  isOrgLoading
+                    ? 'Loading...'
+                    : organization?.name || organizationId
+                }
                 disabled
                 className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md text-gray-500 cursor-not-allowed"
               />

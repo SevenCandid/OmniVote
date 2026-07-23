@@ -23,9 +23,18 @@ export function ThemeProvider({
   storageKey = 'omnivote-ui-theme',
   ...props
 }: ThemeProviderProps) {
-  const [theme, setThemeState] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
-  );
+  const [theme, setThemeState] = useState<Theme>(() => {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        return (
+          (window.localStorage.getItem(storageKey) as Theme) || defaultTheme
+        );
+      }
+    } catch (e) {
+      // Ignore
+    }
+    return defaultTheme;
+  });
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -61,7 +70,13 @@ export function ThemeProvider({
   }, [theme]);
 
   const setTheme = (newTheme: Theme) => {
-    localStorage.setItem(storageKey, newTheme);
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.setItem(storageKey, newTheme);
+      }
+    } catch (e) {
+      // Ignore
+    }
     setThemeState(newTheme);
   };
 

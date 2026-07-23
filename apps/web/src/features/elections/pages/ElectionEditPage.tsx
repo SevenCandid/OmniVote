@@ -106,6 +106,25 @@ export default function ElectionEditPage() {
   if (isLoading) return <BaseLoader />;
   if (!election) return <div>Election not found</div>;
 
+  const isStatusDraftOrConfigured = ['draft', 'configured'].includes(
+    election.status
+  );
+  const isStatusPublished = election.status === 'published';
+  const isStatusVotingOpen = election.status === 'voting_open';
+
+  const isFullyLocked = ![
+    'draft',
+    'configured',
+    'published',
+    'voting_open',
+    'voting_paused',
+  ].includes(election.status);
+
+  const isCoreLocked = !isStatusDraftOrConfigured;
+  const isPreVotingLocked = !isStatusDraftOrConfigured;
+  const isResultsScheduleLocked =
+    isFullyLocked || isStatusVotingOpen || election.status === 'voting_paused';
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex justify-between items-center mb-6">
@@ -116,6 +135,17 @@ export default function ElectionEditPage() {
           </p>
         </div>
       </div>
+
+      {updateMutation.isError && (
+        <div className="bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-4 rounded-md border border-red-200 dark:border-red-900 flex gap-2 items-center">
+          <AlertTriangle size={18} />
+          <span>
+            {(updateMutation.error as any)?.response?.data?.detail ||
+              updateMutation.error.message ||
+              'Failed to update election'}
+          </span>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         {/* General Information */}
@@ -133,7 +163,8 @@ export default function ElectionEditPage() {
                   required: 'Title is required',
                   minLength: 3,
                 })}
-                className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-shadow"
+                disabled={isCoreLocked}
+                className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-shadow disabled:opacity-50 disabled:cursor-not-allowed"
               />
               {errors.title && (
                 <span className="text-red-500 text-xs mt-1 block">
@@ -149,7 +180,8 @@ export default function ElectionEditPage() {
               <textarea
                 {...register('description')}
                 rows={3}
-                className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-shadow"
+                disabled={isFullyLocked}
+                className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none transition-shadow disabled:opacity-50 disabled:cursor-not-allowed"
               />
             </div>
 
@@ -160,7 +192,8 @@ export default function ElectionEditPage() {
                 </label>
                 <select
                   {...register('election_type')}
-                  className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none"
+                  disabled={isCoreLocked}
+                  className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <option value={ElectionType.CUSTOM}>Custom</option>
                   <option value={ElectionType.GENERAL_ELECTION}>
@@ -184,7 +217,8 @@ export default function ElectionEditPage() {
                 </label>
                 <select
                   {...register('visibility')}
-                  className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none"
+                  disabled={isCoreLocked}
+                  className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <option value={Visibility.PRIVATE}>
                     Private (Invite Only)
@@ -219,7 +253,8 @@ export default function ElectionEditPage() {
                 <input
                   type="datetime-local"
                   {...register('voting_opens_at', { required: 'Required' })}
-                  className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none"
+                  disabled={isPreVotingLocked}
+                  className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 />
                 {errors.voting_opens_at && (
                   <span className="text-red-500 text-xs mt-1 block">
@@ -234,7 +269,8 @@ export default function ElectionEditPage() {
                 <input
                   type="datetime-local"
                   {...register('voting_closes_at', { required: 'Required' })}
-                  className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none"
+                  disabled={isFullyLocked}
+                  className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 />
                 {errors.voting_closes_at && (
                   <span className="text-red-500 text-xs mt-1 block">
@@ -252,7 +288,8 @@ export default function ElectionEditPage() {
                 <input
                   type="datetime-local"
                   {...register('registration_opens_at')}
-                  className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none"
+                  disabled={isPreVotingLocked}
+                  className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
               <div>
@@ -262,7 +299,8 @@ export default function ElectionEditPage() {
                 <input
                   type="datetime-local"
                   {...register('registration_closes_at')}
-                  className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none"
+                  disabled={isPreVotingLocked}
+                  className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
               <div>
@@ -272,7 +310,8 @@ export default function ElectionEditPage() {
                 <input
                   type="datetime-local"
                   {...register('results_publish_at')}
-                  className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none"
+                  disabled={isResultsScheduleLocked}
+                  className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
             </div>
@@ -294,7 +333,8 @@ export default function ElectionEditPage() {
               </label>
               <select
                 {...register('timezone')}
-                className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none"
+                disabled={isCoreLocked}
+                className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <option value="UTC">UTC</option>
                 <option value="America/New_York">
@@ -321,7 +361,8 @@ export default function ElectionEditPage() {
                   <input
                     type="checkbox"
                     {...register('allow_anonymous_voting')}
-                    className="w-4 h-4 text-[var(--color-primary)] rounded border-gray-300 focus:ring-[var(--color-primary)]"
+                    disabled={isCoreLocked}
+                    className="w-4 h-4 text-[var(--color-primary)] rounded border-gray-300 focus:ring-[var(--color-primary)] disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
                 <div>
@@ -340,7 +381,8 @@ export default function ElectionEditPage() {
                   <input
                     type="checkbox"
                     {...register('automatically_publish_results')}
-                    className="w-4 h-4 text-[var(--color-primary)] rounded border-gray-300 focus:ring-[var(--color-primary)]"
+                    disabled={isCoreLocked}
+                    className="w-4 h-4 text-[var(--color-primary)] rounded border-gray-300 focus:ring-[var(--color-primary)] disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
                 <div>
@@ -358,7 +400,8 @@ export default function ElectionEditPage() {
                   <input
                     type="checkbox"
                     {...register('require_voter_verification')}
-                    className="w-4 h-4 text-[var(--color-primary)] rounded border-gray-300 focus:ring-[var(--color-primary)]"
+                    disabled={isCoreLocked}
+                    className="w-4 h-4 text-[var(--color-primary)] rounded border-gray-300 focus:ring-[var(--color-primary)] disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
                 <div>

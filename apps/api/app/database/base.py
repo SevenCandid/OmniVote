@@ -38,11 +38,3 @@ class BaseModel(Base):
         sort_order=-100,  # Ensures primary key is generated first in schema mappings
     )
 
-# Import all models here so Alembic can find them for autogenerate
-from app.identity.models.user import User
-from app.identity.models.credential import Credential
-from app.identity.models.session import Session
-from app.identity.models.security import SecurityEvent
-from app.identity.models.tokens import VerificationToken, PasswordResetToken
-from app.models.platform_settings import PlatformSettings
-from app.modules.election.models.election import Election

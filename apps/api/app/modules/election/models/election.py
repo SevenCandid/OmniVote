@@ -13,6 +13,7 @@ class ElectionStatus(str, enum.Enum):
     CONFIGURED = "configured"
     PUBLISHED = "published"
     VOTING_OPEN = "voting_open"
+    VOTING_PAUSED = "voting_paused"
     VOTING_CLOSED = "voting_closed"
     COUNTING = "counting"
     RESULTS_PUBLISHED = "results_published"
