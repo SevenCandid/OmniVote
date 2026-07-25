@@ -3,9 +3,26 @@ import { useElection, useCategories } from '../hooks/useElections';
 import { useVotingSession, useSubmitBallot } from '../hooks/useVoting';
 import { useInitiatePayment } from '../hooks/usePayments';
 import { BaseButton } from '@/components/ui/BaseButton';
-import { CheckCircle2, ChevronLeft, AlertTriangle, CreditCard } from 'lucide-react';
+import { CheckCircle2, ChevronLeft, AlertTriangle, CreditCard, User } from 'lucide-react';
 import { VotingSelectionItem } from '../types/voting';
+import { useCandidates } from '../hooks/useCandidates';
 import { useState } from 'react';
+
+const CandidateReviewName = ({ organizationId, electionId, categoryId, candidateId }: { organizationId: string, electionId: string, categoryId: string, candidateId: string }) => {
+  const { data: candidates } = useCandidates(organizationId, electionId, categoryId);
+  const candidate = candidates?.find(c => c.id === candidateId);
+  
+  if (!candidate) return <span className="font-medium text-sm sm:text-base">Candidate ID: {candidateId.substring(0, 8)}...</span>;
+  
+  return (
+    <div className="flex items-center gap-3">
+      <div className="w-8 h-8 rounded-full overflow-hidden bg-zinc-100 flex items-center justify-center border border-zinc-200 shrink-0">
+        {candidate.photo ? <img src={candidate.photo} className="w-full h-full object-cover" /> : <User size={16} className="text-zinc-400" />}
+      </div>
+      <span className="font-medium text-sm sm:text-base">{candidate.full_name}</span>
+    </div>
+  );
+};
 
 export default function VotingReviewPage() {
   const { organizationId, electionId, sessionId } = useParams<{ organizationId: string; electionId: string; sessionId: string }>();
@@ -143,8 +160,12 @@ export default function VotingReviewPage() {
                   {categorySelections.map((sel: VotingSelectionItem) => (
                     <div key={sel.candidate_id} className="flex items-center gap-3">
                       <CheckCircle2 size={18} className="text-emerald-500 shrink-0" />
-                      <span className="font-medium">Candidate ID: {sel.candidate_id.substring(0, 8)}...</span>
-                      {/* In a real scenario, we'd look up the candidate name. We'll add this later if needed. */}
+                      <CandidateReviewName 
+                        organizationId={organizationId!} 
+                        electionId={electionId!} 
+                        categoryId={sel.category_id} 
+                        candidateId={sel.candidate_id} 
+                      />
                     </div>
                   ))}
                 </div>

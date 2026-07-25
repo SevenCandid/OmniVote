@@ -116,7 +116,7 @@ export default function VotingSessionPage() {
 
       {/* Category Header */}
       <div className="text-center py-4 border-b border-zinc-200 dark:border-zinc-800">
-        <h2 className="text-2xl sm:text-3xl font-extrabold">{currentCategory.name}</h2>
+        <h2 className="text-xl sm:text-2xl font-extrabold">{currentCategory.name}</h2>
         <p className="text-[var(--color-neutral-secondary-light)] mt-2">
           {currentCategory.description || 'Select your preferred candidate'}
         </p>

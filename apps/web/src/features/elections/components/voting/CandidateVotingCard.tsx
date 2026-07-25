@@ -34,7 +34,7 @@ export const CandidateVotingCard = ({
 
       <div className="p-5" onClick={onToggleSelection}>
         <div className="flex gap-4">
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center">
             {candidate.photo ? (
               <img 
                 src={candidate.photo} 
@@ -50,7 +50,7 @@ export const CandidateVotingCard = ({
             <div className="text-xs font-semibold text-[var(--color-neutral-muted-light)] uppercase tracking-wider mb-1">
               Candidate #{candidate.candidate_number}
             </div>
-            <h3 className="text-lg sm:text-xl font-bold leading-tight mb-1">{candidate.full_name}</h3>
+            <h3 className="text-base sm:text-lg font-bold leading-tight mb-1">{candidate.full_name}</h3>
             {candidate.short_name && (
               <p className="text-sm text-[var(--color-neutral-secondary-light)]">{candidate.short_name}</p>
             )}
