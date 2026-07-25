@@ -22,7 +22,7 @@ async function fetchWithConfig<T = any>(endpoint: string, options: RequestInit =
     let errorMessage = 'An error occurred';
     try {
       const parsed = JSON.parse(errorBody);
-      errorMessage = parsed.detail || errorMessage;
+      errorMessage = parsed.message || parsed.detail || errorMessage;
     } catch (e) {}
     throw new Error(errorMessage);
   }

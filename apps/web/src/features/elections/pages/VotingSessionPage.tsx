@@ -78,14 +78,18 @@ export default function VotingSessionPage() {
   };
 
   const handleNext = async () => {
-    // Save draft
-    await saveDraft({ selections });
-    
-    if (currentCategoryIndex < categories.length - 1) {
-      setCurrentCategoryIndex(prev => prev + 1);
-      window.scrollTo(0, 0);
-    } else {
-      navigate(`/voting/${organizationId}/${electionId}/session/${sessionId}/review`);
+    try {
+      // Save draft
+      await saveDraft({ selections });
+      
+      if (currentCategoryIndex < categories.length - 1) {
+        setCurrentCategoryIndex(prev => prev + 1);
+        window.scrollTo(0, 0);
+      } else {
+        navigate(`/voting/${organizationId}/${electionId}/session/${sessionId}/review`);
+      }
+    } catch (error: any) {
+      alert(error.message || "Failed to save your selections. Your session may have expired.");
     }
   };
 
