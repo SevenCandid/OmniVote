@@ -63,3 +63,14 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
             detail="Account pending verification",
         )
     return current_user
+
+async def get_current_user_optional(
+    token: str | None = Depends(OAuth2PasswordBearer(tokenUrl="/api/v1/identity/auth/login", auto_error=False)),
+    db: AsyncSession = Depends(get_db_session)
+) -> User | None:
+    if not token:
+        return None
+    try:
+        return await get_current_user(token, db)
+    except HTTPException:
+        return None

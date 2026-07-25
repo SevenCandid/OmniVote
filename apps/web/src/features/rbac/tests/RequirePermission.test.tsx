@@ -1,4 +1,3 @@
-import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { RequirePermission } from '../components/RequirePermission';
@@ -10,7 +9,7 @@ describe('RequirePermission', () => {
       permissions: [],
       hasPermission: () => false,
       isLoading: false,
-    });
+    } as any);
 
     render(
       <RequirePermission
@@ -29,9 +28,9 @@ describe('RequirePermission', () => {
   it('shows content when permission is granted', () => {
     vi.spyOn(useRbacHooks, 'useMyPermissions').mockReturnValue({
       permissions: ['test.perm'],
-      hasPermission: (k) => k === 'test.perm',
+      hasPermission: (k: string) => k === 'test.perm',
       isLoading: false,
-    });
+    } as any);
 
     render(
       <RequirePermission

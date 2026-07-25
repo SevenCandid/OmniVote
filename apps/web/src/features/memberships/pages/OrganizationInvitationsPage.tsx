@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   useOrganizationInvitations,
@@ -6,7 +5,6 @@ import {
 } from '../hooks/useMemberships';
 import { InvitationList } from '../components/InvitationList';
 import { toast } from 'react-hot-toast';
-import { useOrganization } from '../../organizations/hooks/useOrganizations';
 import { BaseButton } from '../../../components/ui/BaseButton';
 import { InviteMemberDialog } from '../components/InviteMemberDialog';
 import { useState } from 'react';
@@ -16,12 +14,11 @@ export default function OrganizationInvitationsPage() {
   const navigate = useNavigate();
   const [isInviteOpen, setIsInviteOpen] = useState(false);
 
-  const { data: organization } = useOrganization(organizationId!);
-  const {
+    const {
     data: invitations,
     isLoading,
     error,
-  } = useOrganizationInvitations(organizationId!);
+  } = useOrganizationInvitations(organizationId || '');
   const { mutateAsync: revokeInvitation, isPending: isRevoking } =
     useRevokeInvitation();
 

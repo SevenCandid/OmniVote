@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   useRole,
@@ -14,6 +14,7 @@ import { ProtectedBadge } from '../components/ProtectedBadge';
 import { RoleForm, RoleFormData } from '../components/RoleForm';
 import { RequirePermission } from '../components/RequirePermission';
 import { toast } from 'react-hot-toast';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 
 export default function RoleDetailsPage() {
   const { id: organizationId, roleId } = useParams<{
@@ -60,18 +61,12 @@ export default function RoleDetailsPage() {
   };
 
   const handleDeleteRole = async () => {
-    if (
-      window.confirm(
-        'Are you sure you want to delete this role? This cannot be undone.'
-      )
-    ) {
-      try {
-        await deleteRoleMutation.mutateAsync(roleId!);
-        toast.success('Role deleted successfully');
-        navigate(`/dashboard/organizations/${organizationId}/roles`);
-      } catch (e: any) {
-        toast.error(`Error deleting role: ${e.message}`);
-      }
+    try {
+      await deleteRoleMutation.mutateAsync(roleId!);
+      toast.success('Role deleted successfully');
+      navigate(`/dashboard/organizations/${organizationId}/roles`);
+    } catch (e: any) {
+      toast.error(`Error deleting role: ${e.message}`);
     }
   };
 
@@ -88,6 +83,7 @@ export default function RoleDetailsPage() {
     return <div className="p-6 text-center text-zinc-500">Role not found</div>;
   }
 
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const initialFormData: Partial<RoleFormData> = {
     name: role.name,
     description: role.description || '',
@@ -120,8 +116,8 @@ export default function RoleDetailsPage() {
             <div className="flex gap-3">
               <BaseButton
                 variant="danger"
-                onClick={handleDeleteRole}
-                isLoading={deleteRoleMutation.isPending}
+                size="sm"
+                onClick={() => setIsDeleteDialogOpen(true)}
               >
                 Delete Role
               </BaseButton>
@@ -147,6 +143,19 @@ export default function RoleDetailsPage() {
           }
         />
       </BaseCard>
+
+      <ConfirmDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={() => {
+          setIsDeleteDialogOpen(false);
+          handleDeleteRole();
+        }}
+        title="Delete Role"
+        description="Are you sure you want to delete this role? This cannot be undone."
+        variant="danger"
+        confirmText="Delete"
+      />
     </div>
   );
 }

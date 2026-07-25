@@ -3,9 +3,9 @@ import { AuditEvent } from '../../../components/ui/BaseAuditTimeline';
 
 export interface PaginatedAuditResponse {
   items: AuditEvent[];
-  total: int;
-  skip: int;
-  limit: int;
+  total: number;
+  skip: number;
+  limit: number;
 }
 
 export const auditApi = {

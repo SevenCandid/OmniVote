@@ -9,6 +9,6 @@ export const usePersonalAuditLogs = (
   return useQuery({
     queryKey: ['audit-logs', 'personal', skip, limit, eventType],
     queryFn: () => auditApi.getPersonalAuditLogs(skip, limit, eventType),
-    keepPreviousData: true,
+    placeholderData: (prev: any) => prev,
   });
 };

@@ -23,7 +23,8 @@ class WorkerSettings:
     """
 
     # Registered background tasks (discovered by worker on startup)
-    functions = [example_job]
+    from app.workers.jobs.results import update_election_results_task
+    functions = [example_job, update_election_results_task]
 
     # Redis configuration settings
     redis_settings = arq_redis_settings

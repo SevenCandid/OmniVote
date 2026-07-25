@@ -1,4 +1,3 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -22,9 +21,9 @@ export function OrganizationForm({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+        formState: { errors },
   } = useForm<OrganizationCreateInput>({
-    resolver: zodResolver(OrganizationCreateSchema),
+    resolver: zodResolver(OrganizationCreateSchema) as any,
     defaultValues: {
       name: initialData?.name || '',
       slug: initialData?.slug || '',

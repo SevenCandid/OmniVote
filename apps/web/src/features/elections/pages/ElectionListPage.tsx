@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useElections } from '../hooks/useElections';
 import { useMyPermissions } from '../../rbac/hooks/useRbac';

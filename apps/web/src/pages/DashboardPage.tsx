@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   AreaChart,
   Area,
@@ -11,7 +11,6 @@ import {
   TrendingUp,
   Users,
   CheckCircle,
-  Award,
   Plus,
   Upload,
   ShieldCheck,

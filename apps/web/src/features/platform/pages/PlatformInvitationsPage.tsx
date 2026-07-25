@@ -102,11 +102,11 @@ export function PlatformInvitationsPage() {
       case 'ACCEPTED':
         return 'success';
       case 'EXPIRED':
-        return 'neutral';
+        return 'secondary';
       case 'REVOKED':
         return 'danger';
       default:
-        return 'neutral';
+        return 'secondary';
     }
   };
 
@@ -129,7 +129,7 @@ export function PlatformInvitationsPage() {
           <BaseButton
             variant="primary"
             onClick={() => setShowInviteForm(true)}
-            icon={<Plus size={16} />}
+            leftIcon={<Plus size={16} />}
           >
             Create Invitation
           </BaseButton>
@@ -247,14 +247,14 @@ export function PlatformInvitationsPage() {
                     <td className="px-6 py-4">
                       <div className="flex flex-wrap gap-1">
                         {inv.roles.map((role) => (
-                          <BaseBadge key={role.id} variant="primary" size="sm">
+                          <BaseBadge key={role.id} variant="primary">
                             {role.name}
                           </BaseBadge>
                         ))}
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <BaseBadge variant={getStatusColor(inv.status)} size="sm">
+                      <BaseBadge variant={getStatusColor(inv.status)}>
                         {inv.status}
                       </BaseBadge>
                     </td>

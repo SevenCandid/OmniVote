@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { electionApi } from '../api/electionApi';
+import { electionCategoryApi } from '../api/categoryApi';
 import { ElectionCreate, ElectionUpdate } from '../types';
 
 export const electionKeys = {
@@ -10,6 +11,10 @@ export const electionKeys = {
   details: () => [...electionKeys.all, 'detail'] as const,
   detail: (orgId: string, id: string) =>
     [...electionKeys.details(), orgId, id] as const,
+  categories: (orgId: string, electionId: string) =>
+    ['election-categories', orgId, electionId] as const,
+  revenue: (orgId: string, electionId: string) =>
+    [...electionKeys.details(), orgId, electionId, 'revenue'] as const,
 };
 
 export function useElections(organizationId: string, skip = 0, limit = 50) {
@@ -24,6 +29,22 @@ export function useElection(organizationId: string, electionId: string) {
   return useQuery({
     queryKey: electionKeys.detail(organizationId, electionId),
     queryFn: () => electionApi.get(organizationId, electionId),
+    enabled: !!organizationId && !!electionId,
+  });
+}
+
+export function useCategories(organizationId: string, electionId: string) {
+  return useQuery({
+    queryKey: electionKeys.categories(organizationId, electionId),
+    queryFn: () => electionCategoryApi.getAll(organizationId, electionId),
+    enabled: !!organizationId && !!electionId,
+  });
+}
+
+export function useElectionRevenue(organizationId: string, electionId: string) {
+  return useQuery({
+    queryKey: electionKeys.revenue(organizationId, electionId),
+    queryFn: () => electionApi.getRevenue(organizationId, electionId),
     enabled: !!organizationId && !!electionId,
   });
 }

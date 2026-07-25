@@ -21,3 +21,5 @@ factory-boy>=3.3.0
 faker>=25.0.0
 python-multipart>=0.0.18
 fastapi-mail>=1.4.1
+openpyxl>=3.1.2
+fpdf2>=2.7.9

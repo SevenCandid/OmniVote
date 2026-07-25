@@ -47,13 +47,13 @@ export function BaseDialog({
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ type: 'spring', duration: 0.3 }}
             className={cn(
-              'relative w-full bg-white dark:bg-[#18181B] border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] rounded-2xl shadow-xl p-6 z-10',
+              'relative w-full bg-white dark:bg-[#18181B] border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] rounded-2xl shadow-xl p-6 z-10 flex flex-col max-h-[90vh]',
               sizeClasses[size],
               className
             )}
           >
             {/* Header */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 shrink-0">
               {title && (
                 <h3 className="text-lg font-bold font-sans">{title}</h3>
               )}
@@ -67,7 +67,7 @@ export function BaseDialog({
             </div>
 
             {/* Content */}
-            <div className="text-sm">{children}</div>
+            <div className="text-sm overflow-y-auto pr-2">{children}</div>
           </motion.div>
         </div>
       )}

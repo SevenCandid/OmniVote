@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   useRoles,
@@ -8,7 +8,6 @@ import {
 } from '../hooks/useRbac';
 import { BaseCard } from '../../../components/ui/BaseCard';
 import { BaseButton } from '../../../components/ui/BaseButton';
-import { RequirePermission } from '../components/RequirePermission';
 import { toast } from 'react-hot-toast';
 import { EffectivePermissionsPanel } from '../components/EffectivePermissionsPanel';
 

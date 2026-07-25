@@ -1,7 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { usePermissions } from '../hooks/useRbac';
 import { Permission } from '../schemas/rbacSchema';
-import { BaseInput } from '../../../components/ui/BaseInput';
 import { Search, ChevronDown, ChevronRight, Check } from 'lucide-react';
 
 interface PermissionSelectorProps {
@@ -105,8 +104,6 @@ export function PermissionSelector({
             const allSelected =
               perms.length > 0 &&
               perms.every((p) => selectedIds.includes(p.id));
-            const someSelected =
-              perms.some((p) => selectedIds.includes(p.id)) && !allSelected;
 
             return (
               <div key={category} className="bg-white dark:bg-[#18181B]">

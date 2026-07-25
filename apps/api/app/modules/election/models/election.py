@@ -1,8 +1,8 @@
 import enum
 import uuid
 import datetime
-from sqlalchemy import String, ForeignKey, Enum, Boolean, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, ForeignKey, Enum, Boolean, DateTime, Numeric, JSON
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import BaseModel
 from app.database.mixins import TimestampMixin
@@ -26,6 +26,7 @@ class ElectionType(str, enum.Enum):
     SURVEY = "survey"
     POLL = "poll"
     AWARD_VOTING = "award_voting"
+    CONTEST = "contest"
     COMMITTEE_ELECTION = "committee_election"
     CUSTOM = "custom"
 
@@ -35,6 +36,20 @@ class Visibility(str, enum.Enum):
     PUBLIC = "public"
     UNLISTED = "unlisted"
 
+
+class ResultVisibility(str, enum.Enum):
+    HIDDEN = "hidden"
+    LIVE = "live"
+    AFTER_CLOSE = "after_close"
+    ADMIN_ONLY = "admin_only"
+    PUBLIC = "public"
+
+class PublicVerificationMethod(str, enum.Enum):
+    NONE = "none"
+    EMAIL_OTP = "email_otp"
+    SMS_OTP = "sms_otp"
+    PHONE = "phone"
+    PLATFORM_ACCOUNT = "platform_account"
 
 class Election(BaseModel, TimestampMixin):
     __tablename__ = "elections"
@@ -54,6 +69,7 @@ class Election(BaseModel, TimestampMixin):
 
     # Visibility
     visibility: Mapped[Visibility] = mapped_column(Enum(Visibility), nullable=False, default=Visibility.PRIVATE)
+    result_visibility: Mapped[ResultVisibility] = mapped_column(Enum(ResultVisibility), nullable=False, default=ResultVisibility.HIDDEN)
 
     # Scheduling
     registration_opens_at: Mapped[datetime.datetime | None] = mapped_column(UTCDateTime, nullable=True)
@@ -61,12 +77,26 @@ class Election(BaseModel, TimestampMixin):
     voting_opens_at: Mapped[datetime.datetime | None] = mapped_column(UTCDateTime, nullable=True)
     voting_closes_at: Mapped[datetime.datetime | None] = mapped_column(UTCDateTime, nullable=True)
     results_publish_at: Mapped[datetime.datetime | None] = mapped_column(UTCDateTime, nullable=True)
+    
+    # Fallback voter count for closed elections before VoterRegistry exists
+    expected_voter_count: Mapped[int | None] = mapped_column(nullable=True)
 
     # Configuration
+    voting_engine_version: Mapped[int] = mapped_column(default=1, nullable=False)
     timezone: Mapped[str] = mapped_column(String(50), nullable=False, default="UTC")
     allow_anonymous_voting: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     automatically_publish_results: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     require_voter_verification: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    
+    # Public & Paid Voting Configuration
+    public_verification_method: Mapped[PublicVerificationMethod] = mapped_column(Enum(PublicVerificationMethod), default=PublicVerificationMethod.NONE, nullable=False)
+    is_paid: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    cost_per_vote: Mapped[float | None] = mapped_column(Numeric(10, 2), nullable=True)
+    currency: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    min_payment: Mapped[float | None] = mapped_column(Numeric(10, 2), nullable=True)
+    max_payment: Mapped[float | None] = mapped_column(Numeric(10, 2), nullable=True)
+    preset_amounts: Mapped[list | None] = mapped_column(JSON, nullable=True)
+    allow_custom_amount: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 
     # Metadata & Tracking
     created_by: Mapped[uuid.UUID | None] = mapped_column(
@@ -82,3 +112,6 @@ class Election(BaseModel, TimestampMixin):
     deleted_by: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("identity_users.id", ondelete="SET NULL"), nullable=True
     )
+
+    # Relationships
+    categories = relationship("ElectionCategory", back_populates="election", cascade="all, delete-orphan")

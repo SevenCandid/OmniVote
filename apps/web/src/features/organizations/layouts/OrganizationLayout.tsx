@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavLink, Outlet, useParams, useNavigate } from 'react-router-dom';
 import {
   User,
@@ -16,7 +15,6 @@ import {
 } from 'lucide-react';
 import {
   useOrganization,
-  useDeleteOrganization,
 } from '../hooks/useOrganizations';
 import { useMyPermissions } from '../../rbac/hooks/useRbac';
 import { BaseLoader } from '../../../components/ui/BaseLoader';
@@ -26,9 +24,8 @@ export const OrganizationLayout: React.FC = () => {
   const navigate = useNavigate();
 
   const { data: organization, isLoading } = useOrganization(id!);
-  const { hasPermission, isLoading: isLoadingPermissions } =
+  const { isLoading: isLoadingPermissions } =
     useMyPermissions(id);
-  const deleteMutation = useDeleteOrganization();
 
   const navigation = [
     {
@@ -100,45 +97,40 @@ export const OrganizationLayout: React.FC = () => {
     return <div className="p-6">Organization not found.</div>;
   }
 
-  const canDelete = hasPermission('organization.delete');
-
   return (
-    <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 space-y-6">
-      <div className="flex flex-col space-y-4 mb-6">
+    <div className="max-w-7xl mx-auto pb-6 relative h-full flex flex-col px-4 sm:px-6 lg:px-8 w-full">
+      <div className="flex items-center space-x-3 mb-2 shrink-0 bg-[var(--color-canvas-light)] dark:bg-[var(--color-canvas-dark)] py-1.5 border-b border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 z-10">
         <button
           onClick={() => navigate('/dashboard/organizations')}
-          className="text-gray-500 hover:text-gray-900 dark:hover:text-white flex items-center gap-1 text-sm font-medium transition-colors w-fit"
+          className="p-1 text-gray-500 hover:text-gray-900 dark:hover:text-white rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center justify-center shrink-0"
+          title="Back to Organizations"
         >
-          <ArrowLeft size={16} />
-          Back to Organizations
+          <ArrowLeft size={18} />
         </button>
-
-        <div className="flex items-center space-x-3">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            {organization.name}
-          </h1>
-          <div className="flex space-x-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 capitalize">
-              {organization.status}
-            </span>
-            <span
-              className={`px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
-                organization.verification_status === 'verified'
-                  ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                  : organization.verification_status === 'rejected'
-                    ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                    : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
-              }`}
-            >
-              {organization.verification_status.replace('_', ' ')}
-            </span>
-          </div>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+          {organization.name}
+        </h1>
+        <div className="flex space-x-2 ml-2">
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 capitalize">
+            {organization.status}
+          </span>
+          <span
+            className={`px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
+              organization.verification_status === 'verified'
+                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
+                : organization.verification_status === 'rejected'
+                  ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                  : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
+            }`}
+          >
+            {organization.verification_status.replace('_', ' ')}
+          </span>
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6 lg:gap-8">
+      <div className="flex flex-col md:flex-row gap-6 lg:gap-8 flex-1 min-h-0">
         {/* Sidebar */}
-        <aside className="w-full md:w-56 flex-shrink-0 -mx-4 px-4 md:mx-0 md:px-0">
+        <aside className="w-full md:w-52 flex-shrink-0 -mx-4 px-4 md:mx-0 md:px-0 self-start overflow-y-auto no-scrollbar h-full pt-4">
           <nav className="flex md:flex-col space-x-2 md:space-x-0 md:space-y-1 overflow-x-auto no-scrollbar pb-2 md:pb-0">
             {navigation.map((item) => {
               const Icon = item.icon;
@@ -148,7 +140,7 @@ export const OrganizationLayout: React.FC = () => {
                   to={item.disabled ? '#' : item.to}
                   end={item.end}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors whitespace-nowrap ${
+                    `flex items-center gap-3 px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
                       item.disabled
                         ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
                         : isActive
@@ -160,7 +152,7 @@ export const OrganizationLayout: React.FC = () => {
                     if (item.disabled) e.preventDefault();
                   }}
                 >
-                  <Icon size={18} />
+                  <Icon size={16} />
                   {item.name}
                   {item.disabled && (
                     <span className="ml-auto inline-block px-2 py-0.5 text-[10px] uppercase font-bold bg-gray-100 dark:bg-gray-800 text-gray-500 rounded-full">
@@ -174,7 +166,7 @@ export const OrganizationLayout: React.FC = () => {
         </aside>
 
         {/* Content Area */}
-        <main className="flex-1 min-w-0">
+        <main className="flex-1 min-w-0 overflow-y-auto no-scrollbar h-full pb-10 pt-4">
           <Outlet />
         </main>
       </div>

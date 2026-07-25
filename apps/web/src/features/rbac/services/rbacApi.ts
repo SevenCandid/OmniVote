@@ -200,8 +200,8 @@ export const rbacApi = {
     );
   },
   getEffectivePermissions: async (
-    organizationId: string,
-    membershipId: string
+    _organizationId: string,
+    _membershipId: string
   ): Promise<{ roles: Role[]; permissions: string[] }> => {
     // The backend doesn't have a direct endpoint for another member's effective permissions.
     // However, we can fetch their roles and then just return the roles (the frontend will handle deduplication if needed).

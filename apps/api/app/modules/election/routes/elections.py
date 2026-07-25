@@ -163,6 +163,35 @@ async def archive_election(
     await db.commit()
     return election
 
+@router.get("/{election_id}/revenue")
+async def get_election_revenue(
+    organization_id: uuid.UUID,
+    election_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db_session),
+    current_user: User = Depends(get_current_user),
+    _: None = Depends(RequirePermission("election.view")) # Should ideally be election.view_revenue
+):
+    from sqlalchemy import select, func
+    from app.modules.election.models.payment import Payment, PaymentStatus
+    
+    # Simple aggregation of successful payments
+    stmt = select(
+        func.sum(Payment.amount).label("total_revenue"),
+        func.count(Payment.id).label("total_transactions")
+    ).where(
+        Payment.election_id == election_id,
+        Payment.status == PaymentStatus.SUCCESS
+    )
+    
+    result = await db.execute(stmt)
+    row = result.first()
+    
+    return {
+        "total_revenue": float(row.total_revenue) if row and row.total_revenue else 0.0,
+        "total_transactions": int(row.total_transactions) if row and row.total_transactions else 0
+    }
+
+
 @router.post("/{election_id}/cancel", response_model=ElectionResponse)
 async def cancel_election(
     organization_id: uuid.UUID,

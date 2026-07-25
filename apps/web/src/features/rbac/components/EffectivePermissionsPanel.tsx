@@ -28,7 +28,7 @@ export function EffectivePermissionsPanel({
     Record<string, boolean>
   >({});
 
-  const { effectivePermissions, groupedPermissions } = useMemo(() => {
+  const { groupedPermissions } = useMemo(() => {
     const allPerms: Record<string, Permission> = {};
     const sources: Record<string, string[]> = {}; // Map permission ID to role names that grant it
 
@@ -57,7 +57,6 @@ export function EffectivePermissionsPanel({
     );
 
     return {
-      effectivePermissions: allPerms,
       groupedPermissions: grouped,
       sources,
     };

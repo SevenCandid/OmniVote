@@ -1,8 +1,6 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-hot-toast';
-import { BaseInput } from '../../../components/ui/BaseInput';
 import { BaseButton } from '../../../components/ui/BaseButton';
 import {
   SupportRequestCreate,

@@ -134,7 +134,7 @@ export function PlatformAnalyticsPage() {
                   {card.title}
                 </h3>
                 <p className="text-2xl font-bold text-[var(--color-neutral-primary-light)] dark:text-[var(--color-neutral-primary-dark)] mt-1">
-                  {card.value.toLocaleString()}
+                  {(card.value ?? 0).toLocaleString()}
                 </p>
                 {card.trendLabel && (
                   <p className="text-xs text-[var(--color-neutral-muted-light)] dark:text-[var(--color-neutral-muted-dark)] mt-1">

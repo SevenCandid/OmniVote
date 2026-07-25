@@ -8,7 +8,7 @@ import {
   platformOrganizationsApi,
   PlatformOrganization,
 } from '../services/platformOrganizationsApi';
-import { Search, Building, ShieldAlert, ArrowRight } from 'lucide-react';
+import { Search, Building, ArrowRight } from 'lucide-react';
 
 export function PlatformOrganizationsPage() {
   const navigate = useNavigate();
@@ -46,11 +46,11 @@ export function PlatformOrganizationsPage() {
       case 'active':
         return <BaseBadge variant="success">Active</BaseBadge>;
       case 'suspended':
-        return <BaseBadge variant="error">Suspended</BaseBadge>;
+        return <BaseBadge variant="danger">Suspended</BaseBadge>;
       case 'archived':
-        return <BaseBadge variant="default">Archived</BaseBadge>;
+        return <BaseBadge variant="secondary">Archived</BaseBadge>;
       default:
-        return <BaseBadge variant="default">{status}</BaseBadge>;
+        return <BaseBadge variant="secondary">{status}</BaseBadge>;
     }
   };
 
@@ -146,7 +146,7 @@ export function PlatformOrganizationsPage() {
                         {org.verification_status === 'verified' ? (
                           <BaseBadge variant="success">Verified</BaseBadge>
                         ) : org.verification_status === 'rejected' ? (
-                          <BaseBadge variant="error">Rejected</BaseBadge>
+                          <BaseBadge variant="danger">Rejected</BaseBadge>
                         ) : (
                           <BaseBadge variant="warning">Unverified</BaseBadge>
                         )}

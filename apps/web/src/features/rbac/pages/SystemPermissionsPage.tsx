@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { usePermissions } from '../hooks/useRbac';
 import { BaseCard } from '../../../components/ui/BaseCard';
 import { Shield } from 'lucide-react';

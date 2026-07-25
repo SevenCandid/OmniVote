@@ -1,12 +1,11 @@
-import React from 'react';
 import { Invitation, InvitationStatus } from '../schemas/invitationSchema';
 import { BaseCard } from '../../../components/ui/BaseCard';
 import { EmptyState } from '../../../components/ui/EmptyState';
 import { BaseBadge } from '../../../components/ui/BaseBadge';
 import { Mail, Copy, CheckCircle } from 'lucide-react';
 import { BaseButton } from '../../../components/ui/BaseButton';
-import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { useState } from 'react';
 import { RevokeInvitationModal } from './RevokeInvitationModal';
 
 interface InvitationListProps {
@@ -26,7 +25,7 @@ export function InvitationList({
   onRevoke,
   isRevoking,
 }: InvitationListProps) {
-  const [revokingId, setRevokingId] = React.useState<string | null>(null);
+  const [revokingId, setRevokingId] = useState<string | null>(null);
 
   const handleConfirmRevoke = () => {
     if (revokingId && onRevoke) {
@@ -124,16 +123,16 @@ function InvitationStatusBadge({ status }: { status: InvitationStatus }) {
     case InvitationStatus.PENDING:
       return <BaseBadge variant="warning">Pending</BaseBadge>;
     case InvitationStatus.EXPIRED:
-      return <BaseBadge variant="error">Expired</BaseBadge>;
+      return <BaseBadge variant="danger">Expired</BaseBadge>;
     case InvitationStatus.DECLINED:
-      return <BaseBadge variant="neutral">Declined</BaseBadge>;
+      return <BaseBadge variant="secondary">Declined</BaseBadge>;
     default:
-      return <BaseBadge variant="neutral">{status}</BaseBadge>;
+      return <BaseBadge variant="secondary">{status}</BaseBadge>;
   }
 }
 
 function CopyLinkButton({ token }: { token: string }) {
-  const [copied, setCopied] = React.useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     const url = `${window.location.origin}/invite/${token}`;

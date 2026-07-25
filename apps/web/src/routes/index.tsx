@@ -49,6 +49,19 @@ import ElectionCreatePage from '../features/elections/pages/ElectionCreatePage';
 import ElectionOverviewPage from '../features/elections/pages/ElectionOverviewPage';
 import ElectionEditPage from '../features/elections/pages/ElectionEditPage';
 import ElectionLayout from '../features/elections/layouts/ElectionLayout';
+import { ElectionSetupLayout } from '../features/elections/layouts/ElectionSetupLayout';
+import { ElectionSetupPositionsPage } from '../features/elections/pages/ElectionSetupPositionsPage';
+import { ElectionSetupCandidatesPage } from '../features/elections/pages/ElectionSetupCandidatesPage';
+import ElectionPositionsPage from '../features/elections/pages/ElectionPositionsPage';
+import ElectionCandidatesPage from '../features/elections/pages/ElectionCandidatesPage';
+import CandidateManagementPage from '../features/elections/pages/CandidateManagementPage';
+import VotingWelcomePage from '../features/elections/pages/VotingWelcomePage';
+import VotingSessionPage from '../features/elections/pages/VotingSessionPage';
+import VotingReviewPage from '../features/elections/pages/VotingReviewPage';
+import VotingSuccessPage from '../features/elections/pages/VotingSuccessPage';
+import PublicCandidatePage from '../features/elections/pages/PublicCandidatePage';
+import ElectionResultsPage from '../features/elections/pages/ElectionResultsPage';
+
 
 // Platform Pages
 import PlatformDashboardPage from '../features/platform/pages/PlatformDashboardPage';
@@ -94,6 +107,17 @@ export const router = createBrowserRouter([
     path: '/invite/:token',
     element: <InvitationDetailsPage />,
   },
+  // Public Candidate Page
+  {
+    path: 'public/:electionId/candidates/:candidateId',
+    element: <PublicLayout />,
+    children: [
+      {
+        index: true,
+        element: <PublicCandidatePage />,
+      }
+    ]
+  },
   // Auth Routes
   {
     path: '/auth',
@@ -110,7 +134,19 @@ export const router = createBrowserRouter([
       { path: 'verify-email', element: <VerifyEmailPage /> },
     ],
   },
-  // Platform Auth Routes
+  // Voting Application Routes (Standalone)
+  {
+    path: '/voting/:organizationId/:electionId',
+    element: <VotingLayout />,
+    errorElement: <ErrorLayout />,
+    children: [
+      { index: true, element: <VotingWelcomePage /> },
+      { path: 'session/:sessionId', element: <VotingSessionPage /> },
+      { path: 'session/:sessionId/review', element: <VotingReviewPage /> },
+      { path: 'session/:sessionId/success', element: <VotingSuccessPage /> },
+    ],
+  },
+  // Application Routes (Protected Dashboard)
   {
     path: '/platform/login',
     element: (
@@ -167,22 +203,35 @@ export const router = createBrowserRouter([
                   { index: true, element: <ElectionListPage /> },
                   { path: 'new', element: <ElectionCreatePage /> },
                   {
+                    path: ':electionId/setup',
+                    element: <ElectionSetupLayout />,
+                    children: [
+                      {
+                        path: 'positions',
+                        element: <ElectionSetupPositionsPage />,
+                      },
+                      {
+                        path: 'candidates',
+                        element: <ElectionSetupCandidatesPage />,
+                      }
+                    ]
+                  },
+                  {
                     path: ':electionId',
                     element: <ElectionLayout />,
                     children: [
                       { index: true, element: <ElectionOverviewPage /> },
-                      { path: 'edit', element: <ElectionEditPage /> },
                       {
                         path: 'positions',
-                        element: (
-                          <PlaceholderPage title="Positions - Coming Soon" />
-                        ),
+                        element: <ElectionPositionsPage />,
                       },
                       {
                         path: 'candidates',
-                        element: (
-                          <PlaceholderPage title="Candidates - Coming Soon" />
-                        ),
+                        element: <ElectionCandidatesPage />,
+                      },
+                      {
+                        path: 'categories/:categoryId/candidates',
+                        element: <CandidateManagementPage />,
                       },
                       {
                         path: 'voters',
@@ -204,9 +253,7 @@ export const router = createBrowserRouter([
                       },
                       {
                         path: 'results',
-                        element: (
-                          <PlaceholderPage title="Results - Coming Soon" />
-                        ),
+                        element: <ElectionResultsPage />,
                       },
                       {
                         path: 'analytics',
@@ -222,9 +269,7 @@ export const router = createBrowserRouter([
                       },
                       {
                         path: 'settings',
-                        element: (
-                          <PlaceholderPage title="Election Settings - Coming Soon" />
-                        ),
+                        element: <ElectionEditPage />,
                       },
                     ],
                   },
@@ -314,8 +359,16 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+], {
+  future: {
+    v7_relativeSplatPath: true,
+    v7_fetcherPersist: true,
+    v7_normalizeFormMethod: true,
+    v7_partialHydration: true,
+    v7_skipActionErrorRevalidation: true,
+  }
+});
 
 export function AppRouter() {
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router} future={{ v7_startTransition: true }} />;
 }

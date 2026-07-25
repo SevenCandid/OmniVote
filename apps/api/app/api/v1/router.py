@@ -18,6 +18,11 @@ from app.modules.rbac.routes import (
     platform as rbac_platform_routes,
 )
 from app.modules.election.routes import elections as election_routes
+from app.modules.election.routes import categories as election_categories_routes
+from app.modules.election.routes import candidates as election_candidates_routes
+from app.modules.election.routes import voting as voting_routes
+from app.modules.election.routes import payments as payments_routes
+from app.modules.election.routes import visitor as visitor_routes
 from app.modules.support.routes import support as support_routes
 
 api_router = APIRouter()
@@ -65,4 +70,12 @@ api_router.include_router(support_routes.router, tags=["Support"])
 
 # Election API
 api_router.include_router(election_routes.router, prefix="/organizations/{organization_id}/elections", tags=["Elections"])
+api_router.include_router(election_categories_routes.router, prefix="/organizations/{organization_id}/elections", tags=["Election Categories"])
+api_router.include_router(election_candidates_routes.router, prefix="/organizations/{organization_id}/elections", tags=["Election Candidates"])
+api_router.include_router(voting_routes.router, prefix="/organizations/{organization_id}/elections/{election_id}", tags=["Election Voting"])
+api_router.include_router(payments_routes.router, tags=["Paid Voting"])
+api_router.include_router(visitor_routes.router, prefix="/public", tags=["Public Voting"])
+
+from app.modules.election.routes import results as election_results_routes
+api_router.include_router(election_results_routes.router, prefix="/organizations/{organization_id}/elections", tags=["Election Results"])
 

@@ -16,7 +16,7 @@ export const UserAuditPage: React.FC = () => {
     setLimit((prev) => prev + 50);
   };
 
-  const hasMore = data ? data.total > data.items.length : false;
+  const hasMore = data ? data.total > ((data as any).items || []).length : false;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -59,7 +59,7 @@ export const UserAuditPage: React.FC = () => {
 
       <div className="bg-white dark:bg-[var(--color-surface-dark)] p-6 rounded-xl border border-gray-200 dark:border-gray-800">
         <BaseAuditTimeline
-          events={data?.items || []}
+          events={((data as any)?.items || []) || []}
           isLoading={isLoading || isFetching}
           onLoadMore={handleLoadMore}
           hasMore={hasMore}

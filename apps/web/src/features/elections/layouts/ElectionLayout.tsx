@@ -25,12 +25,14 @@ export const ElectionLayout: React.FC = () => {
     {
       name: 'Positions',
       to: `/dashboard/organizations/${organizationId}/elections/${electionId}/positions`,
-      disabled: true,
     },
     {
       name: 'Candidates',
       to: `/dashboard/organizations/${organizationId}/elections/${electionId}/candidates`,
-      disabled: true,
+    },
+    {
+      name: 'Settings',
+      to: `/dashboard/organizations/${organizationId}/elections/${electionId}/settings`,
     },
     {
       name: 'Voters',
@@ -62,11 +64,6 @@ export const ElectionLayout: React.FC = () => {
       to: `/dashboard/organizations/${organizationId}/elections/${electionId}/audit`,
       disabled: true,
     },
-    {
-      name: 'Settings',
-      to: `/dashboard/organizations/${organizationId}/elections/${electionId}/settings`,
-      disabled: true,
-    },
   ];
 
   if (isLoading) {
@@ -79,24 +76,22 @@ export const ElectionLayout: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col space-y-4 mb-2">
+      <div className="flex items-center space-x-3 mb-2">
         <button
           onClick={() =>
             navigate(`/dashboard/organizations/${organizationId}/elections`)
           }
-          className="text-gray-500 hover:text-gray-900 dark:hover:text-white flex items-center gap-1 text-sm font-medium transition-colors w-fit"
+          className="p-1 text-gray-500 hover:text-gray-900 dark:hover:text-white rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center justify-center shrink-0"
+          title="Back to Elections"
         >
-          <ArrowLeft size={16} />
-          Back to Elections
+          <ArrowLeft size={18} />
         </button>
-        <div className="flex items-center space-x-3">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            {election.title}
-          </h2>
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300 capitalize">
-            {election.status.replace('_', ' ')}
-          </span>
-        </div>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+          {election.title}
+        </h2>
+        <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300 capitalize ml-2">
+          {election.status.replace('_', ' ')}
+        </span>
       </div>
 
       <div className="border-b border-gray-200 dark:border-gray-700">

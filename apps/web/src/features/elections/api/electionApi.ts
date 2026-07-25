@@ -202,4 +202,16 @@ export const electionApi = {
       }
     );
   },
+
+  getRevenue: async (
+    organizationId: string,
+    electionId: string
+  ): Promise<{ total_revenue: number, total_transactions: number }> => {
+    return fetchWithConfig(
+      `/organizations/${organizationId}/elections/${electionId}/revenue`,
+      {
+        method: 'GET',
+      }
+    );
+  },
 };

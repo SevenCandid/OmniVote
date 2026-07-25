@@ -1,4 +1,3 @@
-import React from 'react';
 import { BaseDialog } from './BaseDialog';
 import { BaseButton } from './BaseButton';
 

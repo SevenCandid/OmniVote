@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { BaseCard } from './BaseCard';
-import { BaseBadge } from './BaseBadge';
 
 export interface AuditEvent {
   id: string;

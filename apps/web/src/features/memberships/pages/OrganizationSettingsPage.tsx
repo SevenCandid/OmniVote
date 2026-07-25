@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserOrganizations } from '../hooks/useMemberships';
 import { MembershipStatus } from '../schemas/membershipSchema';
@@ -14,8 +13,7 @@ export default function OrganizationSettingsPage() {
   const activeMemberships = memberships?.filter(
     (m) =>
       (m.status === MembershipStatus.ACCEPTED ||
-        m.status === MembershipStatus.SUSPENDED) &&
-      !m.organization?.is_deleted
+        m.status === MembershipStatus.SUSPENDED)
   );
 
   if (isLoading) {

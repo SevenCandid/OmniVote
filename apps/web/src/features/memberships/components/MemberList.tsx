@@ -1,4 +1,3 @@
-import React from 'react';
 import { Membership, MembershipStatus } from '../schemas/membershipSchema';
 import { BaseCard } from '../../../components/ui/BaseCard';
 import { EmptyState } from '../../../components/ui/EmptyState';
@@ -132,10 +131,10 @@ function MembershipStatusBadge({ status }: { status: MembershipStatus }) {
     case MembershipStatus.PENDING:
       return <BaseBadge variant="warning">Pending</BaseBadge>;
     case MembershipStatus.SUSPENDED:
-      return <BaseBadge variant="error">Suspended</BaseBadge>;
+      return <BaseBadge variant="danger">Suspended</BaseBadge>;
     case MembershipStatus.REMOVED:
-      return <BaseBadge variant="neutral">Removed</BaseBadge>;
+      return <BaseBadge variant="secondary">Removed</BaseBadge>;
     default:
-      return <BaseBadge variant="neutral">{status}</BaseBadge>;
+      return <BaseBadge variant="secondary">{status}</BaseBadge>;
   }
 }

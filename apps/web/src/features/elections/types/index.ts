@@ -82,3 +82,6 @@ export interface PaginatedElectionResponse {
   skip: number;
   limit: number;
 }
+
+export * from './category';
+export * from './result';

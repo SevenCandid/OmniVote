@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { BaseButton } from '../../../components/ui/BaseButton';
 import { SupportRequest } from '../schemas/supportSchema';
 import {
   useAcceptSupportRequest,

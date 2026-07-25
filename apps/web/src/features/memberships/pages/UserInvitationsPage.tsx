@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   useUserInvitations,
   useAcceptInvitation,
@@ -158,15 +157,22 @@ export default function UserInvitationsPage() {
                     <div className="text-sm text-zinc-500 mt-1">
                       Status:{' '}
                       <BaseBadge
-                        variant={
-                          invitation.status === InvitationStatus.PENDING
-                            ? 'warning'
-                            : invitation.status === InvitationStatus.ACCEPTED
-                              ? 'success'
-                              : invitation.status === InvitationStatus.DECLINED
-                                ? 'neutral'
-                                : 'error'
-                        }
+                        variant={(() => {
+                          switch (invitation.status) {
+                            case InvitationStatus.PENDING:
+                              return 'warning';
+                            case InvitationStatus.ACCEPTED:
+                              return 'success';
+                            case InvitationStatus.DECLINED:
+                              return 'neutral';
+                            case 'REVOKED' as any:
+                              return 'danger';
+                            case 'EXPIRED' as any:
+                              return 'secondary';
+                            default:
+                              return 'error';
+                          }
+                        })() as any}
                       >
                         {invitation.status}
                       </BaseBadge>

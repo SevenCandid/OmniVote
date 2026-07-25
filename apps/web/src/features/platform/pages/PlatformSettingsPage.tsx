@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BaseCard as Card } from '../../../components/ui/BaseCard';
 import { BaseButton as Button } from '../../../components/ui/BaseButton';
 import { BaseInput as Input } from '../../../components/ui/BaseInput';
@@ -13,9 +13,7 @@ import {
   Shield,
   Settings,
   Mail,
-  Lock,
   AlertTriangle,
-  Database,
 } from 'lucide-react';
 
 const TABS = [

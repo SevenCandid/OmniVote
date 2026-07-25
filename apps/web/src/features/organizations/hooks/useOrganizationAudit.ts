@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { organizationAuditApi } from '../api/organizationAuditApi';
 
 export const useOrganizationAuditLogs = (
@@ -24,6 +24,6 @@ export const useOrganizationAuditLogs = (
         eventType
       ),
     enabled: !!organizationId,
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };

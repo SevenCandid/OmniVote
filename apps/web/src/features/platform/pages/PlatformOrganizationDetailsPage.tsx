@@ -92,9 +92,8 @@ export function PlatformOrganizationDetailsPage() {
     <div className="max-w-7xl mx-auto space-y-6">
       <div className="flex items-center gap-4 mb-4">
         <BaseButton
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate('/platform/organizations')}
+          variant="primary"
+          onClick={() => navigate(`/dashboard/organizations/${id}`)}
         >
           <ArrowLeft size={20} />
         </BaseButton>
@@ -104,7 +103,7 @@ export function PlatformOrganizationDetailsPage() {
             {organization.status === 'active' ? (
               <BaseBadge variant="success">Active</BaseBadge>
             ) : (
-              <BaseBadge variant="error">{organization.status}</BaseBadge>
+              <BaseBadge variant="danger">{organization.status}</BaseBadge>
             )}
             {organization.verification_status === 'verified' && (
               <BaseBadge variant="success">Verified</BaseBadge>

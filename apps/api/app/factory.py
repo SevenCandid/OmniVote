@@ -16,11 +16,15 @@ from app.exceptions.handlers import (
     validation_exception_handler,
 )
 from app.middleware.request_context import RequestContextMiddleware
+from app.core.events.setup import setup_event_dispatcher
 
 
 def create_app() -> FastAPI:
     # Configure structlog logger
     setup_logging()
+    
+    # Setup Event Dispatcher
+    setup_event_dispatcher()
 
     app = FastAPI(
         title=settings.PROJECT_NAME,

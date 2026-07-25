@@ -7,6 +7,9 @@ from app.models.organization import (
     SubscriptionStatus,
 )
 
+# Platform Settings
+from app.models.platform_settings import PlatformSettings
+
 # Identity Platform Models
 from app.identity.models import (
     User,
@@ -53,9 +56,27 @@ from app.models.notification import PlatformNotification, NotificationType
 
 # Election
 from app.modules.election.models.election import Election
+from app.modules.election.models.category import ElectionCategory
+from app.modules.election.models.candidate import ElectionCandidate
+from app.modules.election.models.voting_session import (
+    VotingSession, 
+    VotingSelection, 
+    VotingSessionStatus, 
+    VerificationMethod,
+    VisitorSession
+)
+from app.modules.election.models.ballot import Ballot, BallotSelection
+from app.modules.election.models.payment import (
+    Payment, 
+    PaymentStatus, 
+    VoteWallet, 
+    VoteCreditTransaction, 
+    VoteCreditTransactionType
+)
 
 __all__ = [
     # Organization
+    "PlatformSettings",
     "Organization",
     "OrganizationSettings",
     "OrganizationBranding",
@@ -100,4 +121,18 @@ __all__ = [
     
     # Election
     "Election",
+    "ElectionCategory",
+    "ElectionCandidate",
+    "VotingSession",
+    "VotingSelection",
+    "VotingSessionStatus",
+    "VerificationMethod",
+    "VisitorSession",
+    "Ballot",
+    "BallotSelection",
+    "Payment",
+    "PaymentStatus",
+    "VoteWallet",
+    "VoteCreditTransaction",
+    "VoteCreditTransactionType",
 ]

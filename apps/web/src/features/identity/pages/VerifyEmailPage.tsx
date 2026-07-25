@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams, Link, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { identityApi } from '../services/identityApi';
 import { BaseButton } from '../../../components/ui/BaseButton';
 

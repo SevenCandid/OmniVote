@@ -1,4 +1,5 @@
 import pytest
+import app.models  # Ensure all models are registered
 from app.modules.election.services.election_edit_policy import ElectionEditPolicy
 from app.modules.election.models.election import Election, ElectionStatus
 

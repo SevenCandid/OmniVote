@@ -1,4 +1,3 @@
-import React from 'react';
 import { BaseDialog } from '../../../components/ui/BaseDialog';
 import { BaseButton } from '../../../components/ui/BaseButton';
 

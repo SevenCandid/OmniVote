@@ -1,12 +1,11 @@
-import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import {
   ArrowLeft,
   Save,
-  Globe,
+  
   Lock,
-  Users,
+  
   Clock,
   Settings,
   ShieldCheck,
@@ -26,8 +25,6 @@ export default function ElectionCreatePage() {
   const {
     register,
     handleSubmit,
-    control,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -66,7 +63,7 @@ export default function ElectionCreatePage() {
       {
         onSuccess: (election) => {
           navigate(
-            `/dashboard/organizations/${organizationId}/elections/${election.id}`
+            `/dashboard/organizations/${organizationId}/elections/${election.id}/setup/positions`
           );
         },
       }
@@ -437,11 +434,11 @@ export default function ElectionCreatePage() {
             className="flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--color-primary)] text-white rounded-lg font-medium hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-w-[160px]"
           >
             {createMutation.isPending ? (
-              <span className="animate-pulse">Creating...</span>
+              <span className="animate-pulse">Saving...</span>
             ) : (
               <>
                 <Save size={18} />
-                Create Election
+                Save & Continue
               </>
             )}
           </button>

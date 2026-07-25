@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request, Response, status, BackgroundTasks
+from fastapi import APIRouter, Depends, Request, Response, status, BackgroundTasks, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 import datetime
@@ -79,8 +79,15 @@ async def login(
     ip_address = request.client.host if request.client else None
     user_agent = request.headers.get("user-agent")
     
-    # Map the OAuth2 'username' field to our 'email' field
-    login_data = UserLogin(email=form_data.username, password=form_data.password)
+    from pydantic import ValidationError
+    try:
+        login_data = UserLogin(email=form_data.username, password=form_data.password)
+    except ValidationError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     user = await AuthService.authenticate_user(db, login_data, ip_address, user_agent)
     
     # Create Session

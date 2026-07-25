@@ -53,7 +53,8 @@ def test_arq_worker_initializes():
     assert WorkerSettings.redis_settings is not None
     assert "arq:queue:high" in WorkerSettings.queue_name
     assert WorkerSettings.max_tries == 5
-    assert WorkerSettings.functions == [example_job]
+    from app.workers.jobs.results import update_election_results_task
+    assert WorkerSettings.functions == [example_job, update_election_results_task]
 
 
 def test_health_endpoint_redis_connected(client: TestClient):

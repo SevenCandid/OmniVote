@@ -7,7 +7,7 @@ import {
 } from '../hooks/useOrganizations';
 import { useMyPermissions } from '../../rbac/hooks/useRbac';
 import { BaseLoader } from '../../../components/ui/BaseLoader';
-import { Upload, X, Check, Image as ImageIcon } from 'lucide-react';
+import { X, Check, Image as ImageIcon } from 'lucide-react';
 
 export const OrganizationSettingsBrandingPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();

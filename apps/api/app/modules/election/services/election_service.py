@@ -69,6 +69,7 @@ class ElectionService:
             public_id=public_id,
             status=ElectionStatus.DRAFT,
             created_by=current_user_id,
+            voting_engine_version=1,
             **data.model_dump()
         )
         await self.repository.create(election)

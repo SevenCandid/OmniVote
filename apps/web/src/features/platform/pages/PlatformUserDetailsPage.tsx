@@ -110,7 +110,7 @@ export function PlatformUserDetailsPage() {
       case 'REVOKED':
         return 'danger';
       default:
-        return 'neutral';
+        return 'secondary';
     }
   };
 
@@ -151,7 +151,7 @@ export function PlatformUserDetailsPage() {
             </BaseButton>
           ) : (
             <BaseButton
-              variant="success"
+              variant="primary"
               onClick={() => handleUpdateStatus('ACTIVE')}
               disabled={saving}
             >

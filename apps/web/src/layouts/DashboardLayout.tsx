@@ -47,6 +47,8 @@ export default function DashboardLayout() {
     location.pathname.startsWith(path) &&
     (path !== '/dashboard' || location.pathname === '/dashboard');
 
+  const isOrgLayout = location.pathname.match(/^\/dashboard\/organizations\/[^/]+/) && !location.pathname.includes('/new');
+
   // Sidebar Menu Items
   const menuItems = [
     { title: 'Home', path: '/dashboard', icon: Home },
@@ -337,21 +339,7 @@ export default function DashboardLayout() {
         </header>
 
         {/* Content Area */}
-        <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
-          {/* Breadcrumb / PageHeader Placeholder */}
-          <div className="flex items-center gap-2 text-xs text-[var(--color-neutral-muted-light)] mb-4">
-            <Link
-              to="/dashboard"
-              className="hover:text-primary transition-colors"
-            >
-              Dashboard
-            </Link>
-            <span>/</span>
-            <span className="capitalize">
-              {location.pathname.split('/').pop() || 'Home'}
-            </span>
-          </div>
-
+        <main className={`flex-1 min-w-0 ${isOrgLayout ? 'flex flex-col overflow-hidden bg-[var(--color-canvas-light)] dark:bg-[var(--color-canvas-dark)]' : 'overflow-auto p-4 sm:p-6 lg:p-8'}`}>
           <Outlet />
         </main>
       </div>

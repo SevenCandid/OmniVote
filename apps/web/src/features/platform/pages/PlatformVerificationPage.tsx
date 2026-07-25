@@ -6,10 +6,9 @@ import {
 } from '../services/platformOrganizationsApi';
 import { BaseCard } from '../../../components/ui/BaseCard';
 import { BaseButton } from '../../../components/ui/BaseButton';
-import { BaseBadge } from '../../../components/ui/BaseBadge';
 import { BaseLoader } from '../../../components/ui/BaseLoader';
 import { EmptyState } from '../../../components/ui/EmptyState';
-import { ShieldCheck, Check, X, FileQuestion, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Check, X, FileQuestion } from 'lucide-react';
 
 export function PlatformVerificationPage() {
   const [organizations, setOrganizations] = useState<PlatformOrganization[]>(
@@ -141,9 +140,9 @@ export function PlatformVerificationPage() {
                     <td className="px-6 py-4 text-right actions-cell">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <BaseButton
-                          variant="success"
+                          variant="primary"
                           size="sm"
-                          icon={<Check size={14} />}
+                          leftIcon={<Check size={14} />}
                           disabled={actionLoading === org.id}
                           onClick={() => handleVerifyAction(org.id, 'verified')}
                         >
@@ -152,7 +151,7 @@ export function PlatformVerificationPage() {
                         <BaseButton
                           variant="danger"
                           size="sm"
-                          icon={<X size={14} />}
+                          leftIcon={<X size={14} />}
                           disabled={actionLoading === org.id}
                           onClick={() => handleVerifyAction(org.id, 'rejected')}
                         >
@@ -161,7 +160,7 @@ export function PlatformVerificationPage() {
                         <BaseButton
                           variant="secondary"
                           size="sm"
-                          icon={<FileQuestion size={14} />}
+                          leftIcon={<FileQuestion size={14} />}
                           disabled={actionLoading === org.id}
                           onClick={() =>
                             handleVerifyAction(

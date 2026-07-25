@@ -1,4 +1,3 @@
-import React from 'react';
 import { useOrganizations } from '../hooks/useOrganizations';
 import { useNavigate } from 'react-router-dom';
 

@@ -96,6 +96,8 @@ class ElectionResponse(ElectionBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
     created_by: Optional[uuid.UUID] = None
+    
+    voting_engine_version: int
 
     model_config = {
         "from_attributes": True

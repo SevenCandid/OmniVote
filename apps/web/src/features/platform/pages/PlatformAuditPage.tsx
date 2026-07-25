@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import { BaseCard } from '../../../components/ui/BaseCard';
-import { BaseLoader } from '../../../components/ui/BaseLoader';
-import { EmptyState } from '../../../components/ui/EmptyState';
 import { BaseAuditTimeline } from '../../../components/ui/BaseAuditTimeline';
 import { platformDashboardApi } from '../api/platformDashboardApi';
 import { PlatformAuditLog } from '../schemas/platformDashboardSchema';
@@ -73,9 +71,9 @@ export function PlatformAuditPage() {
           events={logs.map((log) => ({
             id: log.id,
             event_type: log.event_type,
-            user_id: log.user_id,
-            ip_address: log.ip_address,
-            metadata_payload: log.metadata,
+            user_id: log.user_id || undefined,
+            ip_address: log.ip_address || undefined,
+            metadata_payload: log.metadata || undefined,
             created_at: log.timestamp,
           }))}
           isLoading={loading}

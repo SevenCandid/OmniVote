@@ -38,12 +38,11 @@ export default function PlatformLayout() {
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    if (user) {
-      fetchUnreadCount();
-      // Optional: Polling every 60s
-      const interval = setInterval(fetchUnreadCount, 60000);
-      return () => clearInterval(interval);
-    }
+    if (!user) return;
+    fetchUnreadCount();
+    // Optional: Polling every 60s
+    const interval = setInterval(fetchUnreadCount, 60000);
+    return () => clearInterval(interval);
   }, [user]);
 
   const fetchUnreadCount = async () => {

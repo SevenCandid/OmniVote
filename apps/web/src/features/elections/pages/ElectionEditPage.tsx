@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Save, Settings, ShieldCheck, Clock } from 'lucide-react';
@@ -109,7 +109,7 @@ export default function ElectionEditPage() {
   const isStatusDraftOrConfigured = ['draft', 'configured'].includes(
     election.status
   );
-  const isStatusPublished = election.status === 'published';
+  // const isStatusPublished = election.status === 'published';
   const isStatusVotingOpen = election.status === 'voting_open';
 
   const isFullyLocked = ![
@@ -138,7 +138,7 @@ export default function ElectionEditPage() {
 
       {updateMutation.isError && (
         <div className="bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-4 rounded-md border border-red-200 dark:border-red-900 flex gap-2 items-center">
-          <AlertTriangle size={18} />
+          <Settings size={18} />
           <span>
             {(updateMutation.error as any)?.response?.data?.detail ||
               updateMutation.error.message ||

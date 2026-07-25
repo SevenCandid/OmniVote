@@ -41,7 +41,7 @@ export function PlatformUsersPage() {
       case 'REVOKED':
         return 'danger';
       default:
-        return 'neutral';
+        return 'secondary';
     }
   };
 
@@ -64,7 +64,7 @@ export function PlatformUsersPage() {
           <BaseButton
             variant="primary"
             onClick={() => navigate('/platform/invitations')}
-            icon={<Mail size={16} />}
+            leftIcon={<Mail size={16} />}
           >
             Invite User
           </BaseButton>
@@ -121,7 +121,6 @@ export function PlatformUsersPage() {
                             <BaseBadge
                               key={role.id}
                               variant="primary"
-                              size="sm"
                             >
                               {role.name}
                             </BaseBadge>
@@ -136,7 +135,6 @@ export function PlatformUsersPage() {
                     <td className="px-6 py-4">
                       <BaseBadge
                         variant={getStatusColor(user.status)}
-                        size="sm"
                       >
                         {user.status}
                       </BaseBadge>
