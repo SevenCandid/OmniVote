@@ -4,6 +4,33 @@ All notable changes to the VeroSeven Platform and OmniVote application will be d
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v3.2.0] - 2026-07-25
+
+### Added
+- Multi-tenant organization management
+- Election engine
+- Category management
+- Candidate management
+- Voting session wizard
+- Ballot processing
+- Public voting architecture
+- Paid voting architecture
+- Vote wallet
+- Results engine
+- Event-driven architecture
+- Architecture v1.1 documentation
+
+### Changed
+- Unified election configuration model
+- Improved voting workflows
+- Enhanced security architecture
+
+### Security
+- Immutable ballots
+- Visitor session architecture
+- Audit logging
+- Replay protection
+
 ## [v3.1.0] - 2026-07-22
 
 ### Added
