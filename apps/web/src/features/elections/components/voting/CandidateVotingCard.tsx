@@ -32,9 +32,9 @@ export const CandidateVotingCard = ({
         </div>
       )}
 
-      <div className="p-5" onClick={onToggleSelection}>
-        <div className="flex gap-4">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center">
+      <div className="p-3 sm:p-4" onClick={onToggleSelection}>
+        <div className="flex gap-3">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 shrink-0 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center">
             {candidate.photo ? (
               <img 
                 src={candidate.photo} 
@@ -42,7 +42,7 @@ export const CandidateVotingCard = ({
                 className="w-full h-full object-cover"
               />
             ) : (
-              <User size={32} className="text-zinc-400" />
+              <User size={24} className="text-zinc-400" />
             )}
           </div>
           
@@ -58,13 +58,13 @@ export const CandidateVotingCard = ({
         </div>
 
         {candidate.bio && (
-          <p className="mt-4 text-sm text-[var(--color-neutral-secondary-light)] line-clamp-2">
+          <p className="mt-3 text-sm text-[var(--color-neutral-secondary-light)] line-clamp-2">
             {candidate.bio}
           </p>
         )}
       </div>
 
-      <div className="px-5 py-3 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 flex justify-between items-center">
+      <div className="px-3 sm:px-4 py-2.5 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 flex justify-between items-center">
         <button 
           onClick={(e) => {
             e.stopPropagation();

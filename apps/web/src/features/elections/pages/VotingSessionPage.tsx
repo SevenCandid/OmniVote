@@ -99,7 +99,7 @@ export default function VotingSessionPage() {
   const progressPercentage = ((currentCategoryIndex) / categories.length) * 100;
 
   return (
-    <div className="space-y-6 pb-20">
+    <div className="space-y-6 pb-20 max-w-2xl mx-auto">
       {/* Progress Bar */}
       <div className="space-y-2">
         <div className="flex justify-between text-sm font-medium text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)]">
