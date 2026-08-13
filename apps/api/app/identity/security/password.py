@@ -2,11 +2,11 @@ import secrets
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 
-# Argon2 configuration optimized for modern security (OWASP recommendations)
+# Argon2 configuration optimized for low-memory micro VMs (e.g. 256MB on Fly.io)
 ph = PasswordHasher(
     time_cost=2,
-    memory_cost=65536,
-    parallelism=4,
+    memory_cost=19456,  # ~19MB RAM instead of 64MB
+    parallelism=2,      # 2 threads instead of 4 (better for 1 vCPU)
     hash_len=32,
     salt_len=16
 )
