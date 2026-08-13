@@ -92,18 +92,18 @@ export default function DashboardPage() {
             organization{orgCount !== 1 ? 's' : ''}.
           </p>
         </div>
-        <div className="flex gap-3 shrink-0">
+        <div className="flex flex-col sm:flex-row w-full md:w-auto gap-3 shrink-0 mt-2 md:mt-0">
           <BaseButton
             variant="primary"
             size="sm"
-            className="flex items-center gap-1.5 cursor-pointer"
+            className="flex items-center justify-center gap-1.5 cursor-pointer w-full sm:w-auto"
           >
             <Plus size={14} /> Create Event
           </BaseButton>
           <BaseButton
             variant="secondary"
             size="sm"
-            className="flex items-center gap-1.5 cursor-pointer"
+            className="flex items-center justify-center gap-1.5 cursor-pointer w-full sm:w-auto"
           >
             <Upload size={14} /> Import Voters
           </BaseButton>

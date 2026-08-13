@@ -120,12 +120,12 @@ export default function DashboardLayout() {
         {/* Footer Brand */}
         <div className="p-4 border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] sticky bottom-0 z-10 shrink-0 bg-white dark:bg-[#18181B]">
           {isOpen ? (
-            <a href="https://veroseven.com" target="_blank" rel="noopener noreferrer" className="block text-[9px] text-[var(--color-neutral-muted-light)] hover:text-primary transition-colors uppercase tracking-[1.5px]">
+            <a href="https://veroseven.netlify.app" target="_blank" rel="noopener noreferrer" className="block text-[9px] text-[var(--color-neutral-muted-light)] hover:text-primary transition-colors uppercase tracking-[1.5px]">
               Powered by{' '}
               <span className="font-semibold text-primary">VeroSeven</span>
             </a>
           ) : (
-            <a href="https://veroseven.com" target="_blank" rel="noopener noreferrer" className="text-[10px] text-primary hover:text-primary/80 transition-colors font-bold text-center block">
+            <a href="https://veroseven.netlify.app" target="_blank" rel="noopener noreferrer" className="text-[10px] text-primary hover:text-primary/80 transition-colors font-bold text-center block">
               V7
             </a>
           )}
@@ -180,7 +180,7 @@ export default function DashboardLayout() {
               })}
             </nav>
             <div className="p-4 border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] text-center">
-              <a href="https://veroseven.com" target="_blank" rel="noopener noreferrer" className="block text-[9px] text-[var(--color-neutral-muted-light)] hover:text-primary transition-colors uppercase tracking-[1px]">
+              <a href="https://veroseven.netlify.app" target="_blank" rel="noopener noreferrer" className="block text-[9px] text-[var(--color-neutral-muted-light)] hover:text-primary transition-colors uppercase tracking-[1px]">
                 Powered by{' '}
                 <span className="font-semibold text-primary">VeroSeven</span>
               </a>
@@ -192,8 +192,8 @@ export default function DashboardLayout() {
       {/* 3. Main Dashboard Wrapper */}
       <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
         {/* Top Navbar */}
-        <header className="sticky top-0 z-40 w-full h-16 border-b border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-white/80 dark:bg-[#18181B]/80 backdrop-blur-md flex items-center justify-between px-4 sm:px-6">
-          <div className="flex items-center gap-4">
+        <header className="sticky top-0 z-40 w-full h-16 border-b border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-white/80 dark:bg-[#18181B]/80 backdrop-blur-md flex items-center justify-between px-3 sm:px-6">
+          <div className="flex items-center gap-2 sm:gap-4">
             <button
               onClick={() => setShowMobileSidebar(true)}
               className="lg:hidden p-2 rounded-md text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800"
@@ -201,12 +201,20 @@ export default function DashboardLayout() {
             >
               <Menu size={20} />
             </button>
-
-            {/* Tenant Org Selector Removed as requested */}
+            
+            {/* Mobile Brand Logo */}
+            <Link to="/dashboard" className="flex lg:hidden items-center gap-1.5 ml-1">
+              <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-white shrink-0">
+                <Vote size={14} />
+              </div>
+              <span className="font-sans font-bold tracking-tight text-[15px] hidden xs:block">
+                Omni<span className="text-primary">Vote</span>
+              </span>
+            </Link>
           </div>
 
           {/* Search, Notifications & Profile actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             {/* Search Placeholder */}
             <div className="relative hidden md:block">
               <Search
@@ -244,7 +252,7 @@ export default function DashboardLayout() {
             <div className="relative">
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center gap-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 px-3 py-1.5 rounded-full border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] transition-colors select-none"
+                className="flex items-center gap-1.5 sm:gap-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 px-2 sm:px-3 py-1.5 rounded-full border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] transition-colors select-none"
               >
                 <div className="w-6 h-6 rounded-full bg-indigo-100 text-primary font-bold text-xs flex items-center justify-center uppercase">
                   {user?.first_name?.[0]}
@@ -253,7 +261,7 @@ export default function DashboardLayout() {
                 <span className="hidden sm:inline text-xs font-semibold">
                   {user?.first_name} {user?.last_name}
                 </span>
-                <ChevronDown size={12} className="text-zinc-400" />
+                <ChevronDown size={12} className="text-zinc-400 hidden sm:block" />
               </button>
 
               {showUserMenu && (
@@ -332,7 +340,7 @@ export default function DashboardLayout() {
           {/* Global Footer on every page */}
           {!isOrgLayout && (
             <footer className="w-full py-6 mt-auto border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] text-center shrink-0">
-              <a href="https://veroseven.com" target="_blank" rel="noopener noreferrer" className="inline-block text-[10px] text-[var(--color-neutral-muted-light)] hover:text-primary transition-colors uppercase tracking-[1.5px]">
+              <a href="https://veroseven.netlify.app" target="_blank" rel="noopener noreferrer" className="inline-block text-[10px] text-[var(--color-neutral-muted-light)] hover:text-primary transition-colors uppercase tracking-[1.5px]">
                 Powered by <span className="font-semibold text-primary">VeroSeven</span>
               </a>
             </footer>

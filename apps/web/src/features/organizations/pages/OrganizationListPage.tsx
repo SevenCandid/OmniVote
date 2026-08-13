@@ -7,7 +7,7 @@ export default function OrganizationListPage() {
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold">Organizations</h1>
           <p className="text-gray-500 dark:text-gray-400">
@@ -16,7 +16,7 @@ export default function OrganizationListPage() {
         </div>
         <button
           onClick={() => navigate('/dashboard/organizations/new')}
-          className="px-6 py-2 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-700"
+          className="w-full sm:w-auto px-6 py-2 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-700"
         >
           + New Organization
         </button>
