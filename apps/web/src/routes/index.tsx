@@ -24,6 +24,7 @@ import { UserAuditPage } from '../features/identity/pages/UserAuditPage';
 
 // Other Pages
 import LandingPage from '../pages/LandingPage';
+import VoterLandingPage from '../pages/VoterLandingPage';
 import DashboardPage from '../pages/DashboardPage';
 import OrganizationListPage from '../features/organizations/pages/OrganizationListPage';
 import OrganizationDetailsPage from '../features/organizations/pages/OrganizationDetailsPage';
@@ -100,6 +101,7 @@ export const router = createBrowserRouter([
       { path: 'contact', element: <PlaceholderPage title="Contact Us" /> },
       { path: 'terms', element: <PlaceholderPage title="Terms of Service" /> },
       { path: 'privacy', element: <PlaceholderPage title="Privacy Policy" /> },
+      { path: 'vote', element: <VoterLandingPage /> },
     ],
   },
   // Public Invitation Link (Doesn't force auth until user decides to accept)
@@ -344,21 +346,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  // Public Voting UI
-  {
-    path: '/vote',
-    element: <VotingLayout />,
-    children: [
-      {
-        path: ':electionId',
-        element: <PlaceholderPage title="Voter Ballot" />,
-      },
-      {
-        path: ':electionId/receipt',
-        element: <PlaceholderPage title="Vote Receipt" />,
-      },
-    ],
-  },
+  // Platform Admin Routes
 ], {
   future: {
     v7_relativeSplatPath: true,
