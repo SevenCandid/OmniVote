@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col w-full bg-white dark:bg-[#050505] overflow-x-hidden selection:bg-gray-900/10 dark:selection:bg-white/20 selection:text-gray-900 dark:selection:text-white transition-colors duration-500">
+    <div className="flex flex-col w-full bg-transparent overflow-x-hidden selection:bg-gray-900/10 dark:selection:bg-white/20 selection:text-gray-900 dark:selection:text-white transition-colors duration-500">
       {/* 1. Immersive Hero */}
       <HeroSection />
 
@@ -16,7 +16,7 @@ export default function LandingPage() {
       <FeatureCards />
 
       {/* 4. Footer CTA */}
-      <section className="py-32 relative border-t border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-[#050505] overflow-hidden transition-colors duration-500">
+      <section className="py-32 relative border-t border-gray-200 dark:border-white/5 bg-transparent overflow-hidden transition-colors duration-500">
         {/* Subtle ambient glow behind footer */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-[800px] h-[400px] bg-indigo-200/50 dark:bg-indigo-500/20 blur-[150px] rounded-full mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
 

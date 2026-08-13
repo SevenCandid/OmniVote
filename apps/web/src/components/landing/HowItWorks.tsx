@@ -20,7 +20,7 @@ export const HowItWorks = () => {
   ];
 
   return (
-    <section className="relative py-20 md:py-32 bg-gray-50 dark:bg-[#050505] overflow-hidden border-t border-gray-200 dark:border-white/5 transition-colors duration-500">
+    <section className="relative py-20 md:py-32 bg-transparent overflow-hidden border-t border-gray-200 dark:border-white/5 transition-colors duration-500">
       {/* Background ambient glow */}
       <div className="absolute inset-0 w-full h-full pointer-events-none -z-10">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-indigo-100 dark:bg-white/5 blur-[120px] rounded-full mix-blend-multiply dark:mix-blend-screen" />

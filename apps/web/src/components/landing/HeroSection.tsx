@@ -10,7 +10,7 @@ export const HeroSection = () => {
   const scaleGlow = useTransform(scrollY, [0, 1000], [1, 1.5]);
 
   return (
-    <section className="relative h-screen min-h-[800px] flex flex-col items-center justify-center overflow-hidden bg-gray-50 dark:bg-[#050505] transition-colors duration-500">
+    <section className="relative h-screen min-h-[800px] flex flex-col items-center justify-center overflow-hidden bg-transparent transition-colors duration-500">
       {/* Massive Ethereal Gradients */}
       <motion.div 
         style={{ scale: scaleGlow }}
