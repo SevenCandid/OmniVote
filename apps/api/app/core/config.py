@@ -44,15 +44,22 @@ class Settings(BaseSettings):
                     "In-memory SQLite fallbacks are disabled in non-test modes to prevent silent data loss."
                 )
             
-            # asyncpg does not support sslmode=require, it uses ssl=require
-            if "?sslmode=require" in self.DATABASE_URL:
-                self.DATABASE_URL = self.DATABASE_URL.replace("?sslmode=require", "?ssl=require")
-            elif "&sslmode=require" in self.DATABASE_URL:
-                self.DATABASE_URL = self.DATABASE_URL.replace("&sslmode=require", "&ssl=require")
-                
-            # asyncpg does not support channel_binding
-            self.DATABASE_URL = self.DATABASE_URL.replace("&channel_binding=require", "")
-            self.DATABASE_URL = self.DATABASE_URL.replace("?channel_binding=require", "")
+            import urllib.parse
+            
+            parsed = urllib.parse.urlparse(self.DATABASE_URL)
+            query_params = urllib.parse.parse_qsl(parsed.query)
+            new_params = []
+            
+            for k, v in query_params:
+                if k == "sslmode":
+                    new_params.append(("ssl", v))
+                elif k == "channel_binding":
+                    continue
+                else:
+                    new_params.append((k, v))
+                    
+            new_query = urllib.parse.urlencode(new_params)
+            self.DATABASE_URL = urllib.parse.urlunparse(parsed._replace(query=new_query))
 
         if not self.REDIS_URL:
             if self.REDIS_PASSWORD:
