@@ -32,6 +32,10 @@ export default function VotingReviewPage() {
   const { data: categoriesResp, isLoading: loadingCategories } = useCategories(organizationId!, electionId!);
   const { data: session, isLoading: loadingSession } = useVotingSession(organizationId!, electionId!, sessionId);
   const { mutateAsync: submitBallot, isPending: submitting } = useSubmitBallot(organizationId!, electionId!, sessionId!);
+  const { mutateAsync: initiatePayment } = useInitiatePayment(electionId!);
+  
+  const [showPayment, setShowPayment] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
   // Note: We need all candidates across all categories to render the review page properly.
   // In a real implementation we could have a `useAllElectionCandidates` hook, but for now we'll
@@ -48,11 +52,6 @@ export default function VotingReviewPage() {
   if (!election || !session || !categoriesResp) {
     return <div className="p-8 text-center text-red-500">Invalid session data.</div>;
   }
-
-  const { mutateAsync: initiatePayment } = useInitiatePayment(electionId!);
-  
-  const [showPayment, setShowPayment] = useState(false);
-  const [processing, setProcessing] = useState(false);
 
   const categories = categoriesResp;
   const selections = session.selections || [];
