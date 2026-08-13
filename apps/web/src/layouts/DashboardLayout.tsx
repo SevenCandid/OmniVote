@@ -120,14 +120,14 @@ export default function DashboardLayout() {
         {/* Footer Brand */}
         <div className="p-4 border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] sticky bottom-0 z-10 shrink-0 bg-white dark:bg-[#18181B]">
           {isOpen ? (
-            <p className="text-[9px] text-[var(--color-neutral-muted-light)] uppercase tracking-[1.5px]">
+            <a href="https://veroseven.com" target="_blank" rel="noopener noreferrer" className="block text-[9px] text-[var(--color-neutral-muted-light)] hover:text-primary transition-colors uppercase tracking-[1.5px]">
               Powered by{' '}
               <span className="font-semibold text-primary">VeroSeven</span>
-            </p>
+            </a>
           ) : (
-            <span className="text-[10px] text-primary font-bold text-center block">
+            <a href="https://veroseven.com" target="_blank" rel="noopener noreferrer" className="text-[10px] text-primary hover:text-primary/80 transition-colors font-bold text-center block">
               V7
-            </span>
+            </a>
           )}
         </div>
       </aside>
@@ -180,10 +180,10 @@ export default function DashboardLayout() {
               })}
             </nav>
             <div className="p-4 border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] text-center">
-              <p className="text-[9px] text-[var(--color-neutral-muted-light)] uppercase tracking-[1px]">
+              <a href="https://veroseven.com" target="_blank" rel="noopener noreferrer" className="block text-[9px] text-[var(--color-neutral-muted-light)] hover:text-primary transition-colors uppercase tracking-[1px]">
                 Powered by{' '}
                 <span className="font-semibold text-primary">VeroSeven</span>
-              </p>
+              </a>
             </div>
           </aside>
         </div>
@@ -202,12 +202,7 @@ export default function DashboardLayout() {
               <Menu size={20} />
             </button>
 
-            {/* Tenant Org Selector Placeholder */}
-            <div className="flex items-center gap-2 border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] rounded-full px-3 py-1 bg-[var(--color-surface-muted-light)] dark:bg-[var(--color-surface-muted-dark)] text-xs font-semibold cursor-pointer select-none">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>VeroSeven Ltd</span>
-              <ChevronDown size={12} className="text-zinc-400" />
-            </div>
+            {/* Tenant Org Selector Removed as requested */}
           </div>
 
           {/* Search, Notifications & Profile actions */}
@@ -236,24 +231,14 @@ export default function DashboardLayout() {
             </button>
 
             {/* Theme Toggle inside Header */}
-            <div className="flex items-center border border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] rounded-full p-0.5 bg-[var(--color-surface-muted-light)] dark:bg-[var(--color-surface-muted-dark)] scale-90">
-              <button
-                onClick={() => setTheme('light')}
-                title="Light Mode"
-                aria-label="Switch to light mode"
-                className={`p-1 rounded-full ${theme === 'light' ? 'bg-white dark:bg-zinc-800 text-primary shadow-sm' : 'text-zinc-400'}`}
-              >
-                <Sun size={12} />
-              </button>
-              <button
-                onClick={() => setTheme('dark')}
-                title="Dark Mode"
-                aria-label="Switch to dark mode"
-                className={`p-1 rounded-full ${theme === 'dark' ? 'bg-white dark:bg-zinc-800 text-primary shadow-sm' : 'text-zinc-400'}`}
-              >
-                <Moon size={12} />
-              </button>
-            </div>
+            <button
+              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+              title="Toggle Theme"
+              aria-label="Toggle Theme"
+              className="p-2 rounded-full text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            >
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
 
             {/* Profile Dropdown */}
             <div className="relative">
@@ -339,8 +324,19 @@ export default function DashboardLayout() {
         </header>
 
         {/* Content Area */}
-        <main className={`flex-1 min-w-0 ${isOrgLayout ? 'flex flex-col overflow-hidden bg-[var(--color-canvas-light)] dark:bg-[var(--color-canvas-dark)]' : 'overflow-auto p-4 sm:p-6 lg:p-8'}`}>
-          <Outlet />
+        <main className={`flex-1 min-w-0 flex flex-col ${isOrgLayout ? 'overflow-hidden bg-[var(--color-canvas-light)] dark:bg-[var(--color-canvas-dark)]' : 'overflow-auto'}`}>
+          <div className={`flex-1 ${!isOrgLayout ? 'p-4 sm:p-6 lg:p-8' : ''}`}>
+            <Outlet />
+          </div>
+          
+          {/* Global Footer on every page */}
+          {!isOrgLayout && (
+            <footer className="w-full py-6 mt-auto border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] text-center shrink-0">
+              <a href="https://veroseven.com" target="_blank" rel="noopener noreferrer" className="inline-block text-[10px] text-[var(--color-neutral-muted-light)] hover:text-primary transition-colors uppercase tracking-[1.5px]">
+                Powered by <span className="font-semibold text-primary">VeroSeven</span>
+              </a>
+            </footer>
+          )}
         </main>
       </div>
     </div>
