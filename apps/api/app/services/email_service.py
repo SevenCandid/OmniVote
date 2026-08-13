@@ -27,13 +27,9 @@ class EmailService:
             return
 
         conf = get_mail_config()
-        # Ensure mail config is valid before attempting
-        if not conf.USE_CREDENTIALS and conf.MAIL_SERVER not in ["localhost", "omnivote-mail"]:
-            logger.warning(f"Simulating verification to {email_to} with token {token} because no SMTP credentials.")
-            return
              
-        # Verification link assumes frontend runs on VITE_API_BASE_URL parent, e.g. localhost:5173
-        verify_link = f"http://localhost:5173/auth/verify-email?token={token}"
+        # Verification link uses FRONTEND_URL from settings
+        verify_link = f"{settings.FRONTEND_URL}/auth/verify-email?token={token}"
 
         html = f"""
         <p>Hello,</p>
@@ -63,12 +59,9 @@ class EmailService:
             return
 
         conf = get_mail_config()
-        if not conf.USE_CREDENTIALS and conf.MAIL_SERVER not in ["localhost", "omnivote-mail"]:
-            logger.warning(f"Simulating reset to {email_to} with token {token} because no SMTP credentials.")
-            return
              
-        # Reset link
-        reset_link = f"http://localhost:5173/auth/reset-password?token={token}"
+        # Reset link uses FRONTEND_URL from settings
+        reset_link = f"{settings.FRONTEND_URL}/auth/reset-password?token={token}"
 
         html = f"""
         <p>Hello,</p>
