@@ -109,11 +109,11 @@ export default function OrganizationDetailsPage() {
               View and manage your organization's core details.
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 w-full sm:w-auto mt-4 sm:mt-0">
+          <div className="flex flex-row items-center space-x-3 w-full sm:w-auto mt-4 sm:mt-0">
             {!isEditing && canEdit && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium focus:outline-none"
+                className="flex-1 sm:flex-none px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium focus:outline-none"
               >
                 Edit Profile
               </button>
@@ -121,7 +121,7 @@ export default function OrganizationDetailsPage() {
             {canDelete && (
               <button
                 onClick={() => setShowDeleteModal(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/30 rounded-md hover:bg-red-100 dark:hover:bg-red-900/40 text-sm font-medium focus:outline-none"
+                className="flex-1 sm:flex-none px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/30 rounded-md hover:bg-red-100 dark:hover:bg-red-900/40 text-sm font-medium focus:outline-none"
               >
                 Delete Organization
               </button>

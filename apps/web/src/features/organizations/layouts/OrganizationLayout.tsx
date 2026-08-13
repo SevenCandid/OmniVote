@@ -107,15 +107,15 @@ export const OrganizationLayout: React.FC = () => {
         >
           <ArrowLeft size={18} />
         </button>
-        <h1 className="text-base sm:text-xl font-bold text-gray-900 dark:text-white truncate max-w-[150px] sm:max-w-none">
+        <h1 className="text-sm sm:text-xl font-bold text-gray-900 dark:text-white leading-tight">
           {organization.name}
         </h1>
-        <div className="flex space-x-2 ml-2">
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 capitalize">
+        <div className="flex space-x-1.5 sm:space-x-2 ml-2 shrink-0">
+          <span className="px-1.5 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 capitalize whitespace-nowrap">
             {organization.status}
           </span>
           <span
-            className={`px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
+            className={`px-1.5 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-medium capitalize whitespace-nowrap ${
               organization.verification_status === 'verified'
                 ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
                 : organization.verification_status === 'rejected'
