@@ -46,7 +46,7 @@ export const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="text-6xl sm:text-7xl lg:text-9xl font-light tracking-tight text-gray-900 dark:text-white mb-8"
+          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-light tracking-tight text-gray-900 dark:text-white mb-6 sm:mb-8"
         >
           Trust <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-gray-800 dark:from-gray-200 dark:to-gray-500">Secured.</span>
         </motion.h1>
@@ -55,7 +55,7 @@ export const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 font-light max-w-3xl tracking-wide leading-relaxed mb-16"
+          className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-400 font-light max-w-3xl tracking-wide leading-relaxed mb-10 sm:mb-16"
         >
           OmniVote is the institutional-grade voting ledger. <br className="hidden md:block" />
           End-to-end verifiable cryptography meets infinite scale.
@@ -65,17 +65,17 @@ export const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto"
+          className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto px-4 sm:px-0"
         >
-          <Link to="/vote" className="group">
-            <button className="relative w-full sm:w-auto px-10 py-5 bg-gray-900 dark:bg-white text-white dark:text-black font-medium text-lg rounded-full overflow-hidden transition-all hover:scale-105 duration-300 shadow-[0_0_40px_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_rgba(255,255,255,0.1)]">
+          <Link to="/vote" className="group w-full sm:w-auto">
+            <button className="relative w-full px-6 py-4 sm:px-10 sm:py-5 bg-gray-900 dark:bg-white text-white dark:text-black font-medium text-base sm:text-lg rounded-full overflow-hidden transition-all hover:scale-105 duration-300 shadow-[0_0_40px_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_rgba(255,255,255,0.1)]">
               <span className="relative z-10 flex items-center justify-center gap-2">
                 Enter Portal <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
             </button>
           </Link>
-          <Link to="/dashboard" className="group">
-            <button className="relative w-full sm:w-auto px-10 py-5 bg-transparent border border-gray-300 dark:border-white/20 text-gray-900 dark:text-white font-medium text-lg rounded-full overflow-hidden transition-all hover:bg-gray-100 dark:hover:bg-white/5 duration-300">
+          <Link to="/dashboard" className="group w-full sm:w-auto">
+            <button className="relative w-full px-6 py-4 sm:px-10 sm:py-5 bg-transparent border border-gray-300 dark:border-white/20 text-gray-900 dark:text-white font-medium text-base sm:text-lg rounded-full overflow-hidden transition-all hover:bg-gray-100 dark:hover:bg-white/5 duration-300">
               <span className="relative z-10">Admin Console</span>
             </button>
           </Link>

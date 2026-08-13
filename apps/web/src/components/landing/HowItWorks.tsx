@@ -20,7 +20,7 @@ export const HowItWorks = () => {
   ];
 
   return (
-    <section className="relative py-32 bg-gray-50 dark:bg-[#050505] overflow-hidden border-t border-gray-200 dark:border-white/5 transition-colors duration-500">
+    <section className="relative py-20 md:py-32 bg-gray-50 dark:bg-[#050505] overflow-hidden border-t border-gray-200 dark:border-white/5 transition-colors duration-500">
       {/* Background ambient glow */}
       <div className="absolute inset-0 w-full h-full pointer-events-none -z-10">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-indigo-100 dark:bg-white/5 blur-[120px] rounded-full mix-blend-multiply dark:mix-blend-screen" />
@@ -32,7 +32,7 @@ export const HowItWorks = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-24"
+          className="mb-16 md:mb-24"
         >
           <h2 className="text-sm uppercase tracking-[0.3em] text-gray-500 mb-4">Architecture</h2>
           <p className="text-3xl md:text-5xl font-light text-gray-900 dark:text-white leading-tight">
@@ -55,13 +55,13 @@ export const HowItWorks = () => {
                 <div className="hidden md:block absolute top-6 left-16 right-0 h-[1px] bg-gradient-to-r from-gray-300 dark:from-white/20 to-transparent" />
               )}
               
-              <div className="text-6xl font-light text-gray-200 dark:text-white/10 mb-6 font-mono tracking-tighter">
+              <div className="text-5xl md:text-6xl font-light text-gray-200 dark:text-white/10 mb-4 md:mb-6 font-mono tracking-tighter">
                 {step.number}
               </div>
-              <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-4 tracking-wide">
+              <h3 className="text-lg md:text-xl font-medium text-gray-900 dark:text-white mb-2 md:mb-4 tracking-wide">
                 {step.title}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 font-light leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-400 font-light leading-relaxed text-sm md:text-base">
                 {step.description}
               </p>
             </motion.div>
