@@ -1,106 +1,73 @@
 import { motion } from 'framer-motion';
-import { Shield, Zap, Vote, Lock, Globe, Server } from 'lucide-react';
+import { Shield, Server, Lock } from 'lucide-react';
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 15
-    }
-  }
-};
-
-export const FeatureCards: React.FC = () => {
+export const FeatureCards = () => {
   const features = [
     {
-      icon: <Shield className="w-6 h-6" />,
+      icon: <Shield className="w-8 h-8" />,
       title: "End-to-End Verifiable",
-      description: "Cryptographic receipts allow voters to individually audit their ballots and ensure accurate tallying.",
-      color: "from-emerald-400/20 to-emerald-500/5",
-      iconColor: "text-emerald-500 dark:text-emerald-400"
+      description: "Cryptographic receipts allow voters to individually audit their ballots and mathematically prove their vote was tallied.",
     },
     {
-      icon: <Zap className="w-6 h-6" />,
-      title: "High-Throughput Scale",
-      description: "Handle thousands of concurrent transactions for paid public contests and massive SMS voting events.",
-      color: "from-cyan-400/20 to-cyan-500/5",
-      iconColor: "text-cyan-500 dark:text-cyan-400"
-    },
-    {
-      icon: <Vote className="w-6 h-6" />,
-      title: "Multi-Channel Access",
-      description: "Cast ballots securely via Web client, mobile apps, USSD session dial-ins, or SMS message relays.",
-      color: "from-indigo-400/20 to-indigo-500/5",
-      iconColor: "text-indigo-500 dark:text-indigo-400"
-    },
-    {
-      icon: <Lock className="w-6 h-6" />,
-      title: "Zero-Knowledge Proofs",
-      description: "Advanced cryptographic primitives ensure voter anonymity while maintaining verifiable election integrity.",
-      color: "from-purple-400/20 to-purple-500/5",
-      iconColor: "text-purple-500 dark:text-purple-400"
-    },
-    {
-      icon: <Globe className="w-6 h-6" />,
-      title: "Global CDN Edge",
-      description: "Distributed infrastructure guarantees low latency and 99.99% uptime during critical election hours.",
-      color: "from-blue-400/20 to-blue-500/5",
-      iconColor: "text-blue-500 dark:text-blue-400"
-    },
-    {
-      icon: <Server className="w-6 h-6" />,
+      icon: <Server className="w-8 h-8" />,
       title: "Immutable Ledger",
-      description: "All voting transactions are hashed and appended to an append-only ledger for post-election audits.",
-      color: "from-rose-400/20 to-rose-500/5",
-      iconColor: "text-rose-500 dark:text-rose-400"
+      description: "All transactions are hashed into an append-only ledger, ensuring the history of an election cannot be rewritten.",
+    },
+    {
+      icon: <Lock className="w-8 h-8" />,
+      title: "Zero-Knowledge",
+      description: "Advanced cryptographic primitives ensure voter anonymity while maintaining 100% verifiable election integrity.",
     }
   ];
 
   return (
-    <motion.div 
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full"
-    >
-      {features.map((feature, idx) => (
-        <motion.div 
-          key={idx} 
-          variants={itemVariants}
-          whileHover={{ y: -5, scale: 1.02 }}
-          className="group relative rounded-2xl bg-white/50 dark:bg-[#18181B]/60 backdrop-blur-xl border border-gray-200/50 dark:border-white/5 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
-        >
-          {/* Subtle gradient background that glows on hover */}
-          <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-          
-          <div className="relative p-8 flex flex-col h-full z-10">
-            <div className={`w-14 h-14 rounded-xl flex items-center justify-center bg-white dark:bg-black/50 border border-gray-100 dark:border-white/10 shadow-sm mb-6 ${feature.iconColor} group-hover:scale-110 transition-transform duration-300`}>
-              {feature.icon}
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-              {feature.title}
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-              {feature.description}
+    <section className="relative py-32 px-4 max-w-7xl mx-auto w-full z-10 bg-[#050505]">
+      <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
+        
+        {/* Left Side: Massive Typography */}
+        <div className="lg:w-1/3 flex flex-col justify-center sticky top-32 h-fit">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <h2 className="text-4xl md:text-5xl font-light text-white mb-6 leading-tight tracking-tight">
+              Security without <br />
+              <span className="text-gray-500">compromise.</span>
+            </h2>
+            <p className="text-gray-400 text-lg font-light leading-relaxed">
+              OmniVote abandons traditional black-box architecture in favor of a mathematically provable, cryptographic pipeline.
             </p>
-          </div>
-        </motion.div>
-      ))}
-    </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Right Side: Asymmetrical List */}
+        <div className="lg:w-2/3 flex flex-col gap-12 mt-12 lg:mt-0">
+          {features.map((feature, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1, delay: idx * 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col sm:flex-row gap-6 sm:gap-10 group"
+            >
+              <div className="w-16 h-16 shrink-0 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 group-hover:text-white group-hover:border-white/30 transition-all duration-500">
+                {feature.icon}
+              </div>
+              <div className="flex flex-col justify-center border-b border-white/5 pb-12 w-full group-hover:border-white/20 transition-colors duration-500">
+                <h3 className="text-2xl font-medium text-white mb-3 tracking-wide">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-400 font-light leading-relaxed text-lg max-w-lg">
+                  {feature.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 };

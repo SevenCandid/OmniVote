@@ -1,99 +1,97 @@
-import { motion } from 'framer-motion';
+import React from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Sparkles, ArrowRight } from 'lucide-react';
-import { LiveCounter } from './LiveCounter';
-import { BaseButton } from '../ui/BaseButton';
+import { ArrowRight } from 'lucide-react';
 
 export const HeroSection: React.FC = () => {
+  const { scrollY } = useScroll();
+  const yText = useTransform(scrollY, [0, 1000], [0, 300]);
+  const opacityText = useTransform(scrollY, [0, 500], [1, 0]);
+  const scaleGlow = useTransform(scrollY, [0, 1000], [1, 1.5]);
+
   return (
-    <section className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden">
-      {/* Dynamic Background Elements */}
-      <div className="absolute inset-0 w-full h-full -z-10 pointer-events-none">
-        {/* Glow / Mesh Gradients */}
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[100px] opacity-50 dark:opacity-30 mix-blend-screen" />
-        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[120px] opacity-50 dark:opacity-30 mix-blend-screen" />
-        
-        {/* Abstract Floating Shapes (Representing Data Packets / Votes) */}
+    <section className="relative h-screen min-h-[800px] flex flex-col items-center justify-center overflow-hidden bg-[#050505]">
+      {/* Massive Ethereal Gradients */}
+      <motion.div 
+        style={{ scale: scaleGlow }}
+        className="absolute inset-0 w-full h-full -z-10 pointer-events-none"
+      >
         <motion.div 
-          animate={{ y: [0, -30, 0], rotate: [0, 10, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 left-1/6 w-24 h-32 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md rotate-12 hidden md:block"
+          animate={{ 
+            x: ['-20%', '20%', '-20%'], 
+            y: ['-10%', '10%', '-10%'] 
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+          className="absolute top-1/4 left-1/4 w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] bg-slate-800/40 rounded-full blur-[120px] mix-blend-screen"
         />
         <motion.div 
-          animate={{ y: [0, 40, 0], rotate: [0, -15, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute bottom-1/3 right-1/6 w-32 h-24 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md -rotate-6 hidden lg:block"
+          animate={{ 
+            x: ['20%', '-20%', '20%'], 
+            y: ['10%', '-10%', '10%'] 
+          }}
+          transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+          className="absolute bottom-1/4 right-1/4 w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-indigo-900/30 rounded-full blur-[140px] mix-blend-screen"
         />
-        <motion.div 
-          animate={{ y: [0, -50, 0], rotate: [0, 45, 0] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute top-1/3 right-1/4 w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 backdrop-blur-md hidden md:block"
-        />
-      </div>
+      </motion.div>
 
-      <div className="relative z-10 text-center max-w-5xl mx-auto px-4 flex flex-col items-center gap-8 mt-16">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-semibold select-none shadow-[0_0_15px_rgba(16,185,129,0.2)]"
-        >
-          <Sparkles size={16} className="animate-pulse" />
-          <span>The Next Generation of Secure Voting</span>
-        </motion.div>
+      {/* Grid Overlay for texture */}
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:radial-gradient(white,transparent_80%)] opacity-10 pointer-events-none -z-10" />
 
+      {/* Content */}
+      <motion.div 
+        style={{ y: yText, opacity: opacityText }}
+        className="relative z-10 flex flex-col items-center justify-center text-center px-4 max-w-7xl mx-auto w-full mt-24"
+      >
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
-          className="text-5xl sm:text-7xl lg:text-8xl font-bold tracking-tighter text-gray-900 dark:text-white leading-[1.1]"
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          className="text-6xl sm:text-7xl lg:text-9xl font-light tracking-tight text-white mb-8"
         >
-          One System. <br className="hidden sm:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-500 to-indigo-500">
-            Every Vote.
-          </span>
+          Trust <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">Secured.</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
-          className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-medium"
+          transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="text-xl md:text-2xl text-gray-400 font-light max-w-3xl tracking-wide leading-relaxed mb-16"
         >
-          Secure, multi-tenant voting SaaS built for democratic organizational
-          elections and high-throughput public contests. Trust starts with
-          cryptography.
+          OmniVote is the institutional-grade voting ledger. <br className="hidden md:block" />
+          End-to-end verifiable cryptography meets infinite scale.
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
-          className="flex flex-col sm:flex-row gap-4 mt-4 w-full sm:w-auto"
+          transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto"
         >
-          <Link to="/vote" className="w-full sm:w-auto group">
-            <BaseButton size="lg" className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white border-none shadow-lg shadow-indigo-500/25 px-8 text-base h-14 rounded-xl">
-              Enter Voter Portal
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </BaseButton>
+          <Link to="/vote" className="group">
+            <button className="relative w-full sm:w-auto px-10 py-5 bg-white text-black font-medium text-lg rounded-full overflow-hidden transition-all hover:scale-105 duration-300 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                Enter Portal <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </button>
           </Link>
-          <Link to="/dashboard" className="w-full sm:w-auto">
-            <BaseButton variant="secondary" size="lg" className="w-full sm:w-auto px-8 text-base h-14 rounded-xl border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-black/50 backdrop-blur-md hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
-              Go to Admin Console
-            </BaseButton>
+          <Link to="/dashboard" className="group">
+            <button className="relative w-full sm:w-auto px-10 py-5 bg-transparent border border-white/20 text-white font-medium text-lg rounded-full overflow-hidden transition-all hover:bg-white/5 duration-300">
+              <span className="relative z-10">Admin Console</span>
+            </button>
           </Link>
         </motion.div>
-
-        {/* Live Counter Component */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.6, ease: 'easeOut' }}
-          className="mt-16 w-full max-w-md mx-auto"
-        >
-          <LiveCounter endValue={12485902} label="Votes processed securely across all tenants" />
-        </motion.div>
-      </div>
+      </motion.div>
+      
+      {/* Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1.5 }}
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+      >
+        <span className="text-xs uppercase tracking-[0.3em] text-gray-500">Discover</span>
+        <div className="w-[1px] h-12 bg-gradient-to-b from-gray-500 to-transparent" />
+      </motion.div>
     </section>
   );
 };

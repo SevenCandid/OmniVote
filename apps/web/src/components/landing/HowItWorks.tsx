@@ -1,67 +1,73 @@
 import { motion } from 'framer-motion';
-import { UserCheck, KeySquare, CheckCircle2 } from 'lucide-react';
 
-export const HowItWorks: React.FC = () => {
+export const HowItWorks = () => {
   const steps = [
     {
-      icon: <UserCheck className="w-8 h-8" />,
-      title: "1. Verify Identity",
-      description: "Voters authenticate securely via their unique voter ID and optional OTP verification to ensure eligibility.",
-      delay: 0.1
+      number: "01",
+      title: "Authentication",
+      description: "Identity is verified securely without linking the voter to the actual ballot content."
     },
     {
-      icon: <KeySquare className="w-8 h-8" />,
-      title: "2. Cast Encrypted Ballot",
-      description: "The ballot is cryptographically sealed in the browser before being transmitted to our secure ledger.",
-      delay: 0.3
+      number: "02",
+      title: "Encryption",
+      description: "The ballot is cryptographically sealed in the browser before ever touching the network."
     },
     {
-      icon: <CheckCircle2 className="w-8 h-8" />,
-      title: "3. Tally & Audit",
-      description: "Votes are tallied using zero-knowledge proofs, allowing public verification without breaking anonymity.",
-      delay: 0.5
+      number: "03",
+      title: "Consensus",
+      description: "Zero-knowledge proofs validate the ballot's integrity while maintaining absolute anonymity."
     }
   ];
 
   return (
-    <div className="relative max-w-5xl mx-auto px-4 py-16 w-full">
-      <div className="text-center mb-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          How OmniVote Works
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          A seamless, cryptographic pipeline that protects election integrity from end to end.
-        </p>
+    <section className="relative py-32 bg-[#050505] overflow-hidden border-t border-white/5">
+      {/* Background ambient glow */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none -z-10">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-white/5 blur-[120px] rounded-full mix-blend-screen" />
       </div>
 
-      <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12">
-        {/* Connecting Line (Desktop only) */}
-        <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent -translate-y-1/2 z-0" />
+      <div className="max-w-7xl mx-auto px-4 w-full">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-24"
+        >
+          <h2 className="text-sm uppercase tracking-[0.3em] text-gray-500 mb-4">Architecture</h2>
+          <p className="text-3xl md:text-5xl font-light text-white leading-tight">
+            The anatomy of a <br className="hidden md:block"/> mathematically secure vote.
+          </p>
+        </motion.div>
 
-        {steps.map((step, idx) => (
-          <motion.div 
-            key={idx}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: step.delay }}
-            className="relative z-10 flex flex-col items-center text-center"
-          >
-            <div className="w-20 h-20 rounded-2xl bg-white dark:bg-[#18181B] border-2 border-emerald-500/20 dark:border-emerald-500/30 shadow-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-6 relative">
-              {/* Glowing aura */}
-              <div className="absolute inset-0 bg-emerald-500/20 rounded-2xl blur-xl -z-10" />
-              {step.icon}
-            </div>
-            
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-              {step.title}
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed max-w-xs">
-              {step.description}
-            </p>
-          </motion.div>
-        ))}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 lg:gap-16">
+          {steps.map((step, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1, delay: idx * 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col relative"
+            >
+              {/* Connecting line (Desktop) */}
+              {idx !== steps.length - 1 && (
+                <div className="hidden md:block absolute top-6 left-16 right-0 h-[1px] bg-gradient-to-r from-white/20 to-transparent" />
+              )}
+              
+              <div className="text-6xl font-light text-white/10 mb-6 font-mono tracking-tighter">
+                {step.number}
+              </div>
+              <h3 className="text-xl font-medium text-white mb-4 tracking-wide">
+                {step.title}
+              </h3>
+              <p className="text-gray-400 font-light leading-relaxed">
+                {step.description}
+              </p>
+            </motion.div>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
