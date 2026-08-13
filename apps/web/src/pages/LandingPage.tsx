@@ -1,118 +1,59 @@
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { HeroSection } from '../components/landing/HeroSection';
+import { FeatureCards } from '../components/landing/FeatureCards';
+import { HowItWorks } from '../components/landing/HowItWorks';
 import { motion } from 'framer-motion';
-import { Vote, Shield, Zap, Sparkles } from 'lucide-react';
-import { BaseButton } from '../components/ui/BaseButton';
-import { BaseCard } from '../components/ui/BaseCard';
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col gap-16 py-8 sm:py-12 lg:py-16 overflow-hidden">
-      {/* 1. Hero Section */}
-      <section className="relative text-center max-w-4xl mx-auto flex flex-col items-center gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold select-none"
-        >
-          <Sparkles size={12} />
-          <span>Introducing OmniVote v1.0</span>
-        </motion.div>
+    <div className="flex flex-col w-full bg-white dark:bg-[#0A0A0B] overflow-x-hidden selection:bg-emerald-500/30">
+      {/* 1. Hero Section with Live Counter & Abstract Animations */}
+      <HeroSection />
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
-          className="text-4xl sm:text-6xl font-bold tracking-tight bg-gradient-to-r from-primary via-indigo-500 to-indigo-700 bg-clip-text text-transparent font-sans"
-        >
-          One System. Every Vote.
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
-          className="text-base sm:text-xl text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)] max-w-2xl"
-        >
-          Secure, multi-tenant voting SaaS built for democratic organizational
-          elections and high-throughput public contests. Trust starts with
-          cryptography.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex flex-col sm:flex-row gap-4 mt-4 w-full sm:w-auto shrink-0"
-        >
-          <Link to="/vote" className="w-full sm:w-auto">
-            <BaseButton variant="primary" size="lg" className="w-full">
-              Enter Voter Portal
-            </BaseButton>
-          </Link>
-          <Link to="/dashboard" className="w-full sm:w-auto">
-            <BaseButton variant="secondary" size="lg" className="w-full">
-              Go to Admin Console
-            </BaseButton>
-          </Link>
-        </motion.div>
+      {/* 2. Visual Pipeline: How it works */}
+      <section className="py-24 relative border-t border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-[#0F0F11]">
+        <HowItWorks />
       </section>
 
-      {/* 2. Features Grid */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto w-full">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <BaseCard hoverable className="flex flex-col gap-4 h-full">
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
-              <Shield size={24} />
-            </div>
-            <h3 className="text-lg font-bold">End-to-End Verifiable</h3>
-            <p className="text-sm text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)]">
-              Cryptographic receipts allow voters to audit their ballots
-              individually and ensure their vote is tallied correctly.
-            </p>
-          </BaseCard>
-        </motion.div>
+      {/* 3. Features & Trust */}
+      <section className="py-32 relative">
+        <div className="text-center mb-16 px-4">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6"
+          >
+            Built for <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Scale & Trust</span>
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto"
+          >
+            Whether it's a private board election or a massive public television poll, OmniVote delivers unparalleled security and performance.
+          </motion.p>
+        </div>
+        <FeatureCards />
+      </section>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <BaseCard hoverable className="flex flex-col gap-4 h-full">
-            <div className="w-12 h-12 rounded-full bg-teal-500/10 flex items-center justify-center text-teal-600 dark:text-teal-400 shrink-0">
-              <Zap size={24} />
-            </div>
-            <h3 className="text-lg font-bold">High-Throughput Scale</h3>
-            <p className="text-sm text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)]">
-              Designed to handle thousands of concurrent transactions for paid
-              public contests and massive SMS/USSD voting events.
-            </p>
-          </BaseCard>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <BaseCard hoverable className="flex flex-col gap-4 h-full">
-            <div className="w-12 h-12 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
-              <Vote size={24} />
-            </div>
-            <h3 className="text-lg font-bold">Multi-Channel Access</h3>
-            <p className="text-sm text-[var(--color-neutral-secondary-light)] dark:text-[var(--color-neutral-secondary-dark)]">
-              Cast your ballot securely through Web client app, mobile
-              applications, USSD session dial-ins, or SMS message relays.
-            </p>
-          </BaseCard>
-        </motion.div>
+      {/* 4. Footer CTA */}
+      <section className="py-24 relative border-t border-gray-100 dark:border-white/5 bg-gradient-to-b from-white to-gray-50 dark:from-[#0A0A0B] dark:to-[#050505]">
+        <div className="max-w-4xl mx-auto text-center px-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-8">
+            Ready to secure your next election?
+          </h2>
+          <motion.a 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            href="/vote"
+            className="inline-flex items-center justify-center h-16 px-10 rounded-2xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-lg font-bold shadow-2xl shadow-gray-900/20 dark:shadow-white/10 hover:shadow-emerald-500/20 transition-shadow"
+          >
+            Enter Voter Portal
+          </motion.a>
+        </div>
       </section>
     </div>
   );
