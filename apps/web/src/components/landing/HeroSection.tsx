@@ -5,7 +5,9 @@ import { ArrowRight } from 'lucide-react';
 export const HeroSection = () => {
   const { scrollY } = useScroll();
   const yText = useTransform(scrollY, [0, 1000], [0, 300]);
-  const opacityText = useTransform(scrollY, [0, 500], [1, 0]);
+  const opacityTitle = useTransform(scrollY, [0, 200, 350], [1, 1, 0]);
+  const opacitySubtitle = useTransform(scrollY, [0, 300, 450], [1, 1, 0]);
+  const opacityButtons = useTransform(scrollY, [0, 400, 550], [1, 1, 0]);
   const scaleGlow = useTransform(scrollY, [0, 1000], [1, 1.5]);
 
   return (
@@ -38,10 +40,11 @@ export const HeroSection = () => {
 
       {/* Content */}
       <motion.div 
-        style={{ y: yText, opacity: opacityText }}
+        style={{ y: yText }}
         className="relative z-10 flex flex-col items-center justify-center text-center px-4 max-w-7xl mx-auto w-full mt-4"
       >
         <motion.h1
+          style={{ opacity: opacityTitle }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
@@ -51,6 +54,7 @@ export const HeroSection = () => {
         </motion.h1>
 
         <motion.p
+          style={{ opacity: opacitySubtitle }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
@@ -61,6 +65,7 @@ export const HeroSection = () => {
         </motion.p>
 
         <motion.div
+          style={{ opacity: opacityButtons }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}

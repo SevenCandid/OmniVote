@@ -10,8 +10,11 @@ export default function PublicLayout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-canvas-light)] dark:bg-[var(--color-canvas-dark)] text-[var(--color-neutral-primary-light)] dark:text-[var(--color-neutral-primary-dark)]">
+      {/* Global Scroll Fade Mask */}
+      <div className="fixed top-0 left-0 right-0 h-32 bg-gradient-to-b from-[var(--color-canvas-light)] dark:from-[var(--color-canvas-dark)] to-transparent z-40 pointer-events-none" />
+
       {/* Floating Pill Header */}
-      <div className="sticky top-4 z-50 w-full px-4 flex justify-center pointer-events-none transition-all duration-300">
+      <div className="sticky top-4 z-50 w-full px-4 flex flex-col items-center pointer-events-none transition-all duration-300">
         <header className="pointer-events-auto relative w-full max-w-6xl flex items-center justify-between h-16 px-4 sm:px-6 rounded-full border border-gray-200/80 dark:border-white/10 bg-white/70 dark:bg-[#111111]/70 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
           {/* Logo Brand */}
           <Link to="/" className="flex items-center gap-2 group shrink-0">
