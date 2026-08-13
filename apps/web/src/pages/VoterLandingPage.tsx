@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Shield, Mail, Key, Award, CheckCircle, BarChart3 } from 'lucide-react';
+import { Shield, Mail, Key, Award, CheckCircle, BarChart3, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function VoterLandingPage() {
@@ -23,6 +23,11 @@ export default function VoterLandingPage() {
       icon: <BarChart3 className="w-8 h-8" />,
       title: 'Ranked Choice',
       description: 'Rank candidates in order of preference. The system automatically computes instant runoffs to find the true consensus winner.',
+    },
+    {
+      icon: <Smartphone className="w-8 h-8" />,
+      title: 'Public Contests',
+      description: 'Vote via USSD, SMS shortcodes, or public links. Designed for high-volume competitions, pageants, reality shows, and mass public polling.',
     },
   ];
 
@@ -137,7 +142,7 @@ export default function VoterLandingPage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {votingLogics.map((logic, idx) => (
               <motion.div
                 key={idx}
