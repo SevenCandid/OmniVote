@@ -43,6 +43,12 @@ class Settings(BaseSettings):
                     f"DATABASE_URL must be a PostgreSQL connection string for active environment '{self.ENV}'. "
                     "In-memory SQLite fallbacks are disabled in non-test modes to prevent silent data loss."
                 )
+            
+            # asyncpg does not support sslmode=require, it uses ssl=require
+            if "?sslmode=require" in self.DATABASE_URL:
+                self.DATABASE_URL = self.DATABASE_URL.replace("?sslmode=require", "?ssl=require")
+            elif "&sslmode=require" in self.DATABASE_URL:
+                self.DATABASE_URL = self.DATABASE_URL.replace("&sslmode=require", "&ssl=require")
 
         if not self.REDIS_URL:
             if self.REDIS_PASSWORD:
