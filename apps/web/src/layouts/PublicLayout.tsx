@@ -89,96 +89,97 @@ export default function PublicLayout() {
             {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
-          {/* Mobile Menu Panel */}
-          <AnimatePresence>
-            {isMobileMenuOpen && (
-              <motion.div 
-                initial={{ opacity: 0, y: -20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-                className="absolute top-20 left-0 right-0 md:hidden rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white/95 dark:bg-[#111111]/95 backdrop-blur-xl p-4 shadow-2xl overflow-hidden origin-top"
-              >
-                <motion.nav 
-                  initial="closed"
-                  animate="open"
-                  variants={{
-                    open: {
-                      transition: { staggerChildren: 0.05, delayChildren: 0.1 }
-                    },
-                    closed: {}
-                  }}
-                  className="flex flex-col gap-1 text-sm font-medium"
-                >
-                  {[
-                    { name: 'Home', path: '/' },
-                    { name: 'About', path: '/about' },
-                    { name: 'Contact', path: '/contact' },
-                    { name: 'Voter Portal', path: '/vote' }
-                  ].map((item) => (
-                    <motion.div
-                      key={item.name}
-                      variants={{
-                        open: { opacity: 1, y: 0 },
-                        closed: { opacity: 0, y: 10 }
-                      }}
-                    >
-                      <Link
-                        to={item.path}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
-                      >
-                        {item.name}
-                      </Link>
-                    </motion.div>
-                  ))}
-                </motion.nav>
-
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3, duration: 0.2 }}
-                  className="flex flex-col gap-4 border-t border-gray-200 dark:border-white/10 mt-2 pt-4 px-4"
-                >
-                  {/* Theme Selector */}
-                  <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span>Theme</span>
-                    <div className="flex items-center border border-gray-200 dark:border-white/10 rounded-full p-0.5 bg-gray-50 dark:bg-black/20">
-                      <button
-                        onClick={() => setTheme('light')}
-                        className={`p-2 rounded-full transition-all ${theme === 'light' ? 'bg-white dark:bg-zinc-800 text-gray-900 dark:text-white shadow-sm' : 'text-zinc-400'}`}
-                      >
-                        <Sun size={14} />
-                      </button>
-                      <button
-                        onClick={() => setTheme('dark')}
-                        className={`p-2 rounded-full transition-all ${theme === 'dark' ? 'bg-white dark:bg-zinc-800 text-gray-900 dark:text-white shadow-sm' : 'text-zinc-400'}`}
-                      >
-                        <Moon size={14} />
-                      </button>
-                      <button
-                        onClick={() => setTheme('system')}
-                        className={`p-2 rounded-full transition-all ${theme === 'system' ? 'bg-white dark:bg-zinc-800 text-gray-900 dark:text-white shadow-sm' : 'text-zinc-400'}`}
-                      >
-                        <Laptop size={14} />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Action Button */}
-                  <Link
-                    to="/auth/login"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="w-full inline-flex items-center justify-center rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-semibold py-3 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer text-center"
-                  >
-                    Sign In
-                  </Link>
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </header>
       </div>
+
+      {/* Mobile Menu Panel */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="fixed top-24 left-4 right-4 z-50 md:hidden rounded-2xl border border-gray-200/80 dark:border-white/10 bg-white/95 dark:bg-[#111111]/95 backdrop-blur-xl p-4 shadow-2xl overflow-hidden origin-top"
+          >
+            <motion.nav 
+              initial="closed"
+              animate="open"
+              variants={{
+                open: {
+                  transition: { staggerChildren: 0.05, delayChildren: 0.1 }
+                },
+                closed: {}
+              }}
+              className="flex flex-col gap-1 text-sm font-medium"
+            >
+              {[
+                { name: 'Home', path: '/' },
+                { name: 'About', path: '/about' },
+                { name: 'Contact', path: '/contact' },
+                { name: 'Voter Portal', path: '/vote' }
+              ].map((item) => (
+                <motion.div
+                  key={item.name}
+                  variants={{
+                    open: { opacity: 1, y: 0 },
+                    closed: { opacity: 0, y: 10 }
+                  }}
+                >
+                  <Link
+                    to={item.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
+                  >
+                    {item.name}
+                  </Link>
+                </motion.div>
+              ))}
+            </motion.nav>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.2 }}
+              className="flex flex-col gap-4 border-t border-gray-200 dark:border-white/10 mt-2 pt-4 px-4"
+            >
+              {/* Theme Selector */}
+              <div className="flex items-center justify-between text-xs text-gray-500">
+                <span>Theme</span>
+                <div className="flex items-center border border-gray-200 dark:border-white/10 rounded-full p-0.5 bg-gray-50 dark:bg-black/20">
+                  <button
+                    onClick={() => setTheme('light')}
+                    className={`p-2 rounded-full transition-all ${theme === 'light' ? 'bg-white dark:bg-zinc-800 text-gray-900 dark:text-white shadow-sm' : 'text-zinc-400'}`}
+                  >
+                    <Sun size={14} />
+                  </button>
+                  <button
+                    onClick={() => setTheme('dark')}
+                    className={`p-2 rounded-full transition-all ${theme === 'dark' ? 'bg-white dark:bg-zinc-800 text-gray-900 dark:text-white shadow-sm' : 'text-zinc-400'}`}
+                  >
+                    <Moon size={14} />
+                  </button>
+                  <button
+                    onClick={() => setTheme('system')}
+                    className={`p-2 rounded-full transition-all ${theme === 'system' ? 'bg-white dark:bg-zinc-800 text-gray-900 dark:text-white shadow-sm' : 'text-zinc-400'}`}
+                  >
+                    <Laptop size={14} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Button */}
+              <Link
+                to="/auth/login"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full inline-flex items-center justify-center rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-semibold py-3 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer text-center"
+              >
+                Sign In
+              </Link>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Main Body */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
