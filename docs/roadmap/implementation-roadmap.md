@@ -83,7 +83,7 @@ Enterprise Features
 
 * ⚪ Event Management
 * ⚪ Election Configuration
-* ⚪ Ballot Customization
+* 🟢 Ballot Customization
 * ⚪ Voting Engine
 * ⚪ Results Aggregator
 * ⚪ Live Dashboard

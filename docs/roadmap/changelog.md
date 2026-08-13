@@ -5,6 +5,8 @@ All notable changes to the OmniVote platform will be documented in this file. Th
 ---
 
 ## [Unreleased]
+### Added
+- **Election Ballot Preview**: Built the `ElectionBallotPage` in the admin dashboard to provide organizers with a fully functional, read-only preview of the voter's ballot. Includes interactive selection mechanics (respecting category `max_winners`), health checks for empty categories/positions, and a configuration summary (Anonymous Voting & Voter Verification).
 
 ---
 
