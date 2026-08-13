@@ -50,6 +50,7 @@ export interface Election {
   allow_anonymous_voting: boolean;
   automatically_publish_results: boolean;
   require_voter_verification: boolean;
+  public_verification_method?: string;
 
   is_paid?: boolean;
   currency?: string;
