@@ -130,7 +130,7 @@ export const OrganizationLayout: React.FC = () => {
 
       <div className="flex flex-col md:flex-row gap-6 lg:gap-8 flex-1 min-h-0">
         {/* Sidebar */}
-        <aside className="w-full md:w-52 flex-shrink-0 -mx-4 px-4 md:mx-0 md:px-0 self-start overflow-y-auto no-scrollbar h-full pt-4">
+        <aside className="w-full md:w-52 flex-shrink-0 -mx-4 px-4 md:mx-0 md:px-0 self-start overflow-y-auto no-scrollbar h-auto md:h-full pt-4">
           <nav className="flex md:flex-col space-x-2 md:space-x-0 md:space-y-1 overflow-x-auto no-scrollbar pb-2 md:pb-0">
             {navigation.map((item) => {
               const Icon = item.icon;
@@ -166,7 +166,7 @@ export const OrganizationLayout: React.FC = () => {
         </aside>
 
         {/* Content Area */}
-        <main className="flex-1 min-w-0 overflow-y-auto no-scrollbar h-full pb-10 pt-4">
+        <main className="flex-1 min-w-0 overflow-y-auto no-scrollbar h-auto md:h-full pb-10 pt-4">
           <Outlet />
         </main>
       </div>
