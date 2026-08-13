@@ -54,6 +54,7 @@ export interface Election {
   is_paid?: boolean;
   currency?: string;
   cost_per_vote?: number;
+  min_payment?: number;
 
   created_at: string;
   updated_at: string | null;

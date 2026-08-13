@@ -3,7 +3,6 @@ import { CandidateResult } from '../../types';
 
 interface CandidateResultRowProps {
   candidate: CandidateResult;
-  totalVotes: number;
 }
 
 export function CandidateResultRow({ candidate }: CandidateResultRowProps) {
