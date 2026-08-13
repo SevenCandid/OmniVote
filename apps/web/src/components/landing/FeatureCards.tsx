@@ -29,7 +29,7 @@ export const FeatureCards = () => {
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: false, margin: "-100px" }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
             <h2 className="text-4xl md:text-5xl font-light text-gray-900 dark:text-white mb-4 md:mb-6 leading-tight tracking-tight">
@@ -49,7 +49,7 @@ export const FeatureCards = () => {
               key={idx}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
+              viewport={{ once: false, margin: "-100px" }}
               transition={{ duration: 1, delay: idx * 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col sm:flex-row gap-6 sm:gap-10 group"
             >

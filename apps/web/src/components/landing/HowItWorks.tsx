@@ -30,7 +30,7 @@ export const HowItWorks = () => {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: false, margin: "-100px" }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="mb-16 md:mb-24"
         >
@@ -46,7 +46,7 @@ export const HowItWorks = () => {
               key={idx}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
+              viewport={{ once: false, margin: "-100px" }}
               transition={{ duration: 1, delay: idx * 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col relative"
             >
