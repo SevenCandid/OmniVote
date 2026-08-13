@@ -154,17 +154,17 @@ export function OrganizationForm({
       </fieldset>
 
       {!isReadOnly && (
-        <div className="flex justify-end space-x-4">
+        <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4">
           <button
             type="button"
-            className="px-6 py-2 rounded-full border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+            className="w-full sm:w-auto px-6 py-2 rounded-full border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isLoading}
-            className="px-6 py-2 rounded-md bg-[var(--color-primary)] text-white font-medium hover:opacity-90 disabled:opacity-50 transition-opacity focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-primary)]"
+            className="w-full sm:w-auto px-6 py-2 rounded-md bg-[var(--color-primary)] text-white font-medium hover:opacity-90 disabled:opacity-50 transition-opacity focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-primary)]"
           >
             {isLoading ? 'Saving...' : 'Save Organization'}
           </button>
