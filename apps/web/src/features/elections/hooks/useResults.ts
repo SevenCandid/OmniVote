@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { electionResultApi } from '../api/resultApi';
-import { useElection } from './useElections';
 
 export const resultKeys = {
   all: ['election-results'] as const,

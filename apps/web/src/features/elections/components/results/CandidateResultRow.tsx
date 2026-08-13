@@ -1,5 +1,4 @@
-import React from 'react';
-import { Trophy, ArrowRight, ArrowDown, ArrowUp, Minus } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import { CandidateResult } from '../../types';
 
 interface CandidateResultRowProps {
@@ -7,7 +6,7 @@ interface CandidateResultRowProps {
   totalVotes: number;
 }
 
-export function CandidateResultRow({ candidate, totalVotes }: CandidateResultRowProps) {
+export function CandidateResultRow({ candidate }: CandidateResultRowProps) {
   const isWinner = candidate.is_winner;
   const isTied = candidate.is_tied;
 

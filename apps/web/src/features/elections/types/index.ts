@@ -51,6 +51,10 @@ export interface Election {
   automatically_publish_results: boolean;
   require_voter_verification: boolean;
 
+  is_paid?: boolean;
+  currency?: string;
+  cost_per_vote?: number;
+
   created_at: string;
   updated_at: string | null;
   created_by: string | null;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { CategoryResult } from '../../types';
 import { CandidateResultRow } from './CandidateResultRow';
 import { Users, BarChart3 } from 'lucide-react';
@@ -38,7 +37,6 @@ export function CategoryResultCard({ category }: CategoryResultCardProps) {
               <CandidateResultRow 
                 key={candidate.candidate_id} 
                 candidate={candidate} 
-                totalVotes={category.total_votes} 
               />
             ))}
           </div>
