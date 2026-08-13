@@ -58,6 +58,7 @@ import { ElectionSetupCandidatesPage } from '../features/elections/pages/Electio
 import ElectionPositionsPage from '../features/elections/pages/ElectionPositionsPage';
 import ElectionCandidatesPage from '../features/elections/pages/ElectionCandidatesPage';
 import CandidateManagementPage from '../features/elections/pages/CandidateManagementPage';
+import ElectionBallotPage from '../features/elections/pages/ElectionBallotPage';
 import VotingWelcomePage from '../features/elections/pages/VotingWelcomePage';
 import VotingSessionPage from '../features/elections/pages/VotingSessionPage';
 import VotingReviewPage from '../features/elections/pages/VotingReviewPage';
@@ -245,9 +246,7 @@ export const router = createBrowserRouter([
                       },
                       {
                         path: 'ballot',
-                        element: (
-                          <PlaceholderPage title="Ballot - Coming Soon" />
-                        ),
+                        element: <ElectionBallotPage />,
                       },
                       {
                         path: 'voting',
