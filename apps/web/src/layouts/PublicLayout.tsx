@@ -109,7 +109,7 @@ export default function PublicLayout() {
           </button>
 
         </header>
-      </div>
+      </motion.div>
 
       {/* Mobile Menu Panel */}
       <AnimatePresence>
