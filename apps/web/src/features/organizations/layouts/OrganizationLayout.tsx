@@ -107,7 +107,7 @@ export const OrganizationLayout: React.FC = () => {
         >
           <ArrowLeft size={18} />
         </button>
-        <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-base sm:text-xl font-bold text-gray-900 dark:text-white truncate max-w-[150px] sm:max-w-none">
           {organization.name}
         </h1>
         <div className="flex space-x-2 ml-2">
