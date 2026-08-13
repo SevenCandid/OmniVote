@@ -3,12 +3,11 @@ from sqlalchemy import select, func, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 
-from app.database.repository import BaseRepository
 from app.modules.election.models.voter import EligibleVoter, VoterGroup
 
-class VoterRepository(BaseRepository[EligibleVoter]):
+class VoterRepository:
     def __init__(self, session: AsyncSession):
-        super().__init__(EligibleVoter, session)
+        self.session = session
 
     async def get_by_identifier(self, election_id: uuid.UUID, identifier: str) -> EligibleVoter | None:
         stmt = select(EligibleVoter).where(
