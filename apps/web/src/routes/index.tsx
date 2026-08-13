@@ -25,6 +25,8 @@ import { UserAuditPage } from '../features/identity/pages/UserAuditPage';
 // Other Pages
 import LandingPage from '../pages/LandingPage';
 import VoterLandingPage from '../pages/VoterLandingPage';
+import AboutPage from '../pages/AboutPage';
+import ContactPage from '../pages/ContactPage';
 import DashboardPage from '../pages/DashboardPage';
 import OrganizationListPage from '../features/organizations/pages/OrganizationListPage';
 import OrganizationDetailsPage from '../features/organizations/pages/OrganizationDetailsPage';
@@ -88,7 +90,7 @@ export const router = createBrowserRouter([
     errorElement: <ErrorLayout />,
     children: [
       { index: true, element: <LandingPage /> },
-      { path: 'about', element: <PlaceholderPage title="About OmniVote" /> },
+      { path: 'about', element: <AboutPage /> },
       { path: 'pricing', element: <PlaceholderPage title="Pricing Plans" /> },
       {
         path: 'features',
@@ -98,7 +100,7 @@ export const router = createBrowserRouter([
         path: 'security',
         element: <PlaceholderPage title="Security Architecture" />,
       },
-      { path: 'contact', element: <PlaceholderPage title="Contact Us" /> },
+      { path: 'contact', element: <ContactPage /> },
       { path: 'terms', element: <PlaceholderPage title="Terms of Service" /> },
       { path: 'privacy', element: <PlaceholderPage title="Privacy Policy" /> },
       { path: 'vote', element: <VoterLandingPage /> },
