@@ -26,6 +26,7 @@ else:
         "max_overflow": settings.DATABASE_MAX_OVERFLOW,
         "pool_timeout": settings.DATABASE_POOL_TIMEOUT,
         "pool_recycle": settings.DATABASE_POOL_RECYCLE,
+        "pool_pre_ping": True,
         "echo": settings.DATABASE_ECHO,
     }
     # Log startup safely (strip credentials from connection string before logging)
