@@ -72,7 +72,7 @@ export default function PublicLayout() {
             </div>
 
             <Link
-              to="/login"
+              to="/auth/login"
               className="inline-flex items-center justify-center rounded-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-semibold px-6 py-2 hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-sm"
             >
               Sign In
@@ -167,7 +167,7 @@ export default function PublicLayout() {
 
                   {/* Action Button */}
                   <Link
-                    to="/login"
+                    to="/auth/login"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="w-full inline-flex items-center justify-center rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-semibold py-3 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer text-center"
                   >
