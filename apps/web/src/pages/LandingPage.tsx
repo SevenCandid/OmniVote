@@ -1,4 +1,3 @@
-import React from 'react';
 import { HeroSection } from '../components/landing/HeroSection';
 import { FeatureCards } from '../components/landing/FeatureCards';
 import { HowItWorks } from '../components/landing/HowItWorks';
