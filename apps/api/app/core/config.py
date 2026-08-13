@@ -49,6 +49,10 @@ class Settings(BaseSettings):
                 self.DATABASE_URL = self.DATABASE_URL.replace("?sslmode=require", "?ssl=require")
             elif "&sslmode=require" in self.DATABASE_URL:
                 self.DATABASE_URL = self.DATABASE_URL.replace("&sslmode=require", "&ssl=require")
+                
+            # asyncpg does not support channel_binding
+            self.DATABASE_URL = self.DATABASE_URL.replace("&channel_binding=require", "")
+            self.DATABASE_URL = self.DATABASE_URL.replace("?channel_binding=require", "")
 
         if not self.REDIS_URL:
             if self.REDIS_PASSWORD:
