@@ -333,7 +333,7 @@ export default function DashboardLayout() {
 
         {/* Content Area */}
         <main className={`flex-1 min-w-0 flex flex-col ${isOrgLayout ? 'overflow-hidden bg-[var(--color-canvas-light)] dark:bg-[var(--color-canvas-dark)]' : 'overflow-auto'}`}>
-          <div className={`flex-1 ${!isOrgLayout ? 'p-4 sm:p-6 lg:p-8' : ''}`}>
+          <div className={`flex-1 min-h-0 flex flex-col w-full ${!isOrgLayout ? 'p-4 sm:p-6 lg:p-8' : ''}`}>
             <Outlet />
           </div>
           

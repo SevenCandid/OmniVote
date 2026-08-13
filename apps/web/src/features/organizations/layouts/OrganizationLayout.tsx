@@ -98,7 +98,7 @@ export const OrganizationLayout: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto pb-6 relative h-full flex flex-col px-4 sm:px-6 lg:px-8 w-full">
+    <div className="max-w-7xl mx-auto pb-6 relative flex-1 min-h-0 flex flex-col px-4 sm:px-6 lg:px-8 w-full">
       <div className="flex items-center space-x-3 mb-2 shrink-0 bg-[var(--color-canvas-light)] dark:bg-[var(--color-canvas-dark)] py-1.5 border-b border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 z-10">
         <button
           onClick={() => navigate('/dashboard/organizations')}
@@ -166,7 +166,7 @@ export const OrganizationLayout: React.FC = () => {
         </aside>
 
         {/* Content Area */}
-        <main className="flex-1 min-w-0 overflow-y-auto no-scrollbar h-auto md:h-full pb-10 pt-4">
+        <main className="flex-1 min-w-0 overflow-y-auto no-scrollbar pb-10 pt-4">
           <Outlet />
         </main>
       </div>
