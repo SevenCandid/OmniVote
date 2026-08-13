@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useElection } from '../hooks/useElections';
 import { useElectionResults } from '../hooks/useResults';
@@ -8,6 +8,9 @@ import { AlertCircle, Download, ExternalLink, RefreshCw, Activity, Users, FileSp
 import { CategoryResultCard } from '../components/results/CategoryResultCard';
 import { BaseButton } from '../../../components/ui/BaseButton';
 import { ElectionStatus } from '../types';
+import { useRealtime } from '../../../hooks/useRealtime';
+import { LiveBadge } from '../../../components/realtime/LiveBadge';
+import { ConnectionStatus } from '../../../components/realtime/ConnectionStatus';
 
 export default function ElectionResultsPage() {
   const { id: organizationId, electionId } = useParams<{
@@ -32,6 +35,12 @@ export default function ElectionResultsPage() {
     electionId!,
     isLive
   );
+
+  // Subscribe to real-time election results channel
+  useRealtime(electionId ? `election.${electionId}.results` : null, {
+    onEvent: () => refetch(),
+    enabled: isLive,
+  });
 
   if (isElectionLoading || isResultsLoading) return <BaseLoader />;
 
@@ -117,12 +126,8 @@ export default function ElectionResultsPage() {
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
               Election Results
             </h2>
-            {isLive && (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                <span className="w-2 h-2 mr-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                Live Updates
-              </span>
-            )}
+            {isLive && <LiveBadge label="LIVE UPDATES" />}
+            <ConnectionStatus compact />
           </div>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             {election.title}
@@ -135,8 +140,8 @@ export default function ElectionResultsPage() {
             size="sm" 
             onClick={() => refetch()}
             disabled={isRefetching}
-            icon={RefreshCw}
           >
+            <RefreshCw className="w-4 h-4 mr-1.5" />
             {isRefetching ? 'Refreshing...' : 'Refresh'}
           </BaseButton>
           
@@ -145,8 +150,8 @@ export default function ElectionResultsPage() {
             size="sm" 
             onClick={handleExportCsv}
             disabled={isExportingCsv}
-            icon={Download}
           >
+            <Download className="w-4 h-4 mr-1.5" />
             {isExportingCsv ? 'Exporting...' : 'Export CSV'}
           </BaseButton>
 
@@ -155,8 +160,8 @@ export default function ElectionResultsPage() {
             size="sm" 
             onClick={handleExportExcel}
             disabled={isExportingExcel}
-            icon={FileSpreadsheet}
           >
+            <FileSpreadsheet className="w-4 h-4 mr-1.5" />
             {isExportingExcel ? 'Exporting...' : 'Export Excel'}
           </BaseButton>
 
@@ -165,10 +170,11 @@ export default function ElectionResultsPage() {
             size="sm" 
             onClick={handleExportPdf}
             disabled={isExportingPdf}
-            icon={FileText}
           >
+            <FileText className="w-4 h-4 mr-1.5" />
             {isExportingPdf ? 'Exporting...' : 'Export PDF'}
           </BaseButton>
+
         </div>
       </div>
 

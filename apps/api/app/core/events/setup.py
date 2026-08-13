@@ -4,9 +4,12 @@ from app.modules.election.handlers.results_handler import ResultsUpdateHandler
 from app.modules.election.handlers.audit_handler import AuditEventHandler
 from app.modules.election.handlers.analytics_handler import AnalyticsHandler
 
+from app.modules.realtime.events.handlers import ballot_submitted_realtime_handler
+
 def setup_event_dispatcher():
     dispatcher = get_event_dispatcher()
     
     dispatcher.register(BallotSubmitted, ResultsUpdateHandler())
     dispatcher.register(BallotSubmitted, AuditEventHandler())
     dispatcher.register(BallotSubmitted, AnalyticsHandler())
+    dispatcher.register(BallotSubmitted, ballot_submitted_realtime_handler)

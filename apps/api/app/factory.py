@@ -56,15 +56,19 @@ def create_app() -> FastAPI:
 
     # Register Redis Connection Pool Hooks
     @app.on_event("startup")
-    def startup_redis():
+    async def startup_redis():
         from app.cache.redis import redis_manager
+        from app.modules.realtime.broadcasters.pubsub import pubsub_manager
 
         redis_manager.init_pool()
+        await pubsub_manager.start_listener()
 
     @app.on_event("shutdown")
     async def shutdown_redis():
         from app.cache.redis import redis_manager
+        from app.modules.realtime.broadcasters.pubsub import pubsub_manager
 
+        await pubsub_manager.close()
         await redis_manager.close_pool()
 
     # Register Router with Version prefix

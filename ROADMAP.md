@@ -17,7 +17,7 @@ This document outlines the high-level phases and features for the OmniVote platf
 ## Phase II — Platform Experience (Sprint 3.3.0)
 *Status: In Progress*
 
-- [ ] Realtime Engine
+- [x] Realtime Engine
 - [ ] Communication Engine
 - [ ] Voter Registry
 - [ ] USSD Engine
