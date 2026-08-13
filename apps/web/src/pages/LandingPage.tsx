@@ -32,10 +32,10 @@ export default function LandingPage() {
           <motion.a 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            href="/vote"
+            href="/dashboard"
             className="inline-flex items-center justify-center px-12 py-5 rounded-full bg-gray-900 dark:bg-white text-white dark:text-[#050505] text-lg font-medium shadow-[0_0_40px_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(0,0,0,0.2)] dark:hover:shadow-[0_0_60px_rgba(255,255,255,0.2)] transition-all"
           >
-            Enter Voter Portal
+            Admin Dashboard
           </motion.a>
         </div>
       </section>

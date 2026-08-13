@@ -66,16 +66,16 @@ export const HeroSection = () => {
           transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto px-4 sm:px-0"
         >
-          <Link to="/vote" className="group w-full sm:w-auto">
+          <Link to="/dashboard" className="group w-full sm:w-auto">
             <button className="relative w-full px-6 py-4 sm:px-10 sm:py-5 bg-gray-900 dark:bg-white text-white dark:text-black font-medium text-base sm:text-lg rounded-full overflow-hidden transition-all hover:scale-105 duration-300 shadow-[0_0_40px_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_rgba(255,255,255,0.1)]">
               <span className="relative z-10 flex items-center justify-center gap-2">
-                Enter Portal <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                Admin Console <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
             </button>
           </Link>
-          <Link to="/dashboard" className="group w-full sm:w-auto">
+          <Link to="/vote" className="group w-full sm:w-auto">
             <button className="relative w-full px-6 py-4 sm:px-10 sm:py-5 bg-transparent border border-gray-300 dark:border-white/20 text-gray-900 dark:text-white font-medium text-base sm:text-lg rounded-full overflow-hidden transition-all hover:bg-gray-100 dark:hover:bg-white/5 duration-300">
-              <span className="relative z-10">Admin Console</span>
+              <span className="relative z-10">Enter Voter Portal</span>
             </button>
           </Link>
         </motion.div>
