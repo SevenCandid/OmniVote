@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect, s
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
-from app.db.session import get_db
+from app.database.session import get_db
 from app.identity.security.jwt import decode_access_token
 from app.modules.election.services.visitor_service import VisitorService
 from app.modules.realtime.connections.manager import connection_manager
