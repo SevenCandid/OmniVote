@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect, s
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
-from app.database.session import get_db
+from app.database.session import get_db_session
 from app.identity.security.jwt import decode_access_token
 from app.modules.election.services.visitor_service import VisitorService
 from app.modules.realtime.connections.manager import connection_manager
@@ -97,7 +97,7 @@ async def websocket_endpoint(
     websocket: WebSocket,
     token: Optional[str] = Query(None),
     visitor_token: Optional[str] = Query(None),
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db_session),
 ):
     """
     Main WebSocket endpoint for OmniVote real-time client connections.
