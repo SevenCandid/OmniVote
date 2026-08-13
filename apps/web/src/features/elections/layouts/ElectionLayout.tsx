@@ -37,7 +37,6 @@ export const ElectionLayout: React.FC = () => {
     {
       name: 'Voters',
       to: `/dashboard/organizations/${organizationId}/elections/${electionId}/voters`,
-      disabled: true,
     },
     {
       name: 'Ballot',

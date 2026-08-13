@@ -65,6 +65,7 @@ from app.modules.election.models.voting_session import (
     VerificationMethod,
     VisitorSession
 )
+from app.modules.election.models.voter import VoterGroup, EligibleVoter
 from app.modules.election.models.ballot import Ballot, BallotSelection
 from app.modules.election.models.payment import (
     Payment, 
@@ -135,4 +136,6 @@ __all__ = [
     "VoteWallet",
     "VoteCreditTransaction",
     "VoteCreditTransactionType",
+    "VoterGroup",
+    "EligibleVoter",
 ]
