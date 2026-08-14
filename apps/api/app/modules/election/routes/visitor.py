@@ -146,7 +146,7 @@ async def get_public_categories(
             "election_id": cat.election_id,
             "name": cat.name,
             "description": cat.description,
-            "max_selections": cat.max_selections,
+            "max_selections": cat.max_winners,
             "display_order": cat.display_order,
             "candidates": candidates_by_category.get(cat.id, [])
         })
