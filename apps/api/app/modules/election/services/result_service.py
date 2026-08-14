@@ -60,13 +60,22 @@ class ResultService:
         if not is_admin:
             if election.result_visibility == ResultVisibility.HIDDEN:
                 is_visible = False
-            elif election.result_visibility == ResultVisibility.AFTER_CLOSE and election.status not in (ElectionStatus.RESULTS_PUBLISHED, ElectionStatus.ARCHIVED):
-                is_visible = False
             elif election.result_visibility == ResultVisibility.ADMIN_ONLY:
                 is_visible = False
-            elif election.status not in (ElectionStatus.VOTING_CLOSED, ElectionStatus.COUNTING, ElectionStatus.RESULTS_PUBLISHED, ElectionStatus.ARCHIVED):
-                is_visible = False # Public can't see live unless explicitly PUBLIC? Actually if it's PUBLIC we let them see it? 
-                # User says public never sees live counts!
+            elif election.result_visibility == ResultVisibility.AFTER_CLOSE:
+                if election.status not in (ElectionStatus.VOTING_CLOSED, ElectionStatus.COUNTING, ElectionStatus.RESULTS_PUBLISHED, ElectionStatus.ARCHIVED):
+                    is_visible = False
+            elif election.result_visibility == ResultVisibility.PUBLIC:
+                # Same as AFTER_CLOSE for public access? Or does public mean always visible?
+                # Usually PUBLIC means visible after close unless specified as LIVE. 
+                # To be safe, treat PUBLIC same as AFTER_CLOSE unless they explicitly want it LIVE.
+                if election.status not in (ElectionStatus.VOTING_CLOSED, ElectionStatus.COUNTING, ElectionStatus.RESULTS_PUBLISHED, ElectionStatus.ARCHIVED):
+                    is_visible = False
+            elif election.result_visibility == ResultVisibility.LIVE:
+                # Always visible
+                is_visible = True
+            else:
+                # Fallback to hidden if unknown
                 is_visible = False
         else:
             # Admin requests
