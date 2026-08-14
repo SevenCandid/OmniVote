@@ -4,7 +4,7 @@ from sqlalchemy import select, func, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.election.models.election import Election
-from app.modules.election.models.voter import ElectionVoter
+from app.modules.election.models.voter import EligibleVoter
 from app.modules.election.models.voting_session import VotingSession, VotingSessionStatus, VisitorSession
 from app.modules.election.models.category import ElectionCategory
 from app.modules.election.models.ballot import Ballot
@@ -21,7 +21,7 @@ class AnalyticsService:
 
     async def get_election_analytics(self, election_id: uuid.UUID) -> ElectionAnalyticsResponse:
         # Get total registered voters
-        stmt_voters = select(func.count(ElectionVoter.id)).where(ElectionVoter.election_id == election_id)
+        stmt_voters = select(func.count(EligibleVoter.id)).where(EligibleVoter.election_id == election_id)
         total_voters = await self.db.scalar(stmt_voters) or 0
         
         # Get total completed ballots
