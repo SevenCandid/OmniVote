@@ -18,20 +18,24 @@ class ElectionEditPolicy:
                 "time_zone", "allow_anonymous_voting", "automatically_publish_results",
                 "require_voter_verification", "registration_opens_at", 
                 "registration_closes_at", "voting_opens_at", 
-                "voting_closes_at", "results_publish_at"
+                "voting_closes_at", "results_publish_at", "result_visibility"
             }
         elif status == ElectionStatus.PUBLISHED:
             return {
                 "description",
                 "voting_closes_at",
-                "results_publish_at"
+                "results_publish_at", "result_visibility"
             }
         elif status in (ElectionStatus.VOTING_OPEN, ElectionStatus.VOTING_PAUSED):
             return {
                 "description",
-                "voting_closes_at"
+                "voting_closes_at", "result_visibility"
             }
-        # For VOTING_CLOSED, RESULTS_PUBLISHED, ARCHIVED, CANCELLED
+        elif status in (ElectionStatus.VOTING_CLOSED, ElectionStatus.RESULTS_PUBLISHED):
+            return {
+                "result_visibility"
+            }
+        # For ARCHIVED, CANCELLED
         return set()
 
     @classmethod
