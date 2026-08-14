@@ -53,7 +53,6 @@ export const ElectionLayout: React.FC = () => {
     {
       name: 'Analytics',
       to: `/dashboard/organizations/${organizationId}/elections/${electionId}/analytics`,
-      disabled: true,
     },
     {
       name: 'Audit',

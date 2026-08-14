@@ -7,6 +7,7 @@ All notable changes to the OmniVote platform will be documented in this file. Th
 ## [v3.3.0] - 2026-08-14
 
 ### Added
+- **Election Analytics**: New full-stack Analytics dashboard providing real-time metrics on voter turnout, total visitors, active voting sessions, and category-level vote distributions using Recharts.
 - **Live Election Indicator**: Animated, radar-pulsing "Election in Progress" state for Admin Dashboard and Public Results page while a vote is active. No more errors or stale data shown to users.
 - **Admin Live Results Toggle**: `allow_admin_live_results` election setting — configurable at creation time only — lets admins choose whether they see live vote counts during an active election.
 - **Graceful Results API**: Results endpoint returns `200 OK` with `is_hidden: true` instead of `403 Forbidden` when results aren't yet visible, preserving CORS and UX integrity.

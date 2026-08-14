@@ -25,6 +25,7 @@ from app.modules.election.routes import voting as voting_routes
 from app.modules.election.routes import payments as payments_routes
 from app.modules.election.routes import visitor as visitor_routes
 from app.modules.election.routes import results as election_results_routes
+from app.modules.election.routes import analytics as election_analytics_routes
 from app.modules.support.routes import support as support_routes
 
 api_router = APIRouter()
@@ -81,6 +82,7 @@ api_router.include_router(visitor_routes.router, prefix="/public", tags=["Public
 
 from app.modules.election.routes import results as election_results_routes
 api_router.include_router(election_results_routes.router, prefix="/organizations/{organization_id}/elections", tags=["Election Results"])
+api_router.include_router(election_analytics_routes.router, prefix="/organizations/{organization_id}/elections", tags=["Election Analytics"])
 
 from app.modules.realtime.routers import websocket as realtime_routes
 api_router.include_router(realtime_routes.router, prefix="/realtime", tags=["Realtime"])

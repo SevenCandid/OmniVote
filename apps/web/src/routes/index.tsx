@@ -68,6 +68,7 @@ import VotingSuccessPage from '../features/elections/pages/VotingSuccessPage';
 import PublicElectionResultsPage from '../features/elections/pages/PublicElectionResultsPage';
 import PublicCandidatePage from '../features/elections/pages/PublicCandidatePage';
 import ElectionResultsPage from '../features/elections/pages/ElectionResultsPage';
+import ElectionAnalyticsPage from '../features/elections/pages/ElectionAnalyticsPage';
 import PublicLinkRedirectPage from '../features/elections/pages/PublicLinkRedirectPage';
 
 
@@ -266,9 +267,7 @@ export const router = createBrowserRouter([
                       },
                       {
                         path: 'analytics',
-                        element: (
-                          <PlaceholderPage title="Analytics - Coming Soon" />
-                        ),
+                        element: <ElectionAnalyticsPage />,
                       },
                       {
                         path: 'audit',

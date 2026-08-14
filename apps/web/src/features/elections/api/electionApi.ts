@@ -6,6 +6,34 @@ import {
 } from '../types';
 import { useSessionStore } from '../../../stores/sessionStore';
 
+export interface TurnoutDataPoint {
+  date: string;
+  votes: number;
+}
+
+export interface EngagementMetrics {
+  total_visitors: number;
+  active_sessions: number;
+  completed_ballots: number;
+  bounce_rate: number;
+}
+
+export interface CategoryTurnout {
+  category_id: string;
+  category_name: string;
+  total_votes: number;
+}
+
+export interface ElectionAnalyticsResponse {
+  election_id: string;
+  total_voters: number;
+  total_votes_cast: number;
+  turnout_percentage: number;
+  turnout_over_time: TurnoutDataPoint[];
+  category_turnout: CategoryTurnout[];
+  engagement: EngagementMetrics;
+}
+
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
 
@@ -209,6 +237,18 @@ export const electionApi = {
   ): Promise<{ total_revenue: number, total_transactions: number }> => {
     return fetchWithConfig(
       `/organizations/${organizationId}/elections/${electionId}/revenue`,
+      {
+        method: 'GET',
+      }
+    );
+  },
+
+  getAnalytics: async (
+    organizationId: string,
+    electionId: string
+  ): Promise<ElectionAnalyticsResponse> => {
+    return fetchWithConfig(
+      `/organizations/${organizationId}/elections/${electionId}/analytics`,
       {
         method: 'GET',
       }
