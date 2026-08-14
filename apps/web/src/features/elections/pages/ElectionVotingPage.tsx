@@ -3,14 +3,16 @@ import { useElection, useElectionLifecycle } from '../hooks/useElections';
 import { BaseCard } from '@/components/ui/BaseCard';
 import { BaseButton } from '@/components/ui/BaseButton';
 import { QRCodeSVG } from 'qrcode.react';
-import { Copy, ExternalLink, Play, Pause, Square, CheckCircle, Clock } from 'lucide-react';
-import { ElectionStatus } from '../types';
+import { Copy, ExternalLink, Play, Pause, Square, CheckCircle, Clock, Eye } from 'lucide-react';
+import { ElectionStatus, ResultVisibility } from '../types';
+import { useUpdateElection } from '../hooks/useElections';
 
 export default function ElectionVotingPage() {
   const { id: organizationId, electionId } = useParams<{ id: string; electionId: string }>();
   const { data: election, isLoading } = useElection(organizationId!, electionId!);
   
   const lifecycle = useElectionLifecycle();
+  const updateElection = useUpdateElection();
 
   if (isLoading || !election) {
     return <div className="p-8 text-center animate-pulse">Loading voting settings...</div>;
@@ -55,6 +57,18 @@ export default function ElectionVotingPage() {
     }
   };
 
+  const handlePublishResults = async () => {
+    try {
+      await updateElection.mutateAsync({
+        organizationId: organizationId!,
+        electionId: electionId!,
+        data: { result_visibility: ResultVisibility.PUBLIC }
+      });
+    } catch (err: any) {
+      alert(`Failed to publish results: ${err.message}`);
+    }
+  };
+
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       <div className="flex items-center justify-between">
@@ -76,39 +90,50 @@ export default function ElectionVotingPage() {
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">{statusDisplay.description}</p>
             
             <div className="flex flex-wrap gap-4">
-              {election.status === ElectionStatus.DRAFT && (
-                <BaseButton onClick={() => handleAction('publish')} disabled={lifecycle.publish.isPending}>
-                  <CheckCircle size={18} className="mr-2" /> Publish Election
-                </BaseButton>
-              )}
-              
-              {election.status === ElectionStatus.PUBLISHED && (
-                <BaseButton onClick={() => handleAction('open')} disabled={lifecycle.openVoting.isPending} className="bg-green-600 hover:bg-green-700">
-                  <Play size={18} className="mr-2" /> Open Voting
-                </BaseButton>
-              )}
+              <BaseButton
+                onClick={() => handleAction('publish')}
+                disabled={election.status !== ElectionStatus.DRAFT || lifecycle.publish.isPending}
+                variant={election.status === ElectionStatus.DRAFT ? 'primary' : 'outline'}
+                className={election.status !== ElectionStatus.DRAFT ? 'opacity-50' : ''}
+              >
+                <CheckCircle size={18} className="mr-2" /> Publish Election
+              </BaseButton>
 
-              {election.status === ElectionStatus.VOTING_OPEN && (
-                <>
-                  <BaseButton onClick={() => handleAction('pause')} disabled={lifecycle.pauseVoting.isPending} variant="outline" className="text-yellow-600 border-yellow-600 hover:bg-yellow-50">
-                    <Pause size={18} className="mr-2" /> Pause Voting
-                  </BaseButton>
-                  <BaseButton onClick={() => handleAction('close')} disabled={lifecycle.closeVoting.isPending} variant="outline" className="text-red-600 border-red-600 hover:bg-red-50">
-                    <Square size={18} className="mr-2" /> Close Voting
-                  </BaseButton>
-                </>
-              )}
+              <BaseButton
+                onClick={() => handleAction(election.status === ElectionStatus.VOTING_PAUSED ? 'resume' : 'open')}
+                disabled={!(election.status === ElectionStatus.PUBLISHED || election.status === ElectionStatus.VOTING_PAUSED) || lifecycle.openVoting.isPending || lifecycle.resumeVoting.isPending}
+                className={election.status === ElectionStatus.PUBLISHED || election.status === ElectionStatus.VOTING_PAUSED ? 'bg-green-600 hover:bg-green-700' : 'opacity-50'}
+                variant={election.status === ElectionStatus.PUBLISHED || election.status === ElectionStatus.VOTING_PAUSED ? 'primary' : 'outline'}
+              >
+                <Play size={18} className="mr-2" /> {election.status === ElectionStatus.VOTING_PAUSED ? 'Resume Voting' : 'Open Voting'}
+              </BaseButton>
 
-              {election.status === ElectionStatus.VOTING_PAUSED && (
-                <>
-                  <BaseButton onClick={() => handleAction('resume')} disabled={lifecycle.resumeVoting.isPending} className="bg-green-600 hover:bg-green-700">
-                    <Play size={18} className="mr-2" /> Resume Voting
-                  </BaseButton>
-                  <BaseButton onClick={() => handleAction('close')} disabled={lifecycle.closeVoting.isPending} variant="outline" className="text-red-600 border-red-600 hover:bg-red-50">
-                    <Square size={18} className="mr-2" /> Close Voting
-                  </BaseButton>
-                </>
-              )}
+              <BaseButton
+                onClick={() => handleAction('pause')}
+                disabled={election.status !== ElectionStatus.VOTING_OPEN || lifecycle.pauseVoting.isPending}
+                variant="outline"
+                className={election.status === ElectionStatus.VOTING_OPEN ? 'text-yellow-600 border-yellow-600 hover:bg-yellow-50' : 'opacity-50'}
+              >
+                <Pause size={18} className="mr-2" /> Pause Voting
+              </BaseButton>
+
+              <BaseButton
+                onClick={() => handleAction('close')}
+                disabled={!(election.status === ElectionStatus.VOTING_OPEN || election.status === ElectionStatus.VOTING_PAUSED) || lifecycle.closeVoting.isPending}
+                variant="outline"
+                className={(election.status === ElectionStatus.VOTING_OPEN || election.status === ElectionStatus.VOTING_PAUSED) ? 'text-red-600 border-red-600 hover:bg-red-50' : 'opacity-50'}
+              >
+                <Square size={18} className="mr-2" /> End Voting
+              </BaseButton>
+
+              <BaseButton
+                onClick={handlePublishResults}
+                disabled={election.result_visibility === ResultVisibility.PUBLIC || updateElection.isPending}
+                className={election.result_visibility !== ResultVisibility.PUBLIC ? 'bg-blue-600 hover:bg-blue-700' : 'opacity-50'}
+                variant={election.result_visibility !== ResultVisibility.PUBLIC ? 'primary' : 'outline'}
+              >
+                <Eye size={18} className="mr-2" /> Publish Results
+              </BaseButton>
             </div>
           </BaseCard>
           
