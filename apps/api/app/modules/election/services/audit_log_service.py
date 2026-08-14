@@ -25,19 +25,6 @@ class AuditLogService:
         # This handles both Postgres JSONB and SQLite JSON/String.
         search_term = f"%{str(election_id)}%"
         
-        stmt = (
-            select(SecurityEvent)
-            .where(
-                # Cast the JSON column to string to use LIKE
-                SecurityEvent.metadata_payload.cast(select().column('text').type).like(search_term) 
-                if self.db.bind and self.db.bind.dialect.name != 'postgresql' 
-                else SecurityEvent.metadata_payload.cast(select().column('text').type).like(search_term) # We'll just use CAST to string for simplicity
-            )
-            .order_by(desc(SecurityEvent.created_at))
-            .limit(limit)
-        )
-        
-        # A simpler approach that works across dialects:
         # Cast the JSON column to a string/varchar explicitly.
         from sqlalchemy import String, cast
         stmt = (
