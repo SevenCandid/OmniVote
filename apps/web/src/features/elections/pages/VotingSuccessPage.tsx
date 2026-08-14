@@ -6,7 +6,7 @@ import { CheckCircle2, Download, Home, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function VotingSuccessPage() {
-  const { organizationId, electionId } = useParams<{ organizationId: string; electionId: string }>();
+  const { electionId } = useParams<{ electionId: string }>();
   const location = useLocation();
   const navigate = useNavigate();
   const { data: election } = useQuery({

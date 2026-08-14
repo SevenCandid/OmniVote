@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { publicApi } from '../api/publicApi';
-import { useCategories } from '../hooks/useElections';
 import { useVotingSession, useSubmitBallot } from '../hooks/useVoting';
 import { useInitiatePayment } from '../hooks/usePayments';
 import { BaseButton } from '@/components/ui/BaseButton';

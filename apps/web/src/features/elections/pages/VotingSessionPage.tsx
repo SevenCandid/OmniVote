@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { publicApi } from '../api/publicApi';
-import { useCategories } from '../hooks/useElections';
 import { useVotingSession, useSaveDraft } from '../hooks/useVoting';
 import { useCandidates } from '../hooks/useCandidates';
 import { BaseButton } from '@/components/ui/BaseButton';
