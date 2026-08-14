@@ -9,7 +9,8 @@ import {
   ShieldCheck,
   Users,
   Settings,
-  DollarSign
+  DollarSign,
+  BarChart3
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { BaseLoader } from '../../../components/ui/BaseLoader';
@@ -239,6 +240,21 @@ export default function ElectionOverviewPage() {
             >
               Manage Voting
             </BaseButton>
+          </div>
+
+          <div className="bg-white dark:bg-[#18181B] rounded-xl border border-gray-200 dark:border-gray-800 p-6 flex flex-col gap-4 shadow-sm opacity-75">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-lg flex items-center gap-2">
+                <BarChart3 size={18} className="text-gray-500" />
+                Analytics
+              </h3>
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
+                Coming Soon
+              </span>
+            </div>
+            <p className="text-sm text-gray-500">
+              Deep insights into voter turnout, engagement metrics, and geographic distribution will be available here soon.
+            </p>
           </div>
 
           {election.is_paid && (
