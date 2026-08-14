@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useElection } from '../hooks/useElections';
+import { useQuery } from '@tanstack/react-query';
+import { publicApi } from '../api/publicApi';
 import { useStartSession } from '../hooks/useVoting';
 import { BaseButton } from '@/components/ui/BaseButton';
 import { VerificationMethod } from '../types/voting';
@@ -9,7 +10,11 @@ import { useState } from 'react';
 export default function VotingWelcomePage() {
   const { organizationId, electionId } = useParams<{ organizationId: string; electionId: string }>();
   const navigate = useNavigate();
-  const { data: election, isLoading } = useElection(organizationId!, electionId!);
+  const { data: election, isLoading } = useQuery({
+    queryKey: ['public-election', electionId],
+    queryFn: () => publicApi.getElection(electionId!),
+    enabled: !!electionId,
+  });
   const { mutateAsync: startSession, isPending } = useStartSession(organizationId!, electionId!);
   const [error, setError] = useState<string | null>(null);
 

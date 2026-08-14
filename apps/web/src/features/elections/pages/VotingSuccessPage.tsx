@@ -1,14 +1,19 @@
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { publicApi } from '../api/publicApi';
 import { BaseButton } from '@/components/ui/BaseButton';
 import { CheckCircle2, Download, Home, FileText } from 'lucide-react';
 import { format } from 'date-fns';
-import { useElection } from '../hooks/useElections';
 
 export default function VotingSuccessPage() {
   const { organizationId, electionId } = useParams<{ organizationId: string; electionId: string }>();
   const location = useLocation();
   const navigate = useNavigate();
-  const { data: election } = useElection(organizationId!, electionId!);
+  const { data: election } = useQuery({
+    queryKey: ['public-election', electionId],
+    queryFn: () => publicApi.getElection(electionId!),
+    enabled: !!electionId,
+  });
   
   const receiptCode = location.state?.receipt_code || 'UNAVAILABLE';
   const castAt = location.state?.cast_at ? new Date(location.state.cast_at) : new Date();

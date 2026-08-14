@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useElection, useCategories } from '../hooks/useElections';
+import { useQuery } from '@tanstack/react-query';
+import { publicApi } from '../api/publicApi';
+import { useCategories } from '../hooks/useElections';
 import { useVotingSession, useSaveDraft } from '../hooks/useVoting';
 import { useCandidates } from '../hooks/useCandidates';
 import { BaseButton } from '@/components/ui/BaseButton';
@@ -14,8 +16,16 @@ export default function VotingSessionPage() {
   const { organizationId, electionId, sessionId } = useParams<{ organizationId: string; electionId: string; sessionId: string }>();
   const navigate = useNavigate();
 
-  const { data: election, isLoading: loadingElection } = useElection(organizationId!, electionId!);
-  const { data: categoriesResp, isLoading: loadingCategories } = useCategories(organizationId!, electionId!);
+  const { data: election, isLoading: loadingElection } = useQuery({
+    queryKey: ['public-election', electionId],
+    queryFn: () => publicApi.getElection(electionId!),
+    enabled: !!electionId,
+  });
+  const { data: categoriesResp, isLoading: loadingCategories } = useQuery({
+    queryKey: ['public-categories', electionId],
+    queryFn: () => publicApi.getCategories(electionId!),
+    enabled: !!electionId,
+  });
   const { data: session, isLoading: loadingSession } = useVotingSession(organizationId!, electionId!, sessionId);
   const { mutateAsync: saveDraft, isPending: savingDraft } = useSaveDraft(organizationId!, electionId!, sessionId!);
 

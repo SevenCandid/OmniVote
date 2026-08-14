@@ -90,3 +90,43 @@ async def get_public_candidate(
         "photo_url": candidate.photo_url,
         "metadata": candidate.metadata_
     }
+
+@router.get("/elections/{election_id}/categories")
+async def get_public_categories(
+    election_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db_session)
+):
+    repo = CategoryRepository(db)
+    categories = await repo.get_by_election_id(election_id)
+    
+    # Also fetch candidates for these categories to return a complete ballot view
+    candidate_repo = CandidateRepository(db)
+    candidates = await candidate_repo.get_by_election_id(election_id)
+    
+    # Group candidates by category
+    from collections import defaultdict
+    candidates_by_category = defaultdict(list)
+    for c in candidates:
+        candidates_by_category[c.category_id].append({
+            "id": c.id,
+            "category_id": c.category_id,
+            "first_name": c.first_name,
+            "last_name": c.last_name,
+            "full_name": c.full_name,
+            "biography": c.biography,
+            "photo_url": c.photo_url,
+        })
+        
+    result = []
+    for cat in categories:
+        result.append({
+            "id": cat.id,
+            "election_id": cat.election_id,
+            "name": cat.name,
+            "description": cat.description,
+            "max_selections": cat.max_selections,
+            "display_order": cat.display_order,
+            "candidates": candidates_by_category.get(cat.id, [])
+        })
+        
+    return result
