@@ -6,19 +6,16 @@ import { useInitiatePayment } from '../hooks/usePayments';
 import { BaseButton } from '@/components/ui/BaseButton';
 import { CheckCircle2, ChevronLeft, AlertTriangle, CreditCard, User } from 'lucide-react';
 import { VotingSelectionItem } from '../types/voting';
-import { useCandidates } from '../hooks/useCandidates';
 import { useState } from 'react';
 
-const CandidateReviewName = ({ organizationId, electionId, categoryId, candidateId }: { organizationId: string, electionId: string, categoryId: string, candidateId: string }) => {
-  const { data: candidates } = useCandidates(organizationId, electionId, categoryId);
-  const candidate = candidates?.find(c => c.id === candidateId);
+const CandidateReviewName = ({ candidate, candidateId }: { candidate: any, candidateId: string }) => {
   
   if (!candidate) return <span className="font-medium text-sm sm:text-base">Candidate ID: {candidateId.substring(0, 8)}...</span>;
   
   return (
     <div className="flex items-center gap-3">
       <div className="w-8 h-8 rounded-full overflow-hidden bg-zinc-100 flex items-center justify-center border border-zinc-200 shrink-0">
-        {candidate.photo ? <img src={candidate.photo} className="w-full h-full object-cover" /> : <User size={16} className="text-zinc-400" />}
+        {candidate.photo_url ? <img src={candidate.photo_url} className="w-full h-full object-cover" /> : <User size={16} className="text-zinc-400" />}
       </div>
       <span className="font-medium text-sm sm:text-base">{candidate.full_name}</span>
     </div>
@@ -165,17 +162,17 @@ export default function VotingReviewPage() {
                 <p className="text-zinc-500 italic text-sm">No candidate selected (Abstain)</p>
               ) : (
                 <div className="space-y-3">
-                  {categorySelections.map((sel: VotingSelectionItem) => (
+                  {categorySelections.map((sel: VotingSelectionItem) => {
+                    const candidate = category.candidates?.find((c: any) => c.id === sel.candidate_id);
+                    return (
                     <div key={sel.candidate_id} className="flex items-center gap-3">
                       <CheckCircle2 size={18} className="text-emerald-500 shrink-0" />
                       <CandidateReviewName 
-                        organizationId={organizationId!} 
-                        electionId={electionId!} 
-                        categoryId={sel.category_id} 
+                        candidate={candidate} 
                         candidateId={sel.candidate_id} 
                       />
                     </div>
-                  ))}
+                  )})}
                 </div>
               )}
             </div>
