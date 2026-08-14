@@ -34,6 +34,15 @@ export interface ElectionAnalyticsResponse {
   engagement: EngagementMetrics;
 }
 
+export interface ElectionAuditLogEntry {
+  id: string;
+  event_type: string;
+  ip_address: string | null;
+  user_agent: string | null;
+  metadata_payload: any | null;
+  created_at: string;
+}
+
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
 
@@ -249,6 +258,18 @@ export const electionApi = {
   ): Promise<ElectionAnalyticsResponse> => {
     return fetchWithConfig(
       `/organizations/${organizationId}/elections/${electionId}/analytics`,
+      {
+        method: 'GET',
+      }
+    );
+  },
+
+  getAuditLogs: async (
+    organizationId: string,
+    electionId: string
+  ): Promise<ElectionAuditLogEntry[]> => {
+    return fetchWithConfig(
+      `/organizations/${organizationId}/elections/${electionId}/audit`,
       {
         method: 'GET',
       }
