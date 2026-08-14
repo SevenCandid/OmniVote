@@ -100,16 +100,38 @@ export default function ElectionAuditPage() {
                   </div>
                   
                   {log.metadata_payload && Object.keys(log.metadata_payload).length > 0 && (
-                    <div className="mt-2 p-3 bg-gray-50 dark:bg-black/20 rounded-lg text-xs font-mono text-gray-600 dark:text-gray-400 overflow-x-auto border border-gray-100 dark:border-gray-800/60">
-                      <pre>
-                        {JSON.stringify(
-                          Object.fromEntries(
-                            Object.entries(log.metadata_payload).filter(([k]) => k !== 'description')
-                          ),
-                          null,
-                          2
-                        )}
-                      </pre>
+                    <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-800 text-xs">
+                      <ul className="space-y-1.5">
+                        {Object.entries(log.metadata_payload)
+                          .filter(([key]) => key !== 'description')
+                          .map(([key, value]) => {
+                            const formattedKey = key
+                              .replace(/_/g, ' ')
+                              .replace(/\b\w/g, (l) => l.toUpperCase());
+                            let formattedValue = String(value);
+                            if (Array.isArray(value)) {
+                              formattedValue = value.join(', ');
+                            } else if (
+                              typeof value === 'object' &&
+                              value !== null
+                            ) {
+                              formattedValue = JSON.stringify(value);
+                            }
+                            return (
+                              <li
+                                key={key}
+                                className="flex flex-col sm:flex-row sm:gap-2"
+                              >
+                                <span className="font-semibold text-gray-900 dark:text-gray-100 min-w-[120px]">
+                                  {formattedKey}:
+                                </span>
+                                <span className="text-gray-600 dark:text-gray-400 break-all sm:break-normal">
+                                  {formattedValue}
+                                </span>
+                              </li>
+                            );
+                        })}
+                      </ul>
                     </div>
                   )}
                 </div>
