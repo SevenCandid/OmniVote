@@ -16,7 +16,7 @@ export const ElectionLayout: React.FC = () => {
     electionId!
   );
 
-  const navigation = [
+  const navigation: Array<{ name: string; to: string; end?: boolean; disabled?: boolean }> = [
     {
       name: 'Overview',
       to: `/dashboard/organizations/${organizationId}/elections/${electionId}`,
