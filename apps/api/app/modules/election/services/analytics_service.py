@@ -60,7 +60,7 @@ class AnalyticsService:
         # For sqlite compatibility using func.date or string parsing. 
         # Since we use Postgres in prod, we can cast to date. For simplicity, we fetch and group in memory if small, or use SQL.
         # Let's fetch all ballot creation dates
-        stmt_dates = select(Ballot.created_at).where(Ballot.election_id == election_id)
+        stmt_dates = select(Ballot.cast_at).where(Ballot.election_id == election_id)
         result_dates = await self.db.execute(stmt_dates)
         dates = result_dates.scalars().all()
         
