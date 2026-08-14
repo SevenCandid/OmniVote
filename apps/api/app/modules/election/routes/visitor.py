@@ -68,6 +68,28 @@ async def get_public_election(
         "public_verification_method": getattr(election, "public_verification_method", "NONE")
     }
 
+@router.get("/elections/by-short-code/{public_id}")
+async def get_election_by_short_code(
+    public_id: str,
+    db: AsyncSession = Depends(get_db_session)
+):
+    from sqlalchemy import select
+    from app.modules.election.models.election import Election
+    
+    stmt = select(Election.id, Election.organization_id).where(Election.public_id == public_id)
+    result = await db.execute(stmt)
+    row = result.first()
+    
+    if not row:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Election not found")
+        
+    return {
+        "election_id": row.id,
+        "organization_id": row.organization_id
+    }
+
+
 @router.get("/elections/{election_id}/candidates/{candidate_id}")
 async def get_public_candidate(
     election_id: uuid.UUID,

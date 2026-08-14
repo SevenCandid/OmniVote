@@ -67,6 +67,7 @@ import VotingReviewPage from '../features/elections/pages/VotingReviewPage';
 import VotingSuccessPage from '../features/elections/pages/VotingSuccessPage';
 import PublicCandidatePage from '../features/elections/pages/PublicCandidatePage';
 import ElectionResultsPage from '../features/elections/pages/ElectionResultsPage';
+import PublicLinkRedirectPage from '../features/elections/pages/PublicLinkRedirectPage';
 
 
 // Platform Pages
@@ -113,6 +114,11 @@ export const router = createBrowserRouter([
   {
     path: '/invite/:token',
     element: <InvitationDetailsPage />,
+  },
+  // Public Short URL Redirect
+  {
+    path: '/e/:shortCode',
+    element: <PublicLinkRedirectPage />,
   },
   // Public Candidate Page
   {

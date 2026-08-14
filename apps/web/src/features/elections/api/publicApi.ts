@@ -37,6 +37,9 @@ export const publicApi = {
   getCategories: (electionId: string) =>
     fetchPublic<any[]>(`/public/elections/${electionId}/categories`),
     
+  getElectionByShortCode: (shortCode: string) =>
+    fetchPublic<{election_id: string, organization_id: string}>(`/public/elections/by-short-code/${shortCode}`),
+    
   initVisitorSession: (electionId: string) =>
     fetchPublic<{status: string, visitor_token: string}>(`/public/visitor-session/${electionId}`, {
         method: 'POST'
