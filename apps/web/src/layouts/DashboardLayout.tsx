@@ -67,23 +67,24 @@ export default function DashboardLayout() {
   return (
     <div className="h-screen flex overflow-hidden bg-[var(--color-canvas-light)] dark:bg-[var(--color-canvas-dark)] text-[var(--color-neutral-primary-light)] dark:text-[var(--color-neutral-primary-dark)]">
       {/* 1. Desktop Sidebar Container */}
+      <div className={`hidden lg:block shrink-0 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'}`} />
       <aside
-        className={`hidden lg:flex flex-col border-r border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-white dark:bg-[#18181B] transition-all duration-300 h-full shrink-0 ${isOpen ? 'w-64' : 'w-20'}`}
+        className={`fixed top-0 left-0 hidden lg:flex flex-col border-r border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-white dark:bg-[#18181B] transition-all duration-300 h-full group ${isOpen ? 'w-64 z-40' : 'w-20 hover:w-64 z-50 hover:shadow-2xl'}`}
       >
         {/* Header Branding */}
         <div className="sticky top-0 z-10 bg-white/85 dark:bg-[#18181B]/85 backdrop-blur-md h-16 flex items-center justify-between px-4 border-b border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)]">
           <Link
             to="/dashboard"
-            className="flex items-center gap-2 group overflow-hidden"
+            className="flex items-center gap-2 group/logo overflow-hidden"
           >
             <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white shrink-0">
               <Vote size={16} />
             </div>
-            {isOpen && (
+            <div className={`flex items-center transition-all duration-300 overflow-hidden ${isOpen ? 'w-[100px] opacity-100' : 'w-0 opacity-0 group-hover:w-[100px] group-hover:opacity-100'}`}>
               <span className="font-sans font-bold tracking-tight text-base whitespace-nowrap">
                 Omni<span className="text-primary">Vote</span>
               </span>
-            )}
+            </div>
           </Link>
           <button
             onClick={toggle}
@@ -109,26 +110,27 @@ export default function DashboardLayout() {
                 }`}
               >
                 <Icon size={18} className="shrink-0" />
-                {isOpen && (
-                  <span className="whitespace-nowrap">{item.title}</span>
-                )}
+                <div className={`transition-all duration-300 overflow-hidden whitespace-nowrap ${isOpen ? 'w-[120px] opacity-100' : 'w-0 opacity-0 group-hover:w-[120px] group-hover:opacity-100'}`}>
+                  {item.title}
+                </div>
               </Link>
             );
           })}
         </nav>
 
         {/* Footer Brand */}
-        <div className="p-4 border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] sticky bottom-0 z-10 shrink-0 bg-white dark:bg-[#18181B]">
-          {isOpen ? (
+        <div className="p-4 border-t border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] sticky bottom-0 z-10 shrink-0 bg-white dark:bg-[#18181B] overflow-hidden">
+          <div className={`transition-all duration-300 overflow-hidden whitespace-nowrap ${isOpen ? 'w-[180px] opacity-100' : 'w-0 opacity-0 group-hover:w-[180px] group-hover:opacity-100 hidden group-hover:block'}`}>
             <a href="https://veroseven.netlify.app" target="_blank" rel="noopener noreferrer" className="block text-[9px] text-[var(--color-neutral-muted-light)] hover:text-primary transition-colors uppercase tracking-[1.5px]">
               Powered by{' '}
               <span className="font-semibold text-primary">VeroSeven</span>
             </a>
-          ) : (
+          </div>
+          <div className={`transition-all duration-300 ${isOpen ? 'hidden' : 'block group-hover:hidden'}`}>
             <a href="https://veroseven.netlify.app" target="_blank" rel="noopener noreferrer" className="text-[10px] text-primary hover:text-primary/80 transition-colors font-bold text-center block">
               V7
             </a>
-          )}
+          </div>
         </div>
       </aside>
 
