@@ -28,6 +28,14 @@ export enum Visibility {
   UNLISTED = 'unlisted',
 }
 
+export enum ResultVisibility {
+  HIDDEN = 'hidden',
+  LIVE = 'live',
+  AFTER_CLOSE = 'after_close',
+  ADMIN_ONLY = 'admin_only',
+  PUBLIC = 'public',
+}
+
 export interface Election {
   id: string;
   organization_id: string;
@@ -39,6 +47,7 @@ export interface Election {
   description: string | null;
   election_type: ElectionType;
   visibility: Visibility;
+  result_visibility: ResultVisibility;
 
   registration_opens_at: string | null;
   registration_closes_at: string | null;
@@ -68,6 +77,7 @@ export interface ElectionCreate {
   description?: string | null;
   election_type?: ElectionType;
   visibility?: Visibility;
+  result_visibility?: ResultVisibility;
 
   registration_opens_at?: string | null;
   registration_closes_at?: string | null;

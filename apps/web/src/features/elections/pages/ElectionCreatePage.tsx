@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { useCreateElection } from '../hooks/useElections';
 import { useOrganization } from '../../organizations/hooks/useOrganizations';
-import { ElectionType, Visibility } from '../types';
+import { ElectionType, Visibility, ResultVisibility } from '../types';
 
 export default function ElectionCreatePage() {
   const { id: organizationId } = useParams<{ id: string }>();
@@ -32,6 +32,7 @@ export default function ElectionCreatePage() {
       description: '',
       election_type: ElectionType.CUSTOM,
       visibility: Visibility.PRIVATE,
+      result_visibility: ResultVisibility.HIDDEN,
       registration_opens_at: '',
       registration_closes_at: '',
       voting_opens_at: '',
@@ -339,6 +340,24 @@ export default function ElectionCreatePage() {
                 <option value="Europe/Paris">Paris</option>
                 <option value="Africa/Accra">Accra</option>
               </select>
+            </div>
+
+            <div className="max-w-md">
+              <label className="block text-sm font-medium mb-2">
+                Public Result Visibility
+              </label>
+              <select
+                {...register('result_visibility')}
+                className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none"
+              >
+                <option value={ResultVisibility.HIDDEN}>Hidden</option>
+                <option value={ResultVisibility.AFTER_CLOSE}>After Close</option>
+                <option value={ResultVisibility.PUBLIC}>Public (Always Visible)</option>
+                <option value={ResultVisibility.LIVE}>Live</option>
+              </select>
+              <p className="text-xs text-gray-500 mt-2">
+                Controls when and if the public can view the election results.
+              </p>
             </div>
 
             <div className="space-y-4">

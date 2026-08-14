@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-from app.modules.election.models.election import ElectionStatus, ElectionType, Visibility
+from app.modules.election.models.election import ElectionStatus, ElectionType, Visibility, ResultVisibility
 
 
 class ElectionBase(BaseModel):
@@ -11,6 +11,7 @@ class ElectionBase(BaseModel):
     description: Optional[str] = Field(None, max_length=2000, description="A description of the election.")
     election_type: ElectionType = Field(default=ElectionType.CUSTOM, description="The type of the election.")
     visibility: Visibility = Field(default=Visibility.PRIVATE, description="The visibility level of the election.")
+    result_visibility: ResultVisibility = Field(default=ResultVisibility.HIDDEN, description="The visibility level of the election results.")
     
     # Scheduling
     registration_opens_at: Optional[datetime] = None
@@ -58,6 +59,7 @@ class ElectionUpdate(BaseModel):
     description: Optional[str] = Field(None, max_length=2000)
     election_type: Optional[ElectionType] = None
     visibility: Optional[Visibility] = None
+    result_visibility: Optional[ResultVisibility] = None
     status: Optional[ElectionStatus] = None
     
     registration_opens_at: Optional[datetime] = None

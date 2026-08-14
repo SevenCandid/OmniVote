@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Save, Settings, ShieldCheck, Clock } from 'lucide-react';
 import { useElection, useUpdateElection } from '../hooks/useElections';
-import { ElectionType, Visibility } from '../types';
+import { ElectionType, Visibility, ResultVisibility } from '../types';
 import { BaseLoader } from '../../../components/ui/BaseLoader';
 
 export default function ElectionEditPage() {
@@ -30,6 +30,7 @@ export default function ElectionEditPage() {
       description: '',
       election_type: ElectionType.CUSTOM,
       visibility: Visibility.PRIVATE,
+      result_visibility: ResultVisibility.HIDDEN,
       registration_opens_at: '',
       registration_closes_at: '',
       voting_opens_at: '',
@@ -57,6 +58,7 @@ export default function ElectionEditPage() {
         description: election.description || '',
         election_type: election.election_type,
         visibility: election.visibility,
+        result_visibility: election.result_visibility,
         registration_opens_at: formatDateForInput(
           election.registration_opens_at
         ),
@@ -353,6 +355,25 @@ export default function ElectionEditPage() {
                 <option value="Europe/Paris">Paris</option>
                 <option value="Africa/Accra">Accra</option>
               </select>
+            </div>
+
+            <div className="max-w-md">
+              <label className="block text-sm font-medium mb-2">
+                Public Result Visibility
+              </label>
+              <select
+                {...register('result_visibility')}
+                disabled={isCoreLocked}
+                className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-[var(--color-primary)] outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <option value={ResultVisibility.HIDDEN}>Hidden</option>
+                <option value={ResultVisibility.AFTER_CLOSE}>After Close</option>
+                <option value={ResultVisibility.PUBLIC}>Public (Always Visible)</option>
+                <option value={ResultVisibility.LIVE}>Live</option>
+              </select>
+              <p className="text-xs text-gray-500 mt-2">
+                Controls when and if the public can view the election results.
+              </p>
             </div>
 
             <div className="space-y-4">
