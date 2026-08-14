@@ -18,7 +18,7 @@ async def get_election_analytics(
     organization_id: uuid.UUID,
     election_id: uuid.UUID,
     db: AsyncSession = Depends(get_db_session),
-    _=Depends(RequirePermission("election:read")),
+    _: dict = Depends(RequirePermission("election.view")),
 ):
     service = AnalyticsService(db)
     return await service.get_election_analytics(election_id)
