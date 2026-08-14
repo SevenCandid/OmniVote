@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { publicApi } from '../api/publicApi';
 import { useVotingSession, useSaveDraft } from '../hooks/useVoting';
-import { useCandidates } from '../hooks/useCandidates';
 import { BaseButton } from '@/components/ui/BaseButton';
 import { BaseDialog } from '@/components/ui/BaseDialog';
 import { CandidateVotingCard } from '../components/voting/CandidateVotingCard';
@@ -43,14 +42,8 @@ export default function VotingSessionPage() {
 
   const currentCategory = categories[currentCategoryIndex];
   
-  // Fetch candidates for current category
-  const { data: candidatesResp, isLoading: loadingCandidates } = useCandidates(
-    organizationId!, 
-    electionId!, 
-    currentCategory?.id || ''
-  );
-  // useCandidates returns Candidate[] not { items: Candidate[] } according to useCandidates.ts
-  const candidates: Candidate[] = candidatesResp || [];
+  const loadingCandidates = false;
+  const candidates: Candidate[] = currentCategory?.candidates || [];
 
   if (loadingElection || loadingCategories || loadingSession) {
     return <div className="p-8 text-center animate-pulse">Loading voting session...</div>;
