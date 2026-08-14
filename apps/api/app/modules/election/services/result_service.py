@@ -48,7 +48,7 @@ class ResultService:
         is_admin = False
         if user_id:
             from sqlalchemy import select
-            from app.modules.organization.models.membership import Membership
+            from app.modules.membership.models.membership import Membership
             res = await self.db.execute(select(Membership).where(Membership.user_id == user_id, Membership.organization_id == election.organization_id))
             if res.scalar_one_or_none():
                 is_admin = True
