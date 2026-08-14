@@ -19,13 +19,11 @@ import {
   Moon,
   Mail,
 } from 'lucide-react';
-import { useSidebarStore } from '../stores/sidebarStore';
 import { useTheme } from '../providers/theme-provider';
 import { useSessionStore } from '../stores/sessionStore';
 import { identityApi } from '../features/identity/services/identityApi';
 
 export default function DashboardLayout() {
-  const { isOpen, toggle } = useSidebarStore();
   const { theme, setTheme } = useTheme();
   const { user, logout } = useSessionStore();
   const [showUserMenu, setShowUserMenu] = useState(false);

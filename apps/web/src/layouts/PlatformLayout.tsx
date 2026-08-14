@@ -21,7 +21,6 @@ import {
   Sun,
   Moon,
 } from 'lucide-react';
-import { useSidebarStore } from '../stores/sidebarStore';
 import { useTheme } from '../providers/theme-provider';
 import { useSessionStore } from '../stores/sessionStore';
 import { identityApi } from '../features/identity/services/identityApi';
@@ -29,7 +28,6 @@ import { platformNotificationsApi } from '../features/platform/api/platformNotif
 import { useEffect } from 'react';
 
 export default function PlatformLayout() {
-  const { isOpen, toggle } = useSidebarStore();
   const { theme, setTheme } = useTheme();
   const { user, logout } = useSessionStore();
   const [showUserMenu, setShowUserMenu] = useState(false);
