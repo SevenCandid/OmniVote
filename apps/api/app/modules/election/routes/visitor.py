@@ -119,24 +119,24 @@ async def get_public_categories(
     db: AsyncSession = Depends(get_db_session)
 ):
     repo = CategoryRepository(db)
-    categories = await repo.get_by_election_id(election_id)
+    categories = await repo.get_all_by_election(election_id)
     
     # Also fetch candidates for these categories to return a complete ballot view
     candidate_repo = CandidateRepository(db)
-    candidates = await candidate_repo.get_by_election_id(election_id)
+    candidates = await candidate_repo.get_by_election(election_id)
     
     # Group candidates by category
     from collections import defaultdict
     candidates_by_category = defaultdict(list)
     for c in candidates:
-        candidates_by_category[c.category_id].append({
+        candidates_by_category[c.election_category_id].append({
             "id": c.id,
-            "category_id": c.category_id,
-            "first_name": c.first_name,
-            "last_name": c.last_name,
+            "category_id": c.election_category_id,
             "full_name": c.full_name,
-            "biography": c.biography,
-            "photo_url": c.photo_url,
+            "short_name": c.short_name,
+            "bio": c.bio,
+            "manifesto": c.manifesto,
+            "photo_url": c.photo,
         })
         
     result = []
