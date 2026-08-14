@@ -14,13 +14,17 @@ class ExportService:
         writer.writerow(["Generated At", results.generated_at.isoformat()])
         writer.writerow([])
         
+        if results.statistics:
+            writer.writerow(["Total Votes Cast", results.statistics.total_votes_cast])
+            writer.writerow([])
+        
         writer.writerow(["Category", "Candidate", "Votes", "Percentage", "Rank", "Is Winner", "Is Tied"])
         
-        for category in results.categories:
+        for category in (results.categories or []):
             for candidate in category.candidates:
                 writer.writerow([
-                    category.category_name,
-                    candidate.candidate_name,
+                    category.name,
+                    candidate.name,
                     candidate.vote_count,
                     f"{candidate.percentage:.2f}%",
                     candidate.rank,
@@ -43,11 +47,11 @@ class ExportService:
         
         ws.append(["Category", "Candidate", "Votes", "Percentage", "Rank", "Is Winner", "Is Tied"])
         
-        for category in results.categories:
+        for category in (results.categories or []):
             for candidate in category.candidates:
                 ws.append([
-                    category.category_name,
-                    candidate.candidate_name,
+                    category.name,
+                    candidate.name,
                     candidate.vote_count,
                     f"{candidate.percentage:.2f}%",
                     candidate.rank,
@@ -73,9 +77,9 @@ class ExportService:
         pdf.cell(200, 10, text=f"Generated At: {results.generated_at.isoformat()}")
         pdf.ln(10)
         
-        for category in results.categories:
+        for category in (results.categories or []):
             pdf.set_font("helvetica", style="B", size=11)
-            pdf.cell(200, 10, text=f"Category: {category.category_name}")
+            pdf.cell(200, 10, text=f"Category: {category.name}")
             pdf.ln(10)
             pdf.set_font("helvetica", size=10)
             
@@ -88,7 +92,7 @@ class ExportService:
             pdf.ln()
             
             for candidate in category.candidates:
-                pdf.cell(50, 10, candidate.candidate_name, 1)
+                pdf.cell(50, 10, candidate.name, 1)
                 pdf.cell(30, 10, str(candidate.vote_count), 1)
                 pdf.cell(30, 10, f"{candidate.percentage:.2f}%", 1)
                 pdf.cell(20, 10, str(candidate.rank), 1)
