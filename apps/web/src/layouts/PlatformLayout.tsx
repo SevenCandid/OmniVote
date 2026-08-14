@@ -99,9 +99,9 @@ export default function PlatformLayout() {
   return (
     <div className="h-screen flex overflow-hidden bg-[var(--color-canvas-light)] dark:bg-[var(--color-canvas-dark)] text-[var(--color-neutral-primary-light)] dark:text-[var(--color-neutral-primary-dark)]">
       {/* 1. Desktop Sidebar Container */}
-      <div className={`hidden lg:block shrink-0 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'}`} />
+      <div className="hidden lg:block shrink-0 w-20" />
       <aside
-        className={`fixed top-0 left-0 hidden lg:flex flex-col border-r border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-zinc-900 dark:bg-[#121214] text-white transition-all duration-300 h-full group ${isOpen ? 'w-64 z-40' : 'w-20 hover:w-64 z-50 hover:shadow-2xl'}`}
+        className="fixed top-0 left-0 hidden lg:flex flex-col border-r border-[var(--color-border-default-light)] dark:border-[var(--color-border-default-dark)] bg-zinc-900 dark:bg-[#121214] text-white transition-all duration-300 h-full group w-20 hover:w-64 z-50 hover:shadow-2xl"
       >
         {/* Header Branding */}
         <div className="sticky top-0 z-10 bg-zinc-900/95 dark:bg-[#121214]/95 backdrop-blur-md h-16 flex items-center justify-between px-4 border-b border-zinc-800 dark:border-zinc-800">
@@ -112,19 +112,12 @@ export default function PlatformLayout() {
             <div className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-white shrink-0 border border-zinc-700">
               <ShieldAlert size={16} className="text-blue-400" />
             </div>
-            <div className={`flex items-center transition-all duration-300 overflow-hidden ${isOpen ? 'w-[100px] opacity-100' : 'w-0 opacity-0 group-hover:w-[100px] group-hover:opacity-100'}`}>
+            <div className="flex items-center transition-all duration-300 overflow-hidden w-0 opacity-0 group-hover:w-[100px] group-hover:opacity-100">
               <span className="font-sans font-bold tracking-tight text-base whitespace-nowrap text-white">
                 Vero<span className="text-blue-400">Seven</span>
               </span>
             </div>
           </Link>
-          <button
-            onClick={toggle}
-            className="p-1 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800"
-            aria-label="Toggle sidebar"
-          >
-            <Menu size={16} />
-          </button>
         </div>
 
         {/* Navigation Sidebar List */}
@@ -142,7 +135,7 @@ export default function PlatformLayout() {
                 }`}
               >
                 <Icon size={18} className="shrink-0" />
-                <div className={`transition-all duration-300 overflow-hidden whitespace-nowrap ${isOpen ? 'w-[140px] opacity-100' : 'w-0 opacity-0 group-hover:w-[140px] group-hover:opacity-100'}`}>
+                <div className="transition-all duration-300 overflow-hidden whitespace-nowrap w-0 opacity-0 group-hover:w-[140px] group-hover:opacity-100">
                   {item.title}
                 </div>
               </Link>
@@ -152,13 +145,13 @@ export default function PlatformLayout() {
 
         {/* Footer Brand */}
         <div className="p-4 border-t border-zinc-800 sticky bottom-0 z-10 shrink-0 bg-zinc-900 dark:bg-[#121214] overflow-hidden">
-          <div className={`transition-all duration-300 overflow-hidden whitespace-nowrap ${isOpen ? 'w-[180px] opacity-100' : 'w-0 opacity-0 group-hover:w-[180px] group-hover:opacity-100 hidden group-hover:block'}`}>
+          <div className="transition-all duration-300 overflow-hidden whitespace-nowrap w-0 opacity-0 group-hover:w-[180px] group-hover:opacity-100 hidden group-hover:block">
             <p className="text-[9px] text-zinc-500 uppercase tracking-[1.5px] font-semibold flex items-center gap-2">
               <Shield size={10} className="text-zinc-400" />
               Platform Admin
             </p>
           </div>
-          <div className={`transition-all duration-300 ${isOpen ? 'hidden' : 'block group-hover:hidden'}`}>
+          <div className="transition-all duration-300 block group-hover:hidden">
             <span className="text-[10px] text-zinc-500 font-bold text-center block">
               V7
             </span>
