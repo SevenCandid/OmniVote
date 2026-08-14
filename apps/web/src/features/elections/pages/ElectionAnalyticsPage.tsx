@@ -47,45 +47,45 @@ export default function ElectionAnalyticsPage() {
     <div className="space-y-6">
       {/* Top Level Metric Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white dark:bg-[#18181B] p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-lg">
-            <Users size={24} />
+        <div className="bg-white dark:bg-[#18181B] p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-center gap-3">
+          <div className="p-2.5 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-lg">
+            <Users size={20} />
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-500">Total Registered Voters</p>
-            <p className="text-2xl font-bold">{analytics.total_voters}</p>
+            <p className="text-xs font-medium text-gray-500">Total Registered Voters</p>
+            <p className="text-xl font-bold">{analytics.total_voters}</p>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#18181B] p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400 rounded-lg">
-            <UserCheck size={24} />
+        <div className="bg-white dark:bg-[#18181B] p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-center gap-3">
+          <div className="p-2.5 bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400 rounded-lg">
+            <UserCheck size={20} />
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-500">Total Votes Cast</p>
-            <p className="text-2xl font-bold">{analytics.total_votes_cast}</p>
+            <p className="text-xs font-medium text-gray-500">Total Votes Cast</p>
+            <p className="text-xl font-bold">{analytics.total_votes_cast}</p>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#18181B] p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 rounded-lg">
-            <Activity size={24} />
+        <div className="bg-white dark:bg-[#18181B] p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-center gap-3">
+          <div className="p-2.5 bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 rounded-lg">
+            <Activity size={20} />
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-500">Turnout Percentage</p>
+            <p className="text-xs font-medium text-gray-500">Turnout Percentage</p>
             <div className="flex items-end gap-2">
-              <p className="text-2xl font-bold">{analytics.turnout_percentage}%</p>
+              <p className="text-xl font-bold">{analytics.turnout_percentage}%</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#18181B] p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400 rounded-lg">
-            <Eye size={24} />
+        <div className="bg-white dark:bg-[#18181B] p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-center gap-3">
+          <div className="p-2.5 bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400 rounded-lg">
+            <Eye size={20} />
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-500">Total Visitors</p>
-            <p className="text-2xl font-bold">{analytics.engagement.total_visitors}</p>
+            <p className="text-xs font-medium text-gray-500">Total Visitors</p>
+            <p className="text-xl font-bold">{analytics.engagement.total_visitors}</p>
           </div>
         </div>
       </div>
@@ -178,10 +178,10 @@ export default function ElectionAnalyticsPage() {
               <div key={cat.category_id} className="p-4 border border-gray-100 dark:border-gray-800 rounded-lg hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
                 <p className="font-medium mb-2 text-sm">{cat.category_name}</p>
                 <div className="flex items-end justify-between">
-                  <p className="text-2xl font-bold" style={{ color: COLORS[idx % COLORS.length] }}>
-                    {cat.total_votes} <span className="text-sm text-gray-400 font-normal">votes</span>
+                  <p className="text-xl font-bold" style={{ color: COLORS[idx % COLORS.length] }}>
+                    {cat.total_votes} <span className="text-xs text-gray-400 font-normal">votes</span>
                   </p>
-                  <p className="text-sm font-semibold text-gray-600 dark:text-gray-300">
+                  <p className="text-xs font-semibold text-gray-600 dark:text-gray-300">
                     {analytics.total_voters > 0 
                       ? Math.round((cat.total_votes / analytics.total_voters) * 100) 
                       : 0}%
