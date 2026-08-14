@@ -72,6 +72,13 @@ async def export_election_results(
     """
     user_id = current_user.id if current_user else None
     results = await result_service.get_live_results(election_id, user_id=user_id)
+
+    if results.is_hidden:
+        from fastapi import HTTPException
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Results are not yet available for export. The election is still in progress."
+        )
     
     if format.lower() == "excel":
         file_stream = ExportService.generate_excel(results)
