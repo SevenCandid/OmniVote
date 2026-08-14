@@ -4,6 +4,24 @@ All notable changes to the VeroSeven Platform and OmniVote application will be d
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v3.3.0] - 2026-08-14
+
+### Added
+- **Live Election Indicator**: Both the Admin Dashboard and the Public Results page now display a beautiful animated, radar-pulsing "Live Election in Progress" indicator while an election is active, replacing the previous 403 error or crash states.
+- **Admin Live Results Toggle**: New `allow_admin_live_results` configuration field added to the Election creation form. When enabled, admins can see live vote counts on their dashboard while the election is running. This setting is immutable after election creation to preserve integrity.
+- **Graceful Hidden-Results API**: The `GET /results` endpoint no longer returns 403 when results are hidden. It now returns a 200 response with `is_hidden: true` and zeroed statistics, enabling the frontend to render a proper state rather than an error.
+- **Alembic Auto-Migration on Deploy**: Added `release_command = 'alembic upgrade head'` to `fly.toml` so database migrations now run automatically on every Fly.io deployment.
+
+### Fixed
+- **CORS + 500 Error on Results Endpoint**: Fixed `ModuleNotFoundError` caused by incorrect import path (`app.modules.organization.models.membership` → `app.modules.membership.models.membership`), which was crashing the results endpoint and stripping CORS headers.
+- **Null Statistics Crash**: Fixed frontend crash (`Cannot read properties of null`) by returning a zeroed `ElectionStatisticsSchema` object instead of `None` when results are hidden.
+- **Migration NOT NULL Violation**: Fixed Alembic migration for `allow_admin_live_results` to use `server_default='false'`, enabling safe addition of the column to existing election rows.
+
+### Security
+- Admin results visibility is locked at election creation time and cannot be changed after publishing, preventing mid-election configuration tampering.
+
+---
+
 ## [v3.2.0] - 2026-07-25
 
 ### Added

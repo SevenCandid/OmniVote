@@ -85,7 +85,9 @@ Enterprise Features
 * 🟢 Election Configuration
 * 🟢 Ballot Customization
 * 🟢 Voting Engine
-* ⚪ Results Aggregator
+* 🟢 Results Aggregator
+* 🟢 Results Visibility & Live Indicator
+* ⚪ Scheduled Results Publishing
 * ⚪ Live Dashboard
 
 ---

@@ -4,9 +4,18 @@ All notable changes to the OmniVote platform will be documented in this file. Th
 
 ---
 
-## [Unreleased]
+## [v3.3.0] - 2026-08-14
+
 ### Added
-- **Election Ballot Preview**: Built the `ElectionBallotPage` in the admin dashboard to provide organizers with a fully functional, read-only preview of the voter's ballot. Includes interactive selection mechanics (respecting category `max_winners`), health checks for empty categories/positions, and a configuration summary (Anonymous Voting & Voter Verification).
+- **Live Election Indicator**: Animated, radar-pulsing "Election in Progress" state for Admin Dashboard and Public Results page while a vote is active. No more errors or stale data shown to users.
+- **Admin Live Results Toggle**: `allow_admin_live_results` election setting — configurable at creation time only — lets admins choose whether they see live vote counts during an active election.
+- **Graceful Results API**: Results endpoint returns `200 OK` with `is_hidden: true` instead of `403 Forbidden` when results aren't yet visible, preserving CORS and UX integrity.
+- **Alembic Auto-Migrate on Deploy**: `fly.toml` `release_command` now runs `alembic upgrade head` automatically on every backend deployment.
+
+### Fixed
+- Results endpoint 500/CORS error caused by wrong `Membership` module import path.
+- Frontend `null` statistics crash when results were hidden.
+- Alembic `NOT NULL` migration violation for existing election rows.
 
 ---
 
