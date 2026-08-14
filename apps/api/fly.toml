@@ -9,6 +9,9 @@ primary_region = 'iad'
 [build]
   dockerfile = 'Dockerfile'
 
+[deploy]
+  release_command = 'alembic upgrade head'
+
 [processes]
   web = 'uvicorn app.main:app --host 0.0.0.0 --port 8000'
   worker = 'arq app.workers.worker.WorkerSettings'
