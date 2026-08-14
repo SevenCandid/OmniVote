@@ -25,7 +25,8 @@ export interface ElectionStatistics {
 export interface ElectionResult {
   election_id: string;
   status: string;
-  statistics: ElectionStatistics;
-  categories: CategoryResult[];
+  is_hidden?: boolean;
+  statistics?: ElectionStatistics;
+  categories?: CategoryResult[];
   generated_at: string;
 }

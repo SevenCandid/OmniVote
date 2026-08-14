@@ -50,6 +50,7 @@ export interface Election {
   allow_anonymous_voting: boolean;
   automatically_publish_results: boolean;
   require_voter_verification: boolean;
+  allow_admin_live_results: boolean;
   public_verification_method?: string;
 
   is_paid?: boolean;
@@ -78,6 +79,7 @@ export interface ElectionCreate {
   allow_anonymous_voting?: boolean;
   automatically_publish_results?: boolean;
   require_voter_verification?: boolean;
+  allow_admin_live_results?: boolean;
 }
 
 export interface ElectionUpdate extends Partial<ElectionCreate> {}

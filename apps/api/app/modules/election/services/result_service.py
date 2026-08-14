@@ -53,15 +53,37 @@ class ResultService:
             if res.scalar_one_or_none():
                 is_admin = True
 
-        # 1. Check Visibility Rules (bypass for admins)
+        # 1. Determine Visibility
+        is_visible = True
+        
+        # Public requests (not admin)
         if not is_admin:
             if election.result_visibility == ResultVisibility.HIDDEN:
-                raise HTTPException(status_code=403, detail="Results are hidden for this election.")
-            elif election.result_visibility == ResultVisibility.AFTER_CLOSE and election.status != ElectionStatus.RESULTS_PUBLISHED:
-                if election.status not in (ElectionStatus.VOTING_CLOSED, ElectionStatus.COUNTING, ElectionStatus.RESULTS_PUBLISHED, ElectionStatus.ARCHIVED):
-                    raise HTTPException(status_code=403, detail="Results will be visible after the election closes.")
+                is_visible = False
+            elif election.result_visibility == ResultVisibility.AFTER_CLOSE and election.status not in (ElectionStatus.RESULTS_PUBLISHED, ElectionStatus.ARCHIVED):
+                is_visible = False
             elif election.result_visibility == ResultVisibility.ADMIN_ONLY:
-                raise HTTPException(status_code=403, detail="Admin only access")
+                is_visible = False
+            elif election.status not in (ElectionStatus.VOTING_CLOSED, ElectionStatus.COUNTING, ElectionStatus.RESULTS_PUBLISHED, ElectionStatus.ARCHIVED):
+                is_visible = False # Public can't see live unless explicitly PUBLIC? Actually if it's PUBLIC we let them see it? 
+                # User says public never sees live counts!
+                is_visible = False
+        else:
+            # Admin requests
+            # If the election is active (not closed/published)
+            if election.status not in (ElectionStatus.VOTING_CLOSED, ElectionStatus.COUNTING, ElectionStatus.RESULTS_PUBLISHED, ElectionStatus.ARCHIVED):
+                if not election.allow_admin_live_results:
+                    is_visible = False
+                    
+        if not is_visible:
+            return ElectionResultSchema(
+                election_id=election_id,
+                status=election.status,
+                is_hidden=True,
+                statistics=None,
+                categories=None,
+                generated_at=datetime.datetime.now(datetime.timezone.utc)
+            )
                  
         # 3. Compute results
         return await self.compute_and_cache_results(election_id)

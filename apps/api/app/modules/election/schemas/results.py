@@ -31,6 +31,7 @@ class ElectionStatisticsSchema(BaseModel):
 class ElectionResultSchema(BaseModel):
     election_id: uuid.UUID
     status: str
-    statistics: ElectionStatisticsSchema
-    categories: List[CategoryResultSchema]
+    is_hidden: bool = False
+    statistics: ElectionStatisticsSchema | None = None
+    categories: List[CategoryResultSchema] | None = None
     generated_at: datetime

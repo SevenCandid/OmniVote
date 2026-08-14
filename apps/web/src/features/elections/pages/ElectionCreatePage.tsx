@@ -41,6 +41,7 @@ export default function ElectionCreatePage() {
       allow_anonymous_voting: false,
       automatically_publish_results: false,
       require_voter_verification: false,
+      allow_admin_live_results: false,
     },
   });
 
@@ -394,6 +395,25 @@ export default function ElectionCreatePage() {
                   <span className="block text-sm text-gray-500">
                     Voters must complete an extra verification step (e.g. OTP)
                     before casting.
+                  </span>
+                </div>
+              </label>
+
+              <label className="flex items-start gap-3 cursor-pointer">
+                <div className="flex items-center h-5 mt-1">
+                  <input
+                    type="checkbox"
+                    {...register('allow_admin_live_results')}
+                    className="w-4 h-4 text-[var(--color-primary)] rounded border-gray-300 focus:ring-[var(--color-primary)]"
+                  />
+                </div>
+                <div>
+                  <span className="block text-sm font-medium">
+                    Allow Admin to View Live Results
+                  </span>
+                  <span className="block text-sm text-gray-500">
+                    If enabled, admins can view live vote counts while the election is active. 
+                    Otherwise, results are completely hidden until publish.
                   </span>
                 </div>
               </label>

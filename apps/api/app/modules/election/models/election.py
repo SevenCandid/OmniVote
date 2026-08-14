@@ -87,6 +87,7 @@ class Election(BaseModel, TimestampMixin):
     allow_anonymous_voting: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     automatically_publish_results: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     require_voter_verification: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    allow_admin_live_results: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     
     # Public & Paid Voting Configuration
     public_verification_method: Mapped[PublicVerificationMethod] = mapped_column(Enum(PublicVerificationMethod), default=PublicVerificationMethod.NONE, nullable=False)

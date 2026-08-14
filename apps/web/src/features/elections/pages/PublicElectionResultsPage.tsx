@@ -8,6 +8,7 @@ import { ElectionStatus } from '../types';
 import { useRealtime } from '../../../hooks/useRealtime';
 import { LiveBadge } from '../../../components/realtime/LiveBadge';
 import { ConnectionStatus } from '../../../components/realtime/ConnectionStatus';
+import LiveElectionIndicator from '../components/LiveElectionIndicator';
 
 export default function PublicElectionResultsPage() {
   const { organizationId, electionId } = useParams<{
@@ -104,69 +105,77 @@ export default function PublicElectionResultsPage() {
           </div>
         </div>
 
-        {/* Statistics Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {/* Total Votes Card */}
-          <div className="relative bg-[#18181B]/80 backdrop-blur-xl p-6 rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.1)] flex items-start space-x-4 overflow-hidden group">
-            <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
-            <div className="p-3 bg-indigo-500/10 text-indigo-400 rounded-xl border border-indigo-500/20 shadow-sm relative z-10">
-              <Activity className="w-6 h-6" />
-            </div>
-            <div className="relative z-10">
-              <p className="text-sm font-semibold text-zinc-400 uppercase tracking-wider">Total Votes Cast</p>
-              <p className="text-3xl font-extrabold text-white mt-1 tracking-tight">
-                {results.statistics.total_votes_cast.toLocaleString()}
-              </p>
-            </div>
-          </div>
+        {results.is_hidden ? (
+          <LiveElectionIndicator isAdmin={false} />
+        ) : (
+          <>
+            {/* Statistics Overview */}
+            {results.statistics && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                {/* Total Votes Card */}
+                <div className="relative bg-[#18181B]/80 backdrop-blur-xl p-6 rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.1)] flex items-start space-x-4 overflow-hidden group">
+                  <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
+                  <div className="p-3 bg-indigo-500/10 text-indigo-400 rounded-xl border border-indigo-500/20 shadow-sm relative z-10">
+                    <Activity className="w-6 h-6" />
+                  </div>
+                  <div className="relative z-10">
+                    <p className="text-sm font-semibold text-zinc-400 uppercase tracking-wider">Total Votes Cast</p>
+                    <p className="text-3xl font-extrabold text-white mt-1 tracking-tight">
+                      {results.statistics.total_votes_cast.toLocaleString()}
+                    </p>
+                  </div>
+                </div>
 
-          {/* Expected Voters Card */}
-          <div className="relative bg-[#18181B]/80 backdrop-blur-xl p-6 rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.1)] flex items-start space-x-4 overflow-hidden group">
-            <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
-            <div className="p-3 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20 shadow-sm relative z-10">
-              <Users className="w-6 h-6" />
-            </div>
-            <div className="relative z-10">
-              <p className="text-sm font-semibold text-zinc-400 uppercase tracking-wider">Expected Voters</p>
-              <p className="text-3xl font-extrabold text-white mt-1 tracking-tight">
-                {results.statistics.total_eligible_voters ? results.statistics.total_eligible_voters.toLocaleString() : 'N/A'}
-              </p>
-            </div>
-          </div>
+                {/* Expected Voters Card */}
+                <div className="relative bg-[#18181B]/80 backdrop-blur-xl p-6 rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.1)] flex items-start space-x-4 overflow-hidden group">
+                  <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
+                  <div className="p-3 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20 shadow-sm relative z-10">
+                    <Users className="w-6 h-6" />
+                  </div>
+                  <div className="relative z-10">
+                    <p className="text-sm font-semibold text-zinc-400 uppercase tracking-wider">Expected Voters</p>
+                    <p className="text-3xl font-extrabold text-white mt-1 tracking-tight">
+                      {results.statistics.total_eligible_voters ? results.statistics.total_eligible_voters.toLocaleString() : 'N/A'}
+                    </p>
+                  </div>
+                </div>
 
-          {/* Turnout Card */}
-          <div className="relative bg-[#18181B]/80 backdrop-blur-xl p-6 rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.1)] flex items-start space-x-4 overflow-hidden group">
-            <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
-            <div className="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20 shadow-sm relative z-10">
-              <ExternalLink className="w-6 h-6" />
-            </div>
-            <div className="relative z-10">
-              <p className="text-sm font-semibold text-zinc-400 uppercase tracking-wider">Turnout</p>
-              <p className="text-3xl font-extrabold text-white mt-1 tracking-tight">
-                {results.statistics.turnout_percentage !== null 
-                  ? `${results.statistics.turnout_percentage.toFixed(1)}%` 
-                  : 'N/A'}
-              </p>
-            </div>
-          </div>
-        </div>
+                {/* Turnout Card */}
+                <div className="relative bg-[#18181B]/80 backdrop-blur-xl p-6 rounded-2xl border border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.1)] flex items-start space-x-4 overflow-hidden group">
+                  <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+                  <div className="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20 shadow-sm relative z-10">
+                    <ExternalLink className="w-6 h-6" />
+                  </div>
+                  <div className="relative z-10">
+                    <p className="text-sm font-semibold text-zinc-400 uppercase tracking-wider">Turnout</p>
+                    <p className="text-3xl font-extrabold text-white mt-1 tracking-tight">
+                      {results.statistics.turnout_percentage !== null 
+                        ? `${results.statistics.turnout_percentage.toFixed(1)}%` 
+                        : 'N/A'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
-        {/* Results Categories */}
-        <div className="space-y-8">
-          {results.categories.length > 0 ? (
-            results.categories.map((category: any) => (
-              <CategoryResultCard key={category.category_id} category={category} />
-            ))
-          ) : (
-            <div className="text-center py-12 bg-[#18181B]/80 backdrop-blur-xl rounded-2xl border border-zinc-800/80">
-              <p className="text-zinc-400">No categories found for this election.</p>
+            {/* Results Categories */}
+            <div className="space-y-8">
+              {results.categories && results.categories.length > 0 ? (
+                results.categories.map((category: any) => (
+                  <CategoryResultCard key={category.category_id} category={category} />
+                ))
+              ) : (
+                <div className="text-center py-12 bg-[#18181B]/80 backdrop-blur-xl rounded-2xl border border-zinc-800/80">
+                  <p className="text-zinc-400">No categories found for this election.</p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        
-        <div className="text-xs text-zinc-600 text-center pt-12 pb-8 uppercase tracking-widest font-mono">
-          Last updated: {new Date(results.generated_at).toLocaleString()}
-        </div>
+            
+            <div className="text-xs text-zinc-600 text-center pt-12 pb-8 uppercase tracking-widest font-mono">
+              Last updated: {new Date(results.generated_at).toLocaleString()}
+            </div>
+          </>
+        )}
       </main>
     </div>
   );
