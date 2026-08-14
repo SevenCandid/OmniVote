@@ -30,7 +30,7 @@ class EventDispatcher:
             except Exception as e:
                 logger.error(f"Error executing handler {handler.__class__.__name__} for event {event.event_name}: {e}", exc_info=True)
 
-    def register_pending_event(self, session: AsyncSession, event: Event) -> None:
+    def register_pending_event(self, session: AsyncSession, domain_event: Event) -> None:
         """
         Registers an event to be published only after the SQLAlchemy session commits.
         """
@@ -40,7 +40,7 @@ class EventDispatcher:
         if "pending_events" not in session.info:
             session.info["pending_events"] = []
             
-        session.info["pending_events"].append(event)
+        session.info["pending_events"].append(domain_event)
         
         # Ensure we only attach the listener once per session
         if "has_event_listener" not in session.info:

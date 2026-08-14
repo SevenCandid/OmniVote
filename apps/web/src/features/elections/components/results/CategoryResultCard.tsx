@@ -14,25 +14,31 @@ export function CategoryResultCard({ category }: CategoryResultCardProps) {
   });
 
   return (
-    <div className="bg-white dark:bg-[#18181B] rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
-      <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#18181B]/50 flex justify-between items-center">
-        <div>
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+    <div className="bg-white/80 dark:bg-[#18181B]/80 backdrop-blur-xl rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)] transition-all">
+      <div className="px-6 py-5 border-b border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-900/50 flex justify-between items-center relative overflow-hidden">
+        {/* Subtle mesh background element for header */}
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 dark:bg-indigo-500/5 rounded-full blur-2xl pointer-events-none" />
+        
+        <div className="relative z-10">
+          <h3 className="text-xl font-bold text-zinc-900 dark:text-white tracking-tight">
             {category.name}
           </h3>
-          <p className="text-sm text-gray-500 flex items-center mt-1">
-            <Users className="w-4 h-4 mr-1.5" />
+          <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 flex items-center mt-1">
+            <Users className="w-4 h-4 mr-1.5 opacity-70" />
             {category.total_votes.toLocaleString()} total valid votes
           </p>
         </div>
-        <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-lg">
+        <div className="relative z-10 p-2.5 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl shadow-sm border border-indigo-100 dark:border-indigo-500/20">
           <BarChart3 className="w-5 h-5" />
         </div>
       </div>
       
-      <div className="p-6">
+      <div className="p-6 relative">
+        {/* Subtle inner background glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-32 bg-indigo-500/5 blur-3xl pointer-events-none rounded-full" />
+        
         {sortedCandidates.length > 0 ? (
-          <div className="space-y-1">
+          <div className="space-y-1 relative z-10">
             {sortedCandidates.map((candidate) => (
               <CandidateResultRow 
                 key={candidate.candidate_id} 
@@ -41,7 +47,7 @@ export function CategoryResultCard({ category }: CategoryResultCardProps) {
             ))}
           </div>
         ) : (
-          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <div className="text-center py-12 text-zinc-500 dark:text-zinc-400 relative z-10">
             No candidates found in this category.
           </div>
         )}

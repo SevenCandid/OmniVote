@@ -65,6 +65,7 @@ import VotingSessionPage from '../features/elections/pages/VotingSessionPage';
 import ElectionVotingPage from '../features/elections/pages/ElectionVotingPage';
 import VotingReviewPage from '../features/elections/pages/VotingReviewPage';
 import VotingSuccessPage from '../features/elections/pages/VotingSuccessPage';
+import PublicElectionResultsPage from '../features/elections/pages/PublicElectionResultsPage';
 import PublicCandidatePage from '../features/elections/pages/PublicCandidatePage';
 import ElectionResultsPage from '../features/elections/pages/ElectionResultsPage';
 import PublicLinkRedirectPage from '../features/elections/pages/PublicLinkRedirectPage';
@@ -157,6 +158,7 @@ export const router = createBrowserRouter([
       { path: 'session/:sessionId', element: <VotingSessionPage /> },
       { path: 'session/:sessionId/review', element: <VotingReviewPage /> },
       { path: 'session/:sessionId/success', element: <VotingSuccessPage /> },
+      { path: 'results', element: <PublicElectionResultsPage /> },
     ],
   },
   // Application Routes (Protected Dashboard)

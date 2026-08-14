@@ -46,11 +46,13 @@ export default function ElectionResultsPage() {
 
   if (resultsError) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 bg-white dark:bg-[#18181B] rounded-xl border border-gray-200 dark:border-gray-800 text-center">
-        <AlertCircle className="w-12 h-12 text-red-500 mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white">Failed to Load Results</h3>
-        <p className="mt-2 text-gray-500 max-w-sm">
-          {resultsError instanceof Error ? resultsError.message : 'An error occurred'}
+      <div className="flex flex-col items-center justify-center p-12 bg-white/80 dark:bg-[#18181B]/80 backdrop-blur-xl rounded-2xl border border-red-200 dark:border-red-900/30 text-center shadow-lg">
+        <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-6 shadow-inner">
+          <AlertCircle className="w-8 h-8 text-red-500 dark:text-red-400" />
+        </div>
+        <h3 className="text-xl font-bold text-zinc-900 dark:text-white tracking-tight">Failed to Load Results</h3>
+        <p className="mt-2 text-zinc-500 dark:text-zinc-400 max-w-sm">
+          {resultsError instanceof Error ? resultsError.message : 'An error occurred while fetching the results.'}
         </p>
       </div>
     );
@@ -185,38 +187,44 @@ export default function ElectionResultsPage() {
       )}
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-[#18181B] p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-start space-x-4">
-          <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-lg">
-            <Activity className="w-5 h-5" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {/* Total Votes Card */}
+        <div className="relative bg-white/80 dark:bg-[#18181B]/80 backdrop-blur-xl p-6 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)] flex items-start space-x-4 overflow-hidden group hover:border-indigo-500/30 transition-all">
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none group-hover:bg-indigo-500/20 transition-all" />
+          <div className="p-3 bg-indigo-100/80 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl border border-indigo-200/50 dark:border-indigo-500/20 shadow-sm relative z-10">
+            <Activity className="w-6 h-6" />
           </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Votes Cast</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+          <div className="relative z-10">
+            <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Total Votes Cast</p>
+            <p className="text-3xl font-extrabold text-zinc-900 dark:text-white mt-1 tracking-tight">
               {results.statistics.total_votes_cast.toLocaleString()}
             </p>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#18181B] p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-start space-x-4">
-          <div className="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
-            <Users className="w-5 h-5" />
+        {/* Expected Voters Card */}
+        <div className="relative bg-white/80 dark:bg-[#18181B]/80 backdrop-blur-xl p-6 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)] flex items-start space-x-4 overflow-hidden group hover:border-blue-500/30 transition-all">
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none group-hover:bg-blue-500/20 transition-all" />
+          <div className="p-3 bg-blue-100/80 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-xl border border-blue-200/50 dark:border-blue-500/20 shadow-sm relative z-10">
+            <Users className="w-6 h-6" />
           </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Expected Voters</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+          <div className="relative z-10">
+            <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Expected Voters</p>
+            <p className="text-3xl font-extrabold text-zinc-900 dark:text-white mt-1 tracking-tight">
               {results.statistics.total_eligible_voters ? results.statistics.total_eligible_voters.toLocaleString() : 'N/A'}
             </p>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#18181B] p-5 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-start space-x-4">
-          <div className="p-2 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-lg">
-            <ExternalLink className="w-5 h-5" />
+        {/* Turnout Card */}
+        <div className="relative bg-white/80 dark:bg-[#18181B]/80 backdrop-blur-xl p-6 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)] flex items-start space-x-4 overflow-hidden group hover:border-emerald-500/30 transition-all">
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none group-hover:bg-emerald-500/20 transition-all" />
+          <div className="p-3 bg-emerald-100/80 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl border border-emerald-200/50 dark:border-emerald-500/20 shadow-sm relative z-10">
+            <ExternalLink className="w-6 h-6" />
           </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Turnout</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+          <div className="relative z-10">
+            <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Turnout</p>
+            <p className="text-3xl font-extrabold text-zinc-900 dark:text-white mt-1 tracking-tight">
               {results.statistics.turnout_percentage !== null 
                 ? `${results.statistics.turnout_percentage.toFixed(1)}%` 
                 : 'N/A'}

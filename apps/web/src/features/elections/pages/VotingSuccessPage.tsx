@@ -2,8 +2,9 @@ import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { publicApi } from '../api/publicApi';
 import { BaseButton } from '@/components/ui/BaseButton';
-import { CheckCircle2, Download, Home, FileText } from 'lucide-react';
+import { CheckCircle2, Download, Home, FileText, BarChart3 } from 'lucide-react';
 import { format } from 'date-fns';
+import { ElectionStatus } from '../types';
 
 export default function VotingSuccessPage() {
   const { electionId } = useParams<{ electionId: string }>();
@@ -21,6 +22,8 @@ export default function VotingSuccessPage() {
   const handlePrintReceipt = () => {
     window.print();
   };
+
+  const isLive = election?.status === ElectionStatus.VOTING_OPEN && (election as any).result_visibility === 'LIVE';
 
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 space-y-8 animate-fade-in max-w-2xl mx-auto">
@@ -77,8 +80,17 @@ export default function VotingSuccessPage() {
 
       {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-4 w-full pt-4 print:hidden">
+        {isLive && (
+          <BaseButton 
+            className="flex-1 py-4 text-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)] animate-pulse-slow"
+            onClick={() => navigate(`/voting/${election.organization_id}/${electionId}/results`)}
+          >
+            <BarChart3 size={20} className="mr-2" />
+            View Live Results
+          </BaseButton>
+        )}
         <BaseButton 
-          variant="outline" 
+          variant={isLive ? "outline" : "primary"}
           className="flex-1 py-4 text-lg"
           onClick={handlePrintReceipt}
         >
@@ -86,6 +98,7 @@ export default function VotingSuccessPage() {
           Save/Print Receipt
         </BaseButton>
         <BaseButton 
+          variant="outline"
           className="flex-1 py-4 text-lg"
           onClick={() => navigate('/')}
         >
