@@ -4,7 +4,7 @@ import { useElection } from '../hooks/useElections';
 import { useElectionResults } from '../hooks/useResults';
 import { electionResultApi } from '../api/resultApi';
 import { BaseLoader } from '../../../components/ui/BaseLoader';
-import { AlertCircle, Download, ExternalLink, RefreshCw, Activity, Users, FileSpreadsheet, FileText } from 'lucide-react';
+import { AlertCircle, Download, RefreshCw, Activity, Users, FileSpreadsheet, FileText } from 'lucide-react';
 import { CategoryResultCard } from '../components/results/CategoryResultCard';
 import { BaseButton } from '../../../components/ui/BaseButton';
 import { ElectionStatus } from '../types';
