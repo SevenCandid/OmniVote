@@ -80,8 +80,12 @@ class ResultService:
                 election_id=election_id,
                 status=election.status,
                 is_hidden=True,
-                statistics=None,
-                categories=None,
+                statistics=ElectionStatisticsSchema(
+                    total_eligible_voters=None,
+                    total_votes_cast=0,
+                    turnout_percentage=None
+                ),
+                categories=[],
                 generated_at=datetime.datetime.now(datetime.timezone.utc)
             )
                  
