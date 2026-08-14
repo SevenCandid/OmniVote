@@ -146,40 +146,40 @@ export default function ElectionResultsPage() {
               disabled={isRefetching}
             >
               <RefreshCw className="w-4 h-4 mr-1.5" />
-            {isRefetching ? 'Refreshing...' : 'Refresh'}
-          </BaseButton>
-          
-          <BaseButton 
-            variant="outline" 
-            size="sm" 
-            onClick={handleExportCsv}
-            disabled={isExportingCsv}
-          >
-            <Download className="w-4 h-4 mr-1.5" />
-            {isExportingCsv ? 'Exporting...' : 'Export CSV'}
-          </BaseButton>
+              {isRefetching ? 'Refreshing...' : 'Refresh'}
+            </BaseButton>
+            
+            <BaseButton 
+              variant="outline" 
+              size="sm" 
+              onClick={handleExportCsv}
+              disabled={isExportingCsv}
+            >
+              <Download className="w-4 h-4 mr-1.5" />
+              {isExportingCsv ? 'Exporting...' : 'Export CSV'}
+            </BaseButton>
 
-          <BaseButton 
-            variant="outline" 
-            size="sm" 
-            onClick={handleExportExcel}
-            disabled={isExportingExcel}
-          >
-            <FileSpreadsheet className="w-4 h-4 mr-1.5" />
-            {isExportingExcel ? 'Exporting...' : 'Export Excel'}
-          </BaseButton>
+            <BaseButton 
+              variant="outline" 
+              size="sm" 
+              onClick={handleExportExcel}
+              disabled={isExportingExcel}
+            >
+              <FileSpreadsheet className="w-4 h-4 mr-1.5" />
+              {isExportingExcel ? 'Exporting...' : 'Export Excel'}
+            </BaseButton>
 
-          <BaseButton 
-            variant="outline" 
-            size="sm" 
-            onClick={handleExportPdf}
-            disabled={isExportingPdf}
-          >
-            <FileText className="w-4 h-4 mr-1.5" />
-            {isExportingPdf ? 'Exporting...' : 'Export PDF'}
-          </BaseButton>
-
-        </div>
+            <BaseButton 
+              variant="outline" 
+              size="sm" 
+              onClick={handleExportPdf}
+              disabled={isExportingPdf}
+            >
+              <FileText className="w-4 h-4 mr-1.5" />
+              {isExportingPdf ? 'Exporting...' : 'Export PDF'}
+            </BaseButton>
+          </div>
+        )}
       </div>
 
       {error && (
