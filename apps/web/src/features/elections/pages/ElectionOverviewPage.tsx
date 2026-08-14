@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { BaseLoader } from '../../../components/ui/BaseLoader';
-import { ElectionLifecycleActions } from '../components/ElectionLifecycleActions';
 import { BaseButton } from '../../../components/ui/BaseButton';
 
 function CategoryCandidatesPreview({ orgId, electionId, categoryId }: { orgId: string, electionId: string, categoryId: string }) {
@@ -233,12 +232,12 @@ export default function ElectionOverviewPage() {
               <Eye size={18} className="text-gray-500" />
               Voter Access
             </h3>
-            <p className="text-sm text-gray-500">Directly access the secure voting portal for this election.</p>
+            <p className="text-sm text-gray-500">Manage the election lifecycle and distribute voting access links.</p>
             <BaseButton
-              onClick={() => navigate(`/voting/${organizationId}/${electionId}`)}
+              onClick={() => navigate(`/dashboard/organizations/${organizationId}/elections/${electionId}/voting`)}
               className="w-full"
             >
-              Open Voter Portal
+              Manage Voting
             </BaseButton>
           </div>
 
@@ -338,7 +337,7 @@ export default function ElectionOverviewPage() {
             </div>
           </div>
           
-          <ElectionLifecycleActions election={election} />
+          {/* Removed ElectionLifecycleActions as it's now in the Voting tab */}
         </div>
       </div>
     </div>

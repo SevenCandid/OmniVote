@@ -62,6 +62,7 @@ import ElectionBallotPage from '../features/elections/pages/ElectionBallotPage';
 import { ElectionVotersPage } from '../features/elections/pages/ElectionVotersPage';
 import VotingWelcomePage from '../features/elections/pages/VotingWelcomePage';
 import VotingSessionPage from '../features/elections/pages/VotingSessionPage';
+import ElectionVotingPage from '../features/elections/pages/ElectionVotingPage';
 import VotingReviewPage from '../features/elections/pages/VotingReviewPage';
 import VotingSuccessPage from '../features/elections/pages/VotingSuccessPage';
 import PublicCandidatePage from '../features/elections/pages/PublicCandidatePage';
@@ -249,9 +250,7 @@ export const router = createBrowserRouter([
                       },
                       {
                         path: 'voting',
-                        element: (
-                          <PlaceholderPage title="Voting - Coming Soon" />
-                        ),
+                        element: <ElectionVotingPage />,
                       },
                       {
                         path: 'results',

@@ -58,6 +58,7 @@ class ElectionUpdate(BaseModel):
     description: Optional[str] = Field(None, max_length=2000)
     election_type: Optional[ElectionType] = None
     visibility: Optional[Visibility] = None
+    status: Optional[ElectionStatus] = None
     
     registration_opens_at: Optional[datetime] = None
     registration_closes_at: Optional[datetime] = None
