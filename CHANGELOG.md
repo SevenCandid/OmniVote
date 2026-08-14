@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Admin Live Results Toggle**: New `allow_admin_live_results` configuration field added to the Election creation form. When enabled, admins can see live vote counts on their dashboard while the election is running. This setting is immutable after election creation to preserve integrity.
 - **Graceful Hidden-Results API**: The `GET /results` endpoint no longer returns 403 when results are hidden. It now returns a 200 response with `is_hidden: true` and zeroed statistics, enabling the frontend to render a proper state rather than an error.
 - **Alembic Auto-Migration on Deploy**: Added `release_command = 'alembic upgrade head'` to `fly.toml` so database migrations now run automatically on every Fly.io deployment.
+- **Election Analytics Dashboard**: Built a comprehensive real-time dashboard powered by Recharts, showing total voters, total votes cast, turnout percentage, votes over time, voter engagement metrics, and category turnout breakdowns.
+- **Election Audit Logs**: Introduced a detailed, chronological record of all operational and security events (e.g. creating candidates, initiating voting sessions) for each specific election to enhance accountability.
 
 ### Fixed
 - **CORS + 500 Error on Results Endpoint**: Fixed `ModuleNotFoundError` caused by incorrect import path (`app.modules.organization.models.membership` → `app.modules.membership.models.membership`), which was crashing the results endpoint and stripping CORS headers.

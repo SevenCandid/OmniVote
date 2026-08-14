@@ -21,7 +21,7 @@ This document outlines the high-level phases and features for the OmniVote platf
 - [ ] Communication Engine
 - [ ] Voter Registry
 - [ ] USSD Engine
-- [ ] Reporting & Analytics
+- [x] Reporting & Analytics
 - [ ] Production Hardening
 
 ---
