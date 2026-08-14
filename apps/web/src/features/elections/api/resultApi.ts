@@ -60,7 +60,7 @@ export const electionResultApi = {
    * Get results for an election
    */
   getResults: async (organizationId: string, electionId: string): Promise<ElectionResult> => {
-    return fetchWithConfig(`/organizations/${organizationId}/elections/${electionId}/results/`);
+    return fetchWithConfig(`/organizations/${organizationId}/elections/${electionId}/results`);
   },
 
   /**
