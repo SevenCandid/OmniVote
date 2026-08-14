@@ -189,7 +189,7 @@ export default function ElectionResultsPage() {
       )}
 
       {results.is_hidden ? (
-        <LiveElectionIndicator isAdmin={true} />
+        <LiveElectionIndicator isAdmin={true} status={results.status} />
       ) : (
         <>
           {/* Statistics Cards */}

@@ -3,33 +3,44 @@ import { Activity, Lock, Radio } from 'lucide-react';
 
 interface LiveElectionIndicatorProps {
   isAdmin?: boolean;
+  status?: string;
 }
 
-export default function LiveElectionIndicator({ isAdmin = false }: LiveElectionIndicatorProps) {
+export default function LiveElectionIndicator({ isAdmin = false, status = 'voting_open' }: LiveElectionIndicatorProps) {
+  const isClosed = ['voting_closed', 'counting', 'results_published', 'archived'].includes(status);
+  
   return (
-    <div className="flex flex-col items-center justify-center min-h-[500px] w-full p-8 rounded-2xl bg-gradient-to-b from-[var(--color-surface)] to-transparent border border-white/5 relative overflow-hidden">
+    <div className={`flex flex-col items-center justify-center w-full p-8 rounded-2xl bg-gradient-to-b from-[var(--color-surface)] to-transparent border border-white/5 relative overflow-hidden ${isClosed ? 'min-h-[300px]' : 'min-h-[500px]'}`}>
       
       {/* Animated Background Gradients */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[var(--color-primary)]/10 rounded-full blur-[100px] pointer-events-none" />
       
       <div className="relative z-10 flex flex-col items-center max-w-lg text-center space-y-8">
         
-        {/* Radar / Pulse Animation */}
-        <div className="relative flex items-center justify-center w-32 h-32">
-          <motion.div
-            className="absolute inset-0 border border-[var(--color-primary)] rounded-full opacity-20"
-            animate={{ scale: [1, 2.5], opacity: [0.5, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
-          />
-          <motion.div
-            className="absolute inset-4 border border-[var(--color-primary)] rounded-full opacity-40"
-            animate={{ scale: [1, 2], opacity: [0.8, 0] }}
-            transition={{ duration: 2, delay: 0.4, repeat: Infinity, ease: 'easeOut' }}
-          />
-          <div className="relative w-16 h-16 bg-[var(--color-surface)] border border-white/10 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.3)] backdrop-blur-md">
-            <Radio className="w-8 h-8 text-[var(--color-primary)] animate-pulse" />
+        {/* Icon / Animation */}
+        {!isClosed ? (
+          <div className="relative flex items-center justify-center w-32 h-32">
+            <motion.div
+              className="absolute inset-0 border border-[var(--color-primary)] rounded-full opacity-20"
+              animate={{ scale: [1, 2.5], opacity: [0.5, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
+            />
+            <motion.div
+              className="absolute inset-4 border border-[var(--color-primary)] rounded-full opacity-40"
+              animate={{ scale: [1, 2], opacity: [0.8, 0] }}
+              transition={{ duration: 2, delay: 0.4, repeat: Infinity, ease: 'easeOut' }}
+            />
+            <div className="relative w-16 h-16 bg-[var(--color-surface)] border border-white/10 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.3)] backdrop-blur-md">
+              <Radio className="w-8 h-8 text-[var(--color-primary)] animate-pulse" />
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="relative flex items-center justify-center w-24 h-24">
+             <div className="relative w-16 h-16 bg-white/5 border border-white/10 rounded-full flex items-center justify-center backdrop-blur-md">
+              <Lock className="w-8 h-8 text-gray-400" />
+            </div>
+          </div>
+        )}
 
         {/* Text Content */}
         <div className="space-y-4">
@@ -39,7 +50,7 @@ export default function LiveElectionIndicator({ isAdmin = false }: LiveElectionI
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Live Election in Progress
+            {isClosed ? 'Election Concluded' : 'Live Election in Progress'}
           </motion.h2>
           
           <motion.p 
@@ -48,8 +59,9 @@ export default function LiveElectionIndicator({ isAdmin = false }: LiveElectionI
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            Votes are being securely collected in real-time. 
-            The live tally is currently hidden to preserve the integrity of the election.
+            {isClosed 
+              ? 'The voting period has ended. The final results are currently hidden based on the election configuration.'
+              : 'Votes are being securely collected in real-time. The live tally is currently hidden to preserve the integrity of the election.'}
           </motion.p>
         </div>
 
@@ -60,10 +72,12 @@ export default function LiveElectionIndicator({ isAdmin = false }: LiveElectionI
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 text-[var(--color-primary)] text-sm font-medium">
-            <Activity className="w-4 h-4 animate-spin-slow" />
-            Active Collection
-          </div>
+          {!isClosed && (
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 text-[var(--color-primary)] text-sm font-medium">
+              <Activity className="w-4 h-4 animate-spin-slow" />
+              Active Collection
+            </div>
+          )}
           <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-gray-300 text-sm font-medium">
             <Lock className="w-4 h-4" />
             Results Secured

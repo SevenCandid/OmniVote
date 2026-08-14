@@ -106,7 +106,7 @@ export default function PublicElectionResultsPage() {
         </div>
 
         {results.is_hidden ? (
-          <LiveElectionIndicator isAdmin={false} />
+          <LiveElectionIndicator isAdmin={false} status={results.status} />
         ) : (
           <>
             {/* Statistics Overview */}
