@@ -44,23 +44,24 @@ class ResultService:
         if not election:
             raise HTTPException(status_code=404, detail="Election not found")
             
-        # 1. Check Visibility Rules
-        if election.result_visibility == ResultVisibility.HIDDEN:
-            raise HTTPException(status_code=403, detail="Results are hidden for this election.")
-        elif election.result_visibility == ResultVisibility.AFTER_CLOSE and election.status != ElectionStatus.RESULTS_PUBLISHED:
-            # We allow it if status is VOTING_CLOSED maybe? But AFTER_CLOSE usually means when it's closed. 
-            # Or RESULTS_PUBLISHED explicitly.
-            # Let's check if it's closed or published.
-            if election.status not in (ElectionStatus.VOTING_CLOSED, ElectionStatus.COUNTING, ElectionStatus.RESULTS_PUBLISHED, ElectionStatus.ARCHIVED):
-                raise HTTPException(status_code=403, detail="Results will be visible after the election closes.")
-        elif election.result_visibility == ResultVisibility.ADMIN_ONLY:
-            # Check if user is an admin of this organization
-            if not user_id:
-                raise HTTPException(status_code=403, detail="Unauthorized")
-            # We assume organization admin check is done outside or here. For now, we trust user_id if passed, 
-            # but ideally we check org membership. Since this is an MVP, we check if created_by match for now.
-            if election.created_by != user_id:
-                 raise HTTPException(status_code=403, detail="Admin only access")
+        # Check if user is an admin of this organization
+        is_admin = False
+        if user_id:
+            from sqlalchemy import select
+            from app.modules.organization.models.membership import Membership
+            res = await self.db.execute(select(Membership).where(Membership.user_id == user_id, Membership.organization_id == election.organization_id))
+            if res.scalar_one_or_none():
+                is_admin = True
+
+        # 1. Check Visibility Rules (bypass for admins)
+        if not is_admin:
+            if election.result_visibility == ResultVisibility.HIDDEN:
+                raise HTTPException(status_code=403, detail="Results are hidden for this election.")
+            elif election.result_visibility == ResultVisibility.AFTER_CLOSE and election.status != ElectionStatus.RESULTS_PUBLISHED:
+                if election.status not in (ElectionStatus.VOTING_CLOSED, ElectionStatus.COUNTING, ElectionStatus.RESULTS_PUBLISHED, ElectionStatus.ARCHIVED):
+                    raise HTTPException(status_code=403, detail="Results will be visible after the election closes.")
+            elif election.result_visibility == ResultVisibility.ADMIN_ONLY:
+                raise HTTPException(status_code=403, detail="Admin only access")
                  
         # 3. Compute results
         return await self.compute_and_cache_results(election_id)
